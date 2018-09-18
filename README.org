@@ -1,0 +1,26 @@
+
+
+* T Lisp sources
+
+  site: http://mumble.net/~jar/tproject/
+
+
+** Files
+   - t2.9.tar.gz
+   - t3.0.tar.gz
+
+** Abstract of project
+
+   From: http://www.paulgraham.com/thist.html
+
+   Around 1981-1982, the Yale CS dept., which had a strong AI group
+   led by Roger Schank, hired undergraduate Jonathan Rees to implement
+   a new Lisp for their research programming. Jonathan, I and Dan Weld
+   (now a prof. at U Washington) were the three people at Yale that
+   had discovered the early Sussman/Steele "lambda" papers, including
+   Guy's seminal master's thesis on Rabbit, the first Scheme
+   compiler. Dan was a college senior; Jonathan & I were juniors. Alan
+   Perlis, the soul of the department, had just discovered functional
+   programming, and was running a graduate seminar covering early FP
+   languages such as Hope & Miranda & Scheme. The three of us managed
+   to sleaze our way into this grad class, where we met each other.
