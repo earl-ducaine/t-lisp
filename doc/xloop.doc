@@ -1,0 +1,120 @@
+
+
+Source/object is in $HAX/loop.t / loop.o
+
+;;; XLOOP is really is XLOOP*.  Syntax is that of LET* except that the
+;;;  variables are reset at the beginning of every loop iteration.
+;;;
+;;;    (xloop ( (var decl)
+;;;               ...
+;;;             (var decl) )
+;;;           ( ...body... ) )
+;;;
+;;;  The useful sequence procedures are at the other end of the file.
+
+;;; Bugs
+;;;
+;;;    Can't make self referential sequences (fibonacci).
+;;;
+
+;;; (generate next init)
+;;;    Generates an endless sequence. S0 = init, Sn = (next Sn-1)
+
+(define-syntax (generate next init)
+    (let ((var (generate-symbol 'gen)))
+         (push *loop-vars* var)
+         (push *loop-defaults* `(,var ,init))
+         (push *loop-incrs* `(var ,var (,next ,var)))
+         var))
+
+
+;;; Stops the loop as soon as (test -args-) is true.
+
+(define-loop-syntax (truncate test . rest)
+  (let ((var (generate-symbol 'trunc)))
+    (push *loop-vars* var)
+    (push *loop-inits* `(end (,test ,var ,@(cdr rest)) ,var ,(car rest)))
+    (push *loop-incrs* `(end (,test ,var ,@(cdr rest)) ,var ,(car rest)))
+    var))
+
+
+;;; Skips any loop cycles where <test> is false, returns <value> when <test>
+;;; is true.
+
+(define-loop-syntax (filter test value)
+  (let ((var (generate-symbol 'filter)))
+    (push *loop-vars* var)
+    (push *loop-inits* `(next ,test ,var ,value))
+    (push *loop-incrs* `(next ,test ,var ,value))
+    var))
+
+
+;;; Returns the last element in the sequence S0 = init,
+;;;  Sn = (function Sn-1 -rest- )
+
+(define-loop-syntax (reduce function init . rest)
+  (let ((var (generate-symbol 'red)))
+    (push *loop-vars* var)
+    (push *loop-defaults* `(,var ,init))
+    (push *loop-inits* `(var ,var (,function ,var ,@rest)))
+    (push *loop-incrs* `(var ,var (,function ,var ,@rest)))
+    var))
+
+
+;;; Produces the sequence S0 = (function init -rest-),
+;;;  Sn = (function Sn-1 -rest-)
+;;; This is identical to reduce (?)
+
+(define-loop-syntax (scan function init . rest)
+
+
+;;; Derived loop constructs
+;;;  The argument orders are a little random.
+
+;;; S0 = init, Sn = (next Sn-1), stops when (test Sn) is true.
+
+(define-syntax (enumerate init next test)
+
+;;; Enumerate the cdrs of a list.
+
+(define-syntax (e-list-cdr l)
+
+;;; Enumerate the elements of a list.
+
+(define-syntax (e-list l)
+
+;;; Collect the sequence e into a list.
+
+(define-syntax (r-list e)
+
+;;; ...
+
+(define-syntax (r-sum e)
+  `(reduce + 0 ,e))
+
+(define-syntax (r-min e)
+  `(reduce min *min-fixnum* ,e))      ;?!?
+
+(define-syntax (r-count e)
+  `(reduce (lambda (x y) (1+ x)) 0 ,e))
+
+(define-syntax (r-ignore e)
+  `(reduce false 0 ,e))
+
+(define-syntax (r-last e)
+  `(reduce proj1 nil ,e))
+
+;;; Previous value; given Si,  R0 = init, Rn = Sn-1.                 
+
+(define-syntax (p-value init sequence)
+  `(scan (lambda (x y) y) ,init ,sequence))
+
+;;; Fixnums from init to end by step.  No error checking.
+
+(define-syntax (e-range init end . maybe-step)
+  (let ((step (if maybe-step (car maybe-step) 1)))
+    `(enumerate ,init
+                (lambda (x) (+ x ,step))
+                (lambda (x)
+                  (,(if (> 0 step) '< '>) x ,end)))))
+

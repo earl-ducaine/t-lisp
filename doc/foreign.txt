@@ -1,0 +1,32 @@
+(define-foreign (<procedure-name> [<parameter-type-spec> ...])
+        <return-value-type>)
+
+<parameter-type-spec> ::=  ({ IN | OUT | IN/OUT }
+                            <foriegn-type-spec>
+                            <parameter-name>)
+
+<return-value-type> ::= <foreign-type-spec>
+
+(define-foreign-type <type-name>
+    (IN  <input  conversion specification>)
+    (OUT <output conversion specification>))
+
+<input  conversion specification> and
+<output conversion specification>   
+contain information used to coerce arguments to, and results
+from, foreign code.
+
+example:
+
+(define-foreign (name_$resolve (in string path)
+                               (in integer16 path-length)
+                               (out uid uid))
+                void)
+
+We should probably use multiple values to get out parameters
+back into T
+
+(receive (dl ents st)
+         (name_$dirlist dirname dirlist entries status)
+    ...)
+  

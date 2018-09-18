@@ -1,0 +1,103 @@
+
+  DUMPER
+
+     Currently handles fixnums, characters, strings, lists, vectors,
+     symbols, floating point numbers, bignums, and byte vectors.
+
+     The encoding and decoding will not duplicate any non-immediate data
+     structures and allows circular vectors and lists.
+
+
+  Dumping:
+
+     (OPEN-DUMP <filespec>)        -> dump-stream
+
+     (WRITE <dump-stream> <thing>) -> undefined
+       Dumps <thing> into the file.  Any number of objects can be dumped
+       into one file.
+
+     (CLOSE <dump-string>)         -> undefined
+
+  Retrieving:
+
+     (OPEN-RETRIEVE <filespec>)    -> retrieve-stream
+
+     (READ <retrieve-stream>)      -> dumped thing
+       Returns the next dumped object.  *EOF* is returned if there are no
+       remaining unretrieved objects.
+
+     (CLOSE <retrieve-stream>)     -> undefined
+
+
+;;; The following is an example of how to use the dumper:
+
+  Dumping:
+
+    (WITH-OPEN-STREAMS ((OPEN-DUMP "frog.d"))
+      (DUMP S OBJ1)
+      (DUMP S OBJ2)
+         ...
+      (DUMP S OBJn))
+
+  Retrieving:
+
+    (WITH-OPEN-STREAMS ((OPEN-RETRIEVE "frog.d"))
+      (LSET OBJ1 (GET-DUMP D))
+      (LSET OBJ2 (GET-DUMP D))
+         ...
+      (LSET OBJn (GET-DUMP D)))
+
+
+;;; Representation of dumped objects
+
+    All objects are stored as a token followed by some number of data
+  bytes.  Three kinds of data are encoded into the token.  They are the
+  type of the object, whether or not there are multiple pointers to
+  the object, and the number of data bytes that follow the type code.
+  Not every type code includes all three fields.
+
+    Tokens consist of a type byte and up to four size bytes.  The number
+  of size bytes is encoded into the type byte.  The point is to eliminate
+  the need to store bytes equal to zero.  Thus a string of length 12 can
+  be stored in 14 bytes:
+      A type byte, saying that this is a string, whether or not it is
+          shared, and that there are two size bytes.
+      A size byte, containing the number 12.
+      Twelve bytes with the characters.
+  If the string were longer than 255 characters, then another size byte
+  would be added, and the type byte changed ot indicate this.
+
+    Non-immediate objects that occur more than once in the dumped file are
+  only stored once.  An initial pass finds duplicated objects and assigns
+  an index to each on.  The first time one such object is found it is dumped
+  with the 'shared' bit set in the type byte.  All other copies are
+  encoded as a special 'index' type along with the value of the objects
+  index.  The retrieval program puts the shared object into a vector as it
+  finds them.  Later references are looked up into the vector.  This
+  mechanism both reduces storage space and allows circular structures to
+  be dumped.
+
+  Representations           * = unused field
+
+      Type           Size data (1-4 bytes)       Other data
+Immediate types
+      Null                 *                    *
+      Char                 *                 The character in ascii
+      Positive Fixnum  Value of the number      *
+      Negative Fixnum  Absolute value           *
+Index types
+      Object-reference Index value              *
+      String-reference Index value              *
+Non-immediate types (may be shared)
+      Pair                  *                Dumped values of the car and cdr
+      String           # of characters       The characters in ascii
+      Symbol           # of characters       The name in ascii
+      Vector           # of elements         Dumped elements
+      Byte-vector      # of bytes            The bytes
+      Float                 *                Eight bytes worth of bits
+      Positive Bignum  # of two byte chunks  The value in two byte chunks
+      Negative Bignum       "                     "
+
+  The number of size bytes (for those types that need them) and whether the
+  object is shared or not (for those types that may be) are encode into the
+  type byte.

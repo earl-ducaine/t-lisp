@@ -1,0 +1,18 @@
+
+;----- beginning t compilation on "foreign"
+
+;;; Getting support
+;;; Alphatizing
+;;; Free variables (142): (WRITEC READC FOREIGN)
+;;; Assignment analysis
+;;; Complexity analysis
+;;; CPS conversion
+;;; Early binding
+;;; Defining 'SUPPORT/CONSTANT' support for WRITEC
+;;; Defining 'SUPPORT/CONSTANT' support for READC
+;;; Defining 'SUPPORT/WIRED' support for FOREIGN
+;;; Free variables (0): ()
+;;; Defined variables (144): (WRITEC READC FOREIGN)
+;;; Simplifying
+;;; Simplification done
+;;; Writing support file

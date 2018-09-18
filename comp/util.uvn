@@ -1,0 +1,69 @@
+
+;----- Beginning T compilation on "util.t"
+
+;PP-CPS compiled
+;  Consed environment = (STREAM INDENT-TO)
+;(LAMBDA (NODE) ...) compiled
+;PP-CPS-1 compiled
+;PP-CPS-2 compiled
+;LAMBDA-NAME compiled
+;VARIABLE-UNIQUE-NAME compiled
+;COPY-NODE-TREE compiled
+;COPY-LEAF compiled
+;(LAMBDA (VAR) ...) compiled
+;COPY-LAMBDA compiled
+;  Consed environment = (NEW-NODE SOURCE RENAME)
+;(LAMBDA (ARG) ...) compiled
+;COPY-CALL compiled
+;ERASE-ALL compiled
+;ERASE compiled
+;FIND compiled
+;FILTER compiled
+;  Consed environment = (RES)
+;  Consed environment = ((RES) PRED)
+;(LAMBDA (KEY ENTRY) ...) compiled
+;SELECT-FROM-TABLE compiled
+;TABLE->LIST compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (TERMINAL-OUTPUT LAMBDA-NODE? LAMBDA-VARIABLES HPOS SETTER
+WRITEC MAP WRITE LAMBDA-BODY PRETTY-PRINT FORMAT CALL-PROC+ARGS WALK NODE?
+NODE-VARIANT LEAF-NODE? LEAF-VARIANT LITERAL-VALUE LIST PRIMOP-VALUE PRIMOP.CONSTRUCTED?
+IDENTIFICATION PRIMOP.ARGLIST CONS* REFERENCE-VARIABLE CALL-NODE? LOSING-XSELECT
+USED? VARIABLE-NAME VARIABLE-BINDER VARIABLE-ID CONCATENATE-SYMBOL CREATE-LITERAL-NODE
+CREATE-PRIMOP-NODE ASSQ CREATE-REFERENCE-NODE REFERENCE-COPY-SOURCES LOSING-XCASE
+CREATE-VARIABLE VARIABLE-REP CREATE-LAMBDA-NODE CONS APPEND! RELATE LENGTH
+CALL-EXITS CREATE-CALL-NODE NODE-ROLE NODE-CHILDREN REFERENCE-NODE? VARIABLE-REFS
+DELQ! VARIABLE-NUMBER NTH *LOOSE* REVERSE! TRUE *T-IMPLEMENTATION-ENV* *VALUE))
+
+(DEFINED-VARIABLES (PP-CPS PP-CPS-1 PP-CPS-2 VARIABLE-UNIQUE-NAME LAMBDA-NAME
+COPY-NODE-TREE COPY-CALL COPY-LAMBDA COPY-LEAF ERASE-ALL ERASE FIND FILTER
+SELECT-FROM-TABLE WALK-TABLE TABLE->LIST PRINT-TYPE-STRING SELF-EVALUATING?
+BLOCKIFY ARGLIST->ARGSPECTRUM MAKE-SYNTAX-DESCRIPTOR FILENAME-WITH-TYPE
+PARSE-HERALD HERALD-SUPPORT AUGMENT-CONTEXT))
+
+(LSET-VARIABLES ())
+
+;;;     121  number of templates/code chunks emitted
+;;;    3389  LAP instructions emitted
+;;;      84  number of value cell pointers in unit
+;;;     229  number of entries into data section
+;;;      81  calls not requiring stack padding
+;;;      19  calls requiring stack padding
+;;;     684  number of TN's generated
+;;;       9  successes at propagating substitution into a LET body
+;;;      10  attempts to propagate substitution into a LET body
+;;;      27  substitutions of an argument for a parameter
+;;;      18  ((LAMBDA () FOO)) becomes FOO
+;;;      19  unreferenced argument with no side effects is flushed
+;;;       7  IF of a constant has dead arm eliminated
+;;;       1  IF of an IF is involuted (anchor pointing)
+;;;       4  (IF (NOT A) B C) becomes (IF A C B)
+;;;       2  one BLOCK within another is flattened out
+;;;       1  statements eliminated from a BLOCK
+;;;      19  unreferenced parameter is flushed
+;;;     840  number of internal-format program nodes created
+
+
+;----- Finished compiling "util.t"
+

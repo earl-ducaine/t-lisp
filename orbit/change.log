@@ -1,0 +1,4 @@
+*** 01/29/1984 14:54:35, "//sigma/t/t3/orbit/convert.t", rees ***
+Introduced EXITS primop.
+Replaced fixnum-specific primops with their full-blown generic
+counterparts in anticipation of declaration propagation.

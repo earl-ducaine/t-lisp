@@ -1,0 +1,19 @@
+    VGC
+Need a foreign-desc? handler
+Nobody makes Unix symbols, for xenoids, *T-BOOT-PROCS*, *T-BOOT-PROC*, etc.
+    ...or generates relocation items for refs to these dudes.
+I'm not happy with the way template-structs are handled.
+I'm not happy with the pure/impure classification system.
+No methods for writing out: (can be ignored for vm system)
+    bitv
+    bignum
+    short, single, & double float
+    array
+
+
+    COMEX
+instantiator details of returned value
+
+No one currently builds the symbol table
+...or builds the system's locale using the refs lists from the comex
+instantiator.

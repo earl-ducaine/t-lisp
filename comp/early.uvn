@@ -1,0 +1,128 @@
+
+;----- Beginning T compilation on "early.t"
+
+;(LAMBDA (() ENTRY) ...) compiled
+;(LAMBDA (() () () SELF . REST) ...) compiled
+;  Consed environment = (TABLE PRIMOP-ENV SUPER ID)
+;  Closure
+;(LAMBDA (NAME VALUE) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (() () () () NAME) ...) compiled
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;(LAMBDA (OBJECT.1 STATE.2) ...) compiled
+;(LAMBDA (NAME) ...) compiled
+;MAKE-SUPPORT-ENV compiled
+;MAKE-EMPTY-SUPPORT-ENV compiled
+;  Consed environment = (TABLE ID)
+;  Closure
+;(LAMBDA (NAME VALUE) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;(LAMBDA (OBJECT.4 STATE.5) ...) compiled
+;(LAMBDA (NAME) ...) compiled
+;MAKE-PRIMOP-ENV compiled
+;*DEFINE-SUPPORT compiled
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;  Consed environment = (DATA VALUE VARIANT LOCAL?)
+;(LAMBDA (() () () ()) LOCAL?) compiled
+;(LAMBDA (() () () ()) VARIANT) compiled
+;(LAMBDA (() () () ()) VALUE) compiled
+;(LAMBDA (() () () ()) DATA) compiled
+;(LAMBDA (() () () () KEY) ...) compiled
+;(LAMBDA (() () () () KEY DATUM) ...) compiled
+;(LAMBDA (OBJECT.8 STATE.9) ...) compiled
+;MAKE-SUPPORT-ENTRY compiled
+;SUPPORT/LSET compiled
+;SUPPORT/DEFINE compiled
+;(LAMBDA (()) (QUOTE ())) compiled
+;(LAMBDA (() () () ()) (QUOTE SUPPORT/CONSTANT)) compiled
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;(LAMBDA (OBJECT.18 STATE.19) ...) compiled
+;(LAMBDA (()) (QUOTE ())) compiled
+;(LAMBDA (() () () ()) (QUOTE SUPPORT/WIRED)) compiled
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;(LAMBDA (OBJECT.20 STATE.21) ...) compiled
+;(LAMBDA (()) (QUOTE ())) compiled
+;(LAMBDA (() () () ()) (QUOTE SUPPORT/INTEGRABLE)) compiled
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;(LAMBDA (OBJECT.22 STATE.23) ...) compiled
+;SUPPORTED? compiled
+;VARIABLE-SUPPORT compiled
+;  Consed environment = (VALUE)
+;  Consed environment = (VARIANT VAR)
+;(LAMBDA (() () () ()) VALUE) compiled
+;(LAMBDA (OBJECT.26.32 STATE.27.33) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (OBJECT.28.34 STATE.29.35) ...) compiled
+;ADD-SUPPORT-VALUE compiled
+;EARLY-BIND compiled
+;EARLY-BIND-VAR compiled
+;LOOP compiled
+;FIND-DEFINITIONS compiled
+;ADD-PERMANENT-SUPPORT compiled
+;SUPPORT-FROM-REF compiled
+;SUPPORTS-DEFINITION? compiled
+;SUPPORT-IS-PRIMOP? compiled
+
+;>>>> Internal compiler error!
+;>>>> Report this bug to the compiler implementors.
+;>>>> Type (RET) to attempt corrective action.
+;Error: TN 1126 and TN 1128 both have the spare name ENVREF ("look at" *NODE*)
+;Action: will assume TN 1126 retains the name and discard TN 1128
+;  Consed environment = (TREE-WALK VARIABLE)
+;TREE-WALK compiled
+;MARK-REFERENCE-SOURCES compiled
+;GET-SUPPORT-DEFINITION compiled
+;GET-SUPPORT-FROM-REF compiled
+;(LAMBDA (REF) ...) compiled
+;FIX-MULTIPLE-DEFINITIONS compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (GET-SUPPORT-ENVIRONMENTS MAKE-TABLE SETTER AUGMENT-CONTEXT
+PRINT %DISPATCH-NEXT TABLE-ENTRY SELECT-FROM-TABLE OBJECT-HASH FORMAT FALSE
+BUG %OBJECT ASSQ CONS* IDENTIFICATION HANDLE-OPERATION VARIABLE-SUPPORT-ENV
+VARIABLE-NAME PRIMOP-NODE? LITERAL-NODE? JOIN THE-FREE-VARIABLES LOSING-XCASE
+REVERSE! *VALUES-VECTOR* WARNING LENGTH < NOISE VARIABLE-REFS NODE-PARENT
+CALL-ARG LAMBDA-NODE? CALL-PROC NODE-ROLE PRIMOP-VALUE PRIMOP.DEFINES-SUPPORT?
+PRIMOP.SUPPORT-VARIANT REFERENCE-NODE? REFERENCE-VARIABLE VARIABLE-BINDER
+PRIMOP/*PRIMOP PRIMOP-REF? CALL-ARGS LITERAL-VALUE LAMBDA-BODY NODE-VARIANT
+LEAF-NODE? REFERENCE-COPY-SOURCES CALL-NODE? LOSING-XSELECT CALL-PROC+ARGS
+WALK DELQ! CREATE-PRIMOP-NODE PRIMOP/*DEFINE %OPERATION %PREDICATE %MASSAGE-DEFAULT))
+
+(DEFINED-VARIABLES (SUPPORT.LOCAL? MAKE-SUPPORT-ENV LOCAL-SUPPORT PRIMOP-SUPPORT
+MAKE-EMPTY-SUPPORT-ENV MAKE-PRIMOP-ENV *DEFINE-SUPPORT MAKE-SUPPORT-ENTRY
+SUPPORT? SUPPORT.VARIANT SUPPORT.VALUE SUPPORT.DATA SUPPORT.RETRIEVE SUPPORT.ADD-DATA
+SUPPORT/LSET SUPPORT/DEFINE PERMANENT-SUPPORT-VARIANT? SUPPORTED? VARIABLE-SUPPORT
+ADD-SUPPORT-VALUE GET-SUPPORT-DEFINITION EARLY-BIND EARLY-BIND-VAR FIND-DEFINITIONS
+FIX-MULTIPLE-DEFINITIONS ADD-PERMANENT-SUPPORT SUPPORT-FROM-REF SUPPORT-IS-PRIMOP?
+SUPPORT/CONSTANT MARK-REFERENCE-SOURCES SUPPORTS-DEFINITION? GET-SUPPORT-FROM-REF
+*PRIMITIVE-PRIMOP-ENV* *PRIMITIVE-SUPPORT-ENV* SUPPORT/WIRED SUPPORT/INTEGRABLE))
+
+(LSET-VARIABLES (*SUPPORT-ENVIRONMENT-NAMES* *STANDARD-SUPPORT-ENV*))
+
+;;;     214  number of templates/code chunks emitted
+;;;    5505  LAP instructions emitted
+;;;      98  number of value cell pointers in unit
+;;;     362  number of entries into data section
+;;;     122  calls not requiring stack padding
+;;;      29  calls requiring stack padding
+;;;    1415  number of TN's generated
+;;;      33  successes at propagating substitution into a LET body
+;;;      36  attempts to propagate substitution into a LET body
+;;;      67  substitutions of an argument for a parameter
+;;;      58  ((LAMBDA () FOO)) becomes FOO
+;;;      56  unreferenced argument with no side effects is flushed
+;;;       1  (SETTER FOO) becomes SET-FOO
+;;;      21  IF of a constant has dead arm eliminated
+;;;       9  IF of an IF is involuted (anchor pointing)
+;;;       7  (IF (NOT A) B C) becomes (IF A C B)
+;;;       2  one BLOCK within another is flattened out
+;;;      33  BLOCK of one statement simplified to the statement
+;;;      35  statements eliminated from a BLOCK
+;;;      83  unreferenced parameter is flushed
+;;;    2024  number of internal-format program nodes created
+
+
+;----- Finished compiling "early.t"
+

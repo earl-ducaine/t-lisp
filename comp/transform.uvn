@@ -1,0 +1,54 @@
+
+;----- Beginning T compilation on "$ORBIT/transform.t"
+
+;TRANSFORM compiled
+;(LAMBDA (VAR VAL) ...) compiled
+;TRANSFORM-LET compiled
+;  Consed environment = (CONT)
+;(LAMBDA (REF.40) ...) compiled
+;TRANSFORM-JOIN compiled
+;TRANSFORM-VALUES compiled
+;TRANSFORM-RECEIVE-VALUES compiled
+;TRANSFORM-PREDICATE compiled
+;TRANSFORM-TO-CONDITIONAL compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (CALL-NODE? CALL-PROC LAMBDA-NODE? KNOWN-PRIMOP-VALUE PRIMOP.FORMALS
+PRIMOP.CONSTRUCTED? PRIMOP.TRANSFORM USED? VARIABLE-REFS VARIABLE-TYPE SETTER
+SUBSTITUTE LAMBDA-VARIABLES LAMBDA-REST-VAR LAMBDA-BODY DETACH REPLACE CALL-EXITS
+LENGTH CALL-ARG TRUE? CALL-ARGS MAP ANY? ERASE-UNUSED-ARGUMENTS REMOVE-UNREFERENCED-VARIABLES
+*OR CALL-PROC+ARGS PRIMOP/CONDITIONAL PRIMOP-REF? PRIMOP/TEST REFERENCE-NODE?
+REFERENCE-VARIABLE LAMBDA-CONT-VAR CREATE-VARIABLE LIST CREATE-LAMBDA-NODE
+CREATE-CALL-NODE RELATE RELATE-CALL-ARGS CREATE-REFERENCE-NODE WALK ERASE
+NODE-CHILDREN COPY-NODE-TREE COPY-LIST REPLACE-CALL-ARGS REPLACE-VAR LAMBDA-ALL-VARIABLES
+DELQ! PRIMOP-NODE? CREATE-PRIMOP-NODE S-EXP->NODE-TREE))
+
+(DEFINED-VARIABLES (TRANSFORM TRANSFORM-LET TRANSFORM-JOIN TRANSFORM-VALUES
+TRANSFORM-RECEIVE-VALUES TRANSFORM-PREDICATE TRANSFORM-TO-CONDITIONAL))
+
+(LSET-VARIABLES ())
+
+;;;     153  number of templates/code chunks emitted
+;;;    3564  LAP instructions emitted
+;;;      60  number of value cell pointers in unit
+;;;     225  number of entries into data section
+;;;     103  calls not requiring stack padding
+;;;      40  calls requiring stack padding
+;;;     705  number of TN's generated
+;;;      86  successes at propagating substitution into a LET body
+;;;      93  attempts to propagate substitution into a LET body
+;;;      90  substitutions of an argument for a parameter
+;;;      92  ((LAMBDA () FOO)) becomes FOO
+;;;      56  unreferenced argument with no side effects is flushed
+;;;       3  IF of a LET becomes LET of an IF
+;;;      23  IF of a constant has dead arm eliminated
+;;;      18  IF of an IF is involuted (anchor pointing)
+;;;      11  (IF (NOT A) B C) becomes (IF A C B)
+;;;       2  one BLOCK within another is flattened out
+;;;       2  statements eliminated from a BLOCK
+;;;      56  unreferenced parameter is flushed
+;;;    1638  number of internal-format program nodes created
+
+
+;----- Finished compiling "$ORBIT/transform.t"
+

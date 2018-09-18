@@ -1,0 +1,564 @@
+;;; Free variables (396): (FIXNUM-DIVIDE FIXNUM-SUBTRACT ASH FIXNUM-MULTIPLY
+LOGIOR LOGXOR FIXNUM-ADD SIMPLE-ARITHMETIC-OP ASCII->CHAR CHAR->ASCII TEXT->SYMBOL!
+MAKE-TYPE-CONVERTER LOGNOT %MAKE-SYMBOL-HEADER %MAKE-STRING-HEADER %MAKE-TEXT-HEADER
+MAKE-HEADER-MAKER BIGNUM-HEADER? SYMBOL-HEADER? STRING? TEXT-HEADER? BITV-HEADER?
+GENERAL-VECTOR-HEADER? CHAR? IMMEDIATE? FIXNUM? EXTEND? LIST? MAKE-HEADER-TYPE-PREDICATE
+MAKE-TAG-TYPE-PREDICATE %MAKE-EXTEND %MAKE-PAIR COMPARE EQ? FIXNUM-LESS?
+FIXNUM-EQUAL? MAKE-COMPARATOR %SET-AREF AREF CDR CAR STRING-OFFSET STRING-TEXT
+EXTEND-TEMPLATE XENOID-POINTER %SET-ACCESSOR MAKE-ACCESSOR CALL-XENOID HEADER/SYMBOL
+HEADER/STRING HEADER/SLICE HEADER/BIGNUM HEADER/GENERAL-VECTOR HEADER/TEXT
+HEADER/BITV HEADER/CHAR %CDR-OFFSET% %CAR-OFFSET% TAG/PAIR TAG/EXTEND TAG/IMMEDIATE
+TAG/FIXNUM)
+Top-node (397): #{LAMBDA-node 397}
+CPS tree:
+  ((P_1 K_0)        (K_0 P_3))
+   ((P_3 K_2)        (BLOCK P_5 P_276))
+    ((P_5)            (BLOCK P_7 P_274))
+     ((P_7)            (BLOCK P_9 P_272))
+      ((P_9)            (BLOCK P_11 P_270))
+       ((P_11)           (BLOCK P_13 P_268))
+        ((P_13)           (BLOCK P_15 P_266))
+         ((P_15)           (BLOCK P_17 P_264))
+          ((P_17)           (BLOCK P_19 P_262))
+           ((P_19)           (BLOCK P_21 P_260))
+            ((P_21)           (BLOCK P_23 P_258))
+             ((P_23)           (BLOCK P_25 P_256))
+              ((P_25)           (BLOCK P_27 P_254))
+               ((P_27)           (BLOCK P_29 P_252))
+                ((P_29)           (BLOCK P_31 P_250))
+                 ((P_31)           (BLOCK P_33 P_248))
+                  ((P_33)           (BLOCK P_38 P_246))
+                   ((P_38)           (BLOCK P_40 P_244))
+                    ((P_40)           (BLOCK P_42 P_242))
+                     ((P_42)           (BLOCK P_44 P_240))
+                      ((P_44)           (BLOCK P_46 P_238))
+                       ((P_46)           (BLOCK P_48 P_236))
+                        ((P_48)           (BLOCK P_50 P_234))
+                         ((P_50)           (BLOCK P_52 P_232))
+                          ((P_52)           (BLOCK P_54 P_230))
+                           ((P_54)           (BLOCK P_56 P_228))
+                            ((P_56)           (BLOCK P_62 P_226))
+                             ((P_62)           (BLOCK P_64 P_224))
+                              ((P_64)           (BLOCK P_66 P_222))
+                               ((P_66)           (BLOCK P_68 P_220))
+                                ((P_68)           (BLOCK P_70 P_218))
+                                 ((P_70)           (BLOCK P_72 P_216))
+                                  ((P_72)           (BLOCK P_74 P_214))
+                                   ((P_74)           (BLOCK P_75 P_212))
+                                    ((P_75)           (BLOCK P_80 P_210))
+                                     ((P_80)           (BLOCK P_85 P_208))
+                                      ((P_85)           (BLOCK P_87 P_206))
+                                       ((P_87)           (BLOCK P_89 P_204))
+                                        ((P_89)           (BLOCK P_91 P_202))
+                                         ((P_91)           (BLOCK P_93 P_200))
+                                          ((P_93)           (BLOCK P_95 P_198))
+                                           ((P_95)           (BLOCK P_97 P_196))
+                                            ((P_97)           (BLOCK P_99 P_194))
+                                             ((P_99)           (BLOCK P_101
+                                                                      P_192))
+                                              ((P_101)          (BLOCK P_103
+                                                                       P_190))
+                                               ((P_103)          (BLOCK P_105
+                                                                        P_188))
+                                                ((P_105)          (BLOCK P_107
+                                                                         P_186))
+                                                 ((P_107)          (BLOCK P_112
+                                                                          P_184))
+                                                  ((P_112)          (BLOCK P_114
+                                                                           P_182))
+                                                   ((P_114)          (BLOCK P_116
+                                                                            P_180))
+                                                    ((P_116)          (BLOCK P_118
+                                                                             P_178))
+                                                     ((P_118)          (BLOCK P_120
+                                                                              P_176))
+                                                      ((P_120)          (BLOCK P_127
+                                                                               P_174))
+                                                       ((P_127)          (BLOCK P_129
+                                                                                P_172))
+                                                        ((P_129)          (BLOCK P_131
+                                                                                 P_170))
+                                                         ((P_131)          (BLOCK P_133
+                                                                                  P_168))
+                                                          ((P_133)          (BLOCK P_139
+                                                                                   P_166))
+                                                           ((P_139)          (BLOCK P_141
+                                                                                    P_164))
+                                                            ((P_141)          (BLOCK P_143
+                                                                                     P_162))
+                                                             ((P_143)          (BLOCK P_145
+                                                                                      P_160))
+                                                              ((P_145)          (BLOCK P_147
+                                                                                       P_158))
+                                                               ((P_147)          (BLOCK P_149
+                                                                                        P_156))
+                                                                ((P_149)          (BLOCK P_151
+                                                                                         P_154))
+                                                                 ((P_151)          (*PRIMOP C_358
+                                                                                            '#{Object
+398 FIXNUM-DIVIDE}))
+                                                                  ((C_358
+V_357)                                                                              ((MAKE-DEFINER CONSTANT)
+                                                                                     K_2
+                                                                                     FIXNUM-DIVIDE
+                                                                                     V_357))
+                                                                 ((P_154
+K_153)                                                                             (*PRIMOP C_356
+                                                                                            '#{Object
+399 FIXNUM-SUBTRACT}))
+                                                                  ((C_356
+V_355)                                                                              ((MAKE-DEFINER CONSTANT)
+                                                                                     K_153
+                                                                                     FIXNUM-SUBTRACT
+                                                                                     V_355))
+                                                                ((P_156
+K_155)                                                                            (*PRIMOP C_354
+                                                                                           '#{Object
+400 ASH}))
+                                                                 ((C_354
+V_353)                                                                             ((MAKE-DEFINER CONSTANT)
+                                                                                    K_155
+                                                                                    ASH
+                                                                                    V_353))
+                                                               ((P_158 K_157)    (*PRIMOP C_352
+                                                                                          '#{Object
+401 FIXNUM-MULTIPLY}))
+                                                                ((C_352
+V_351)                                                                            ((MAKE-DEFINER CONSTANT)
+                                                                                   K_157
+                                                                                   FIXNUM-MULTIPLY
+                                                                                   V_351))
+                                                              ((P_160 K_159)    (SIMPLE-ARITHMETIC-OP C_350
+                                                                                                      'BISL2
+                                                                                                      'BISL3))
+                                                               ((C_350 V_349)    ((MAKE-DEFINER CONSTANT)
+                                                                                  K_159
+                                                                                  LOGIOR
+                                                                                  V_349))
+                                                             ((P_162 K_161)    (SIMPLE-ARITHMETIC-OP C_348
+                                                                                                     'XORL2
+                                                                                                     'XORL3))
+                                                              ((C_348 V_347)    ((MAKE-DEFINER CONSTANT)
+                                                                                 K_161
+                                                                                 LOGXOR
+                                                                                 V_347))
+                                                            ((P_164 K_163)    (SIMPLE-ARITHMETIC-OP C_346
+                                                                                                    'ADDL2
+                                                                                                    'ADDL3))
+                                                             ((C_346 V_345)    ((MAKE-DEFINER CONSTANT)
+                                                                                K_163
+                                                                                FIXNUM-ADD
+                                                                                V_345))
+                                                           ((P_166 K_165)    ((MAKE-DEFINER WIRED)
+                                                                              K_165
+                                                                              SIMPLE-ARITHMETIC-OP
+                                                                              P_138))
+                                                            ((P_138 K_135
+INST1_136 INST2_137)                                                          (*PRIMOP K_135
+                                                                                       '#{Object
+402 SIMPLE-ARITHMETIC-OP}
+                                                                                       INST1_136
+                                                                                       INST2_137))
+                                                          ((P_168 K_167)    (MAKE-TYPE-CONVERTER C_344
+                                                                                                 '6
+                                                                                                 HEADER/CHAR
+                                                                                                 '(*)))
+                                                           ((C_344 V_343)    ((MAKE-DEFINER CONSTANT)
+                                                                              K_167
+                                                                              ASCII->CHAR
+                                                                              V_343))
+                                                         ((P_170 K_169)    (MAKE-TYPE-CONVERTER C_342
+                                                                                                '-6
+                                                                                                '#F
+                                                                                                '(*)))
+                                                          ((C_342 V_341)    ((MAKE-DEFINER CONSTANT)
+                                                                             K_169
+                                                                             CHAR->ASCII
+                                                                             V_341))
+                                                        ((P_172 K_171)    (MAKE-TYPE-CONVERTER C_340
+                                                                                               '#F
+                                                                                               HEADER/SYMBOL
+                                                                                               '(*)))
+                                                         ((C_340 V_339)    ((MAKE-DEFINER CONSTANT)
+                                                                            K_171
+                                                                            TEXT->SYMBOL!
+                                                                            V_339))
+                                                       ((P_174 K_173)    ((MAKE-DEFINER WIRED)
+                                                                          K_173
+                                                                          MAKE-TYPE-CONVERTER
+                                                                          P_126))
+                                                        ((P_126 K_122 SHIFT_123
+TAG_124 ARG-SPECS_125)                                                    (*PRIMOP K_122
+                                                                                   '#{Object
+403 MAKE-TYPE-CONVERTER}
+                                                                                   SHIFT_123
+                                                                                   TAG_124
+                                                                                   ARG-SPECS_125))
+                                                      ((P_176 K_175)    (*PRIMOP C_338
+                                                                                 '#{Object
+404 LOGNOT}))
+                                                       ((C_338 V_337)    ((MAKE-DEFINER CONSTANT)
+                                                                          K_175
+                                                                          LOGNOT
+                                                                          V_337))
+                                                     ((P_178 K_177)    (MAKE-HEADER-MAKER C_336
+                                                                                          HEADER/SYMBOL))
+                                                      ((C_336 V_335)    ((MAKE-DEFINER CONSTANT)
+                                                                         K_177
+                                                                         %MAKE-SYMBOL-HEADER
+                                                                         V_335))
+                                                    ((P_180 K_179)    (MAKE-HEADER-MAKER C_334
+                                                                                         HEADER/STRING))
+                                                     ((C_334 V_333)    ((MAKE-DEFINER CONSTANT)
+                                                                        K_179
+                                                                        %MAKE-STRING-HEADER
+                                                                        V_333))
+                                                   ((P_182 K_181)    (MAKE-HEADER-MAKER C_332
+                                                                                        HEADER/TEXT))
+                                                    ((C_332 V_331)    ((MAKE-DEFINER CONSTANT)
+                                                                       K_181
+                                                                       %MAKE-TEXT-HEADER
+                                                                       V_331))
+                                                  ((P_184 K_183)    ((MAKE-DEFINER WIRED)
+                                                                     K_183
+                                                                     MAKE-HEADER-MAKER
+                                                                     P_111))
+                                                   ((P_111 K_109 TAG_110)
+                                                                     (*PRIMOP K_109
+                                                                              '#{Object
+405 MAKE-HEADER-MAKER}
+                                                                              TAG_110))
+                                                 ((P_186 K_185)    (*PRIMOP C_330
+                                                                            '#{Object
+406 BIGNUM-HEADER?}))
+                                                  ((C_330 V_329)    ((MAKE-DEFINER CONSTANT)
+                                                                     K_185
+                                                                     BIGNUM-HEADER?
+                                                                     V_329))
+                                                ((P_188 K_187)    (*PRIMOP C_328
+                                                                           '#{Object
+407 SYMBOL-HEADER?}))
+                                                 ((C_328 V_327)    ((MAKE-DEFINER CONSTANT)
+                                                                    K_187
+                                                                    SYMBOL-HEADER?
+                                                                    V_327))
+                                               ((P_190 K_189)    (*PRIMOP C_326
+                                                                          '#{Object
+408 STRING?}))
+                                                ((C_326 V_325)    ((MAKE-DEFINER CONSTANT)
+                                                                   K_189
+                                                                   STRING?
+                                                                   V_325))
+                                              ((P_192 K_191)    (*PRIMOP C_324
+                                                                         '#{Object
+409 TEXT-HEADER?}))
+                                               ((C_324 V_323)    ((MAKE-DEFINER CONSTANT)
+                                                                  K_191
+                                                                  TEXT-HEADER?
+                                                                  V_323))
+                                             ((P_194 K_193)    (*PRIMOP C_322
+                                                                        '#{Object
+410 BITV-HEADER?}))
+                                              ((C_322 V_321)    ((MAKE-DEFINER CONSTANT)
+                                                                 K_193
+                                                                 BITV-HEADER?
+                                                                 V_321))
+                                            ((P_196 K_195)    (*PRIMOP C_320
+                                                                       '#{Object
+411 GENERAL-VECTOR-HEADER?}))
+                                             ((C_320 V_319)    ((MAKE-DEFINER CONSTANT)
+                                                                K_195
+                                                                GENERAL-VECTOR-HEADER?
+                                                                V_319))
+                                           ((P_198 K_197)    (*PRIMOP C_318
+                                                                      '#{Object
+412 CHAR?}))
+                                            ((C_318 V_317)    ((MAKE-DEFINER CONSTANT)
+                                                               K_197
+                                                               CHAR?
+                                                               V_317))
+                                          ((P_200 K_199)    (*PRIMOP C_316
+                                                                     '#{Object
+413 IMMEDIATE?}))
+                                           ((C_316 V_315)    ((MAKE-DEFINER CONSTANT)
+                                                              K_199
+                                                              IMMEDIATE?
+                                                              V_315))
+                                         ((P_202 K_201)    (*PRIMOP C_314
+                                                                    '#{Object
+414 FIXNUM?}))
+                                          ((C_314 V_313)    ((MAKE-DEFINER CONSTANT)
+                                                             K_201
+                                                             FIXNUM?
+                                                             V_313))
+                                        ((P_204 K_203)    (*PRIMOP C_312
+                                                                   '#{Object
+415 EXTEND?}))
+                                         ((C_312 V_311)    ((MAKE-DEFINER CONSTANT)
+                                                            K_203
+                                                            EXTEND?
+                                                            V_311))
+                                       ((P_206 K_205)    (*PRIMOP C_310
+                                                                  '#{Object
+416 LIST?}))
+                                        ((C_310 V_309)    ((MAKE-DEFINER CONSTANT)
+                                                           K_205
+                                                           LIST?
+                                                           V_309))
+                                      ((P_208 K_207)    ((MAKE-DEFINER WIRED)
+                                                         K_207
+                                                         MAKE-HEADER-TYPE-PREDICATE
+                                                         P_84))
+                                       ((P_84 K_82 HEADER_83)
+                                                         (*PRIMOP K_82
+                                                                  '#{Object
+417 MAKE-HEADER-TYPE-PREDICATE}
+                                                                  HEADER_83))
+                                     ((P_210 K_209)    ((MAKE-DEFINER WIRED)
+                                                        K_209
+                                                        MAKE-TAG-TYPE-PREDICATE
+                                                        P_79))
+                                      ((P_79 K_77 TAG_78)
+                                                        (*PRIMOP K_77
+                                                                 '#{Object
+418 MAKE-TAG-TYPE-PREDICATE}
+                                                                 TAG_78))
+                                    ((P_212 K_211)    (K_211 UNDEFINED))
+                                   ((P_214 K_213)    (*PRIMOP C_308
+                                                              '#{Object
+419 %MAKE-EXTEND}))
+                                    ((C_308 V_307)    ((MAKE-DEFINER CONSTANT)
+                                                       K_213
+                                                       %MAKE-EXTEND
+                                                       V_307))
+                                  ((P_216 K_215)    (*PRIMOP C_306
+                                                             '#{Object 420
+%MAKE-PAIR}))
+                                   ((C_306 V_305)    ((MAKE-DEFINER CONSTANT)
+                                                      K_215
+                                                      %MAKE-PAIR
+                                                      V_305))
+                                 ((P_218 K_217)    (*PRIMOP C_304
+                                                            '#{Object 421
+COMPARE}))
+                                  ((C_304 V_303)    ((MAKE-DEFINER CONSTANT)
+                                                     K_217
+                                                     COMPARE
+                                                     V_303))
+                                ((P_220 K_219)    (MAKE-COMPARATOR C_302
+                                                                   'JGEQ
+                                                                   'TOP?))
+                                 ((C_302 V_301)    ((MAKE-DEFINER CONSTANT)
+                                                    K_219
+                                                    EQ?
+                                                    V_301))
+                               ((P_222 K_221)    (MAKE-COMPARATOR C_300
+                                                                  'JGEQ
+                                                                  'NUMBER?))
+                                ((C_300 V_299)    ((MAKE-DEFINER CONSTANT)
+                                                   K_221
+                                                   FIXNUM-LESS?
+                                                   V_299))
+                              ((P_224 K_223)    (MAKE-COMPARATOR C_298
+                                                                 'JNEQ
+                                                                 'NUMBER?))
+                               ((C_298 V_297)    ((MAKE-DEFINER CONSTANT)
+                                                  K_223
+                                                  FIXNUM-EQUAL?
+                                                  V_297))
+                             ((P_226 K_225)    ((MAKE-DEFINER WIRED)
+                                                K_225
+                                                MAKE-COMPARATOR
+                                                P_61))
+                              ((P_61 K_58 BRANCH-INST_59 TYPE_60)
+                                                (*PRIMOP K_58
+                                                         '#{Object 422 MAKE-COMPARATOR}
+                                                         BRANCH-INST_59
+                                                         TYPE_60))
+                            ((P_228 K_227)    (*PRIMOP C_296
+                                                       '#{Object 423 %SET-AREF}))
+                             ((C_296 V_295)    ((MAKE-DEFINER CONSTANT)
+                                                K_227
+                                                %SET-AREF
+                                                V_295))
+                           ((P_230 K_229)    (*PRIMOP C_294
+Interrupt
+>> #F
+>>                                                    '#{Object 424 AREF}))
+                            ((C_294 V_293)    ((MAKE-DEFINER CONSTANT)
+                                               K_229
+                                               AREF
+                                               V_293))
+                          ((P_232 K_231)    (MAKE-ACCESSOR C_292 '-3))
+                           ((C_292 V_291)    ((MAKE-DEFINER CONSTANT)
+                                              K_231
+                                              CDR
+                                              V_291))
+                         ((P_234 K_233)    (MAKE-ACCESSOR C_290 '1))
+                          ((C_290 V_289)    ((MAKE-DEFINER CONSTANT)
+                                             K_233
+                                             CAR
+                                             V_289))
+                        ((P_236 K_235)    (MAKE-ACCESSOR C_288 '8))
+                         ((C_288 V_287)    ((MAKE-DEFINER CONSTANT)
+                                            K_235
+                                            STRING-OFFSET
+                                            V_287))
+                       ((P_238 K_237)    (MAKE-ACCESSOR C_286 '4))
+                        ((C_286 V_285)    ((MAKE-DEFINER CONSTANT)
+                                           K_237
+                                           STRING-TEXT
+                                           V_285))
+                      ((P_240 K_239)    (MAKE-ACCESSOR C_284 '0))
+                       ((C_284 V_283)    ((MAKE-DEFINER CONSTANT)
+                                          K_239
+                                          EXTEND-TEMPLATE
+                                          V_283))
+                     ((P_242 K_241)    (MAKE-ACCESSOR C_282 '4))
+                      ((C_282 V_281)    ((MAKE-DEFINER CONSTANT)
+                                         K_241
+                                         XENOID-POINTER
+                                         V_281))
+                    ((P_244 K_243)    (*PRIMOP C_280
+                                               '#{Object 425 %SET-ACCESSOR}))
+                     ((C_280 V_279)    ((MAKE-DEFINER CONSTANT)
+                                        K_243
+                                        %SET-ACCESSOR
+                                        V_279))
+                   ((P_246 K_245)    ((MAKE-DEFINER WIRED)
+                                      K_245
+                                      MAKE-ACCESSOR
+                                      P_37))
+                    ((P_37 K_35 OFFSET_36)
+                                      (*PRIMOP K_35
+                                               '#{Object 426 MAKE-ACCESSOR}
+                                               OFFSET_36))
+                  ((P_248 K_247)    (*PRIMOP C_278
+                                             '#{Object 427 CALL-XENOID}))
+                   ((C_278 V_277)    ((MAKE-DEFINER CONSTANT)
+                                      K_247
+                                      CALL-XENOID
+                                      V_277))
+                 ((P_250 K_249)    ((MAKE-DEFINER CONSTANT)
+                                    K_249
+                                    HEADER/SYMBOL
+                                    '49))
+                ((P_252 K_251)    ((MAKE-DEFINER CONSTANT)
+                                   K_251
+                                   HEADER/STRING
+                                   '41))
+               ((P_254 K_253)    ((MAKE-DEFINER CONSTANT)
+                                  K_253
+                                  HEADER/SLICE
+                                  '41))
+              ((P_256 K_255)    ((MAKE-DEFINER CONSTANT)
+                                 K_255
+                                 HEADER/BIGNUM
+                                 '37))
+             ((P_258 K_257)    ((MAKE-DEFINER CONSTANT)
+                                K_257
+                                HEADER/GENERAL-VECTOR
+                                '25))
+            ((P_260 K_259)    ((MAKE-DEFINER CONSTANT)
+                               K_259
+                               HEADER/TEXT
+                               '17))
+           ((P_262 K_261)    ((MAKE-DEFINER CONSTANT)
+                              K_261
+                              HEADER/BITV
+                              '9))
+          ((P_264 K_263)    ((MAKE-DEFINER CONSTANT)
+                             K_263
+                             HEADER/CHAR
+                             '1))
+         ((P_266 K_265)    ((MAKE-DEFINER CONSTANT)
+                            K_265
+                            %CDR-OFFSET%
+                            '-3))
+        ((P_268 K_267)    ((MAKE-DEFINER CONSTANT) K_267 %CAR-OFFSET% '1))
+       ((P_270 K_269)    ((MAKE-DEFINER CONSTANT) K_269 TAG/PAIR '3))
+      ((P_272 K_271)    ((MAKE-DEFINER CONSTANT) K_271 TAG/EXTEND '2))
+     ((P_274 K_273)    ((MAKE-DEFINER CONSTANT) K_273 TAG/IMMEDIATE '1))
+    ((P_276 K_275)    ((MAKE-DEFINER CONSTANT) K_275 TAG/FIXNUM '0))
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-DIVIDE
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-SUBTRACT
+;;; Defining 'SUPPORT/CONSTANT' support for ASH
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-MULTIPLY
+;;; Defining 'SUPPORT/CONSTANT' support for LOGIOR
+;;; Defining 'SUPPORT/CONSTANT' support for LOGXOR
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-ADD
+;;; Defining 'SUPPORT/WIRED' support for SIMPLE-ARITHMETIC-OP
+;;; Defining 'SUPPORT/CONSTANT' support for ASCII->CHAR
+;;; Defining 'SUPPORT/CONSTANT' support for CHAR->ASCII
+;;; Defining 'SUPPORT/CONSTANT' support for TEXT->SYMBOL!
+;;; Defining 'SUPPORT/WIRED' support for MAKE-TYPE-CONVERTER
+;;; Defining 'SUPPORT/CONSTANT' support for LOGNOT
+;;; Defining 'SUPPORT/CONSTANT' support for %MAKE-SYMBOL-HEADER
+;;; Defining 'SUPPORT/CONSTANT' support for %MAKE-STRING-HEADER
+;;; Defining 'SUPPORT/CONSTANT' support for %MAKE-TEXT-HEADER
+;;; Defining 'SUPPORT/WIRED' support for MAKE-HEADER-MAKER
+;;; Defining 'SUPPORT/CONSTANT' support for BIGNUM-HEADER?
+;;; Defining 'SUPPORT/CONSTANT' support for SYMBOL-HEADER?
+;;; Defining 'SUPPORT/CONSTANT' support for STRING?
+;;; Defining 'SUPPORT/CONSTANT' support for TEXT-HEADER?
+;;; Defining 'SUPPORT/CONSTANT' support for BITV-HEADER?
+;;; Defining 'SUPPORT/CONSTANT' support for GENERAL-VECTOR-HEADER?
+;;; Defining 'SUPPORT/CONSTANT' support for CHAR?
+;;; Defining 'SUPPORT/CONSTANT' support for IMMEDIATE?
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM?
+;;; Defining 'SUPPORT/CONSTANT' support for EXTEND?
+;;; Defining 'SUPPORT/CONSTANT' support for LIST?
+;;; Defining 'SUPPORT/WIRED' support for MAKE-HEADER-TYPE-PREDICATE
+;;; Defining 'SUPPORT/WIRED' support for MAKE-TAG-TYPE-PREDICATE
+;;; Defining 'SUPPORT/CONSTANT' support for %MAKE-EXTEND
+;;; Defining 'SUPPORT/CONSTANT' support for %MAKE-PAIR
+;;; Defining 'SUPPORT/CONSTANT' support for COMPARE
+;;; Defining 'SUPPORT/CONSTANT' support for EQ?
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-LESS?
+;;; Defining 'SUPPORT/CONSTANT' support for FIXNUM-EQUAL?
+;;; Defining 'SUPPORT/WIRED' support for MAKE-COMPARATOR
+;;; Defining 'SUPPORT/CONSTANT' support for %SET-AREF
+;;; Defining 'SUPPORT/CONSTANT' support for AREF
+;;; Defining 'SUPPORT/CONSTANT' support for CDR
+;;; Defining 'SUPPORT/CONSTANT' support for CAR
+;;; Defining 'SUPPORT/CONSTANT' support for STRING-OFFSET
+;;; Defining 'SUPPORT/CONSTANT' support for STRING-TEXT
+;;; Defining 'SUPPORT/CONSTANT' support for EXTEND-TEMPLATE
+;;; Defining 'SUPPORT/CONSTANT' support for XENOID-POINTER
+;;; Defining 'SUPPORT/CONSTANT' support for %SET-ACCESSOR
+;;; Defining 'SUPPORT/WIRED' support for MAKE-ACCESSOR
+;;; Defining 'SUPPORT/CONSTANT' support for CALL-XENOID
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/SYMBOL
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/STRING
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/SLICE
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/BIGNUM
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/GENERAL-VECTOR
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/TEXT
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/BITV
+;;; Defining 'SUPPORT/CONSTANT' support for HEADER/CHAR
+;;; Defining 'SUPPORT/CONSTANT' support for %CDR-OFFSET%
+;;; Defining 'SUPPORT/CONSTANT' support for %CAR-OFFSET%
+;;; Defining 'SUPPORT/CONSTANT' support for TAG/PAIR
+;;; Defining 'SUPPORT/CONSTANT' support for TAG/EXTEND
+;;; Defining 'SUPPORT/CONSTANT' support for TAG/IMMEDIATE
+;;; Defining 'SUPPORT/CONSTANT' support for TAG/FIXNUM
+;;; Free variables (0): #F
+;;; Defined variables (428): (FIXNUM-DIVIDE FIXNUM-SUBTRACT ASH FIXNUM-MULTIPLY
+LOGIOR LOGXOR FIXNUM-ADD SIMPLE-ARITHMETIC-OP ASCII->CHAR CHAR->ASCII TEXT->SYMBOL!
+MAKE-TYPE-CONVERTER LOGNOT %MAKE-SYMBOL-HEADER %MAKE-STRING-HEADER %MAKE-TEXT-HEADER
+MAKE-HEADER-MAKER BIGNUM-HEADER? SYMBOL-HEADER? STRING? TEXT-HEADER? BITV-HEADER?
+GENERAL-VECTOR-HEADER? CHAR? IMMEDIATE? FIXNUM? EXTEND? LIST? MAKE-HEADER-TYPE-PREDICATE
+MAKE-TAG-TYPE-PREDICATE %MAKE-EXTEND %MAKE-PAIR COMPARE EQ? FIXNUM-LESS?
+FIXNUM-EQUAL? MAKE-COMPARATOR %SET-AREF AREF CDR CAR STRING-OFFSET STRING-TEXT
+EXTEND-TEMPLATE XENOID-POINTER %SET-ACCESSOR MAKE-ACCESSOR CALL-XENOID HEADER/SYMBOL
+HEADER/STRING HEADER/SLICE HEADER/BIGNUM HEADER/GENERAL-VECTOR HEADER/TEXT
+HEADER/BITV HEADER/CHAR %CDR-OFFSET% %CAR-OFFSET% TAG/PAIR TAG/EXTEND TAG/IMMEDIATE
+TAG/FIXNUM)
+;;; type of V_349 is NUMBER?
+;;; type of V_347 is NUMBER?
+;;; type of V_345 is NUMBER?
+;;; integrating: HEADER/CHAR
+;;; integrating: HEADER/SYMBOL
+;;; integrating: HEADER/SYMBOL
+;;; integrating: HEADER/STRING
+;;; integrating: HEADER/TEXT

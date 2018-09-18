@@ -1,0 +1,36 @@
+
+;----- Beginning T compilation on "sets.t"
+
+;EMPTY-SET compiled
+;ADJOIN compiled
+;UNION compiled
+;INTERSECTION compiled
+;INTERSECTION? compiled
+;SETREMQ compiled
+;SETDIFF compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (EQ? MEM))
+
+(DEFINED-VARIABLES (EMPTY-SET ADJOIN UNION INTERSECTION INTERSECTION? SETREMQ
+SETDIFF))
+
+(LSET-VARIABLES ())
+
+;;;      15  number of templates/code chunks emitted
+;;;     519  LAP instructions emitted
+;;;       9  number of value cell pointers in unit
+;;;      27  number of entries into data section
+;;;       7  calls not requiring stack padding
+;;;     154  number of TN's generated
+;;;      16  substitutions of an argument for a parameter
+;;;      12  ((LAMBDA () FOO)) becomes FOO
+;;;      16  unreferenced argument with no side effects is flushed
+;;;       9  IF of a constant has dead arm eliminated
+;;;       9  (IF (NOT A) B C) becomes (IF A C B)
+;;;      16  unreferenced parameter is flushed
+;;;     303  number of internal-format program nodes created
+
+
+;----- Finished compiling "sets.t"
+

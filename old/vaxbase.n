@@ -1,0 +1,49 @@
+[Binding *ASSEMBLY-OUTPUT*] 
+;;; Free variables (62): (SETTER VALUES *SET-VAR TRUE? TEST CONDITIONAL
+*BLOCK Y *DEFINE-WIRED *DEFINE-CONSTANT *DEFINE-INTEGRABLE *LSET *DEFINE
+MAKE-DEFINER N-ARY UNDEFINED-EFFECT UNDEFINED CONTINUATION *PRIMOP)
+;;; Defining 'SUPPORT/CONSTANT' support for SETTER
+;;; Defining 'SUPPORT/CONSTANT' support for VALUES
+;;; Defining 'SUPPORT/CONSTANT' support for *SET-VAR
+;;; Defining 'SUPPORT/CONSTANT' support for TRUE?
+;;; Defining 'SUPPORT/CONSTANT' support for TEST
+;;; Defining 'SUPPORT/CONSTANT' support for CONDITIONAL
+
+;;; Warning: shadowing *BLOCK
+;;; Defining 'SUPPORT/CONSTANT' support for *BLOCK
+;;; Defining 'SUPPORT/CONSTANT' support for Y
+
+;;; Warning: shadowing *DEFINE-WIRED
+;;; Defining 'SUPPORT/CONSTANT' support for *DEFINE-WIRED
+
+;;; Warning: shadowing *DEFINE-CONSTANT
+;;; Defining 'SUPPORT/CONSTANT' support for *DEFINE-CONSTANT
+
+;;; Warning: shadowing *DEFINE-INTEGRABLE
+;;; Defining 'SUPPORT/CONSTANT' support for *DEFINE-INTEGRABLE
+
+;;; Warning: shadowing *LSET
+;;; Defining 'SUPPORT/CONSTANT' support for *LSET
+
+;;; Warning: shadowing *DEFINE
+;;; Defining 'SUPPORT/CONSTANT' support for *DEFINE
+;;; Defining 'SUPPORT/WIRED' support for MAKE-DEFINER
+
+;;; Warning: shadowing N-ARY
+;;; Defining 'SUPPORT/CONSTANT' support for N-ARY
+
+;;; Warning: shadowing UNDEFINED-EFFECT
+;;; Defining 'SUPPORT/CONSTANT' support for UNDEFINED-EFFECT
+
+;;; Warning: shadowing UNDEFINED
+;;; Defining 'SUPPORT/CONSTANT' support for UNDEFINED
+
+;;; Warning: shadowing CONTINUATION
+;;; Defining 'SUPPORT/CONSTANT' support for CONTINUATION
+
+;;; Warning: shadowing *PRIMOP
+;;; Defining 'SUPPORT/CONSTANT' support for *PRIMOP
+;;; Free variables (0): ()
+;;; Defined variables (64): (SETTER VALUES *SET-VAR TRUE? TEST CONDITIONAL
+*BLOCK Y *DEFINE-WIRED *DEFINE-CONSTANT *DEFINE-INTEGRABLE *LSET *DEFINE
+MAKE-DEFINER N-ARY UNDEFINED-EFFECT UNDEFINED CONTINUATION *PRIMOP)

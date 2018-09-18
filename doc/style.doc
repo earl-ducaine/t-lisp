@@ -1,0 +1,232 @@
+The Style
+
+according to The Dictator.
+
+-----
+
+Case.
+
+Use lower case for code, when in a code context, and upper case for code,
+when in commentary.  (Where a separate code font is available, that may
+be used instead of upper case for names and code embedded in commentary.)
+
+Use lower case in commentary when something is being used as a word.
+Real words include car and cdr.
+
+Example: the following procedure, FOO, takes the car of its argument, using
+the CAR procedure.
+        (define (foo x) (car x))        ;The object X must be a list.
+
+-----
+
+Naming.
+
+The general formula is "inputtype-verb-outputtype", where inputtype or
+outputtype may be omitted, where obvious or meaningless.
+
+Examples: MAKE-STRING, STRING-APPEND, VECTOR-LENGTH
+
+Predicates, and only predicates, should have names ending in "?".  If a
+procedure returns a value which has interest beyond its trueness or
+falseness, then it's not a predicate, and shouldn't have a name ending
+with a question mark.
+
+The coercion form "type1->type2" should only be used where an inverse or
+near-inverse function is conceivable.  Therefore these routines should
+never perform side-effects or take more than one argument.
+
+Procedure names should never begin "define-...".  If a name begins with
+"define-..." then it should be the name of a reserved word.  If something
+really insists on beginning with "define-" then put an asterisk on the
+beginning: "*define-...".
+
+Procedures named *DEFINE-something should perform some kind of
+definition as a side effect, and shouldn't return useful values.  If you
+want a procedure which returns a value which finds its way to the right
+hand side of a DEFINE, then call it MAKE-something or CREATE-something or
+just something.
+
+*FOO* - for global definitions which aren't procedures, and for global
+variables.
+
+*FOO - for naming procedures which implement the "desugaring" of some
+special form.  E.g.
+        (WITH-OPEN-STREAMS ((var1 exp1) ...) . body)
+might expand into
+        (*WITH-OPEN-STREAMS (LAMBDA (var1 ...) . body) (LAMBDA () exp1)).
+
+Reserved words should never begin with asterisks.  Otherwise they might be
+mistaken for procedures or variables named according to one of the above
+conventions.
+
+An experimental convention now is to use the formula "type/instance" for
+enumerated types.  E.g., if there are three colors, red, green, and blue,
+then the variables COLOR/RED, COLOR/GREEN, and COLOR/BLUE could hold the
+three values of the enumerated type.  E.g.
+        (define color/red ...)
+        (xselect color
+                 ((color/red) ...)
+                 ...)
+Alternatively, when using symbols as the values of the type, the symbols
+could use the type/instance formula:
+        (xcase color
+               ((color/red) ...)
+               ...)
+
+Some existing T internal code uses the convention that a prefix %% means a
+small constant integer, e.g. %%PAIR-TAG, %%CAR-OFFSET.  Probably better to
+use the / convention above: TAG/PAIR etc.
+
+T internal code also uses a prefix % to mean "internal" or "unsafe".  E.g.
+MAKE-STRING simply checks the type of its argument and calls %MAKE-STRING.
+
+-----
+
+True and false.
+
+Never use (), #f, or #t in value-producing positions.  Use them only
+inside of quoted structure, or in other non-evaluated positions.
+
+        Good:   (lambda () (foo a b))
+                (lambda () (foo t nil))
+                (lambda () (foo '() '(a) '(a b)))
+                (lambda () (foo '(#t #f)))
+                (object nil ((op self) 3))
+        Bad:    (lambda () (foo #t #f))
+                (lambda () (foo t ()))
+                (lambda () (foo () (list) (list 'a) (list 'a 'b)))
+                (object () ((op self) 3))
+
+() should always mean a list, #f a truth value.  (Of course, as stated
+above, neither should be used in any evaluated position.)  Use T as an
+expression yielding a true value, NIL as an expression yielding a false
+value, and neither in non-value-producing positions.
+
+        Good:   (append '(a b) '())
+                (null? '())
+                (not nil)
+                (not (car '(#f #t)))
+        Bad:    (append '(a b) nil)
+                (null? nil)
+                (not '())
+                (not (car '(() (a b))))
+
+Use #F for ignored bound variable positions:
+                (destructure (((a b #f d) l))
+                  ...)
+
+-----
+
+Indentation.
+
+In calls, indent every argument directly beneath the beginning of the first
+argument.  Examples:
+        (string-append *ship*
+                       " will depart "
+                       *when*)
+
+        ((derivative cos)
+         (+ (expt x 3) (expt y 3)))
+
+In special forms, indent the body, if any, two spaces in:
+
+        (let ((x (foo 5)))
+          (list x x))
+
+        (do ((i 0 (+ i 1)))
+            ((= i n) v)
+          (set (vref v i) a))
+
+-----
+
+Comments: example
+
+;;; This is an example of the correct use of comments.  Comments which
+;;; begin at the left margin should begin with three semicolons followed
+;;; by one space.  Note that text in triple-semi and double-semi comments
+;;; should always consist of complete, capitalized, and grammatically
+;;; correct sentences which end with a period or other punctuation.
+;;; This is desirable, but not as important, for single-semi comments.
+;;; Two spaces should separate sentences.
+
+;;; (FACT integer) -> integer
+;;;     Computes the factorial of its argument.
+
+(define (fact n)
+  (cond ((= n 0) 1)             ;A comment here has one semicolon.
+        (else
+         ;; A comment here would have two semicolons.
+         (* n (fact (- n 1))))))
+
+-----
+
+Spacing.
+
+Use one blank line (not zero, not two or more) between top-level forms.
+Similarly, separate top-level comments from code by one blank line.
+
+There shouldn't be blank lines in the middle of a form unless warranted by
+highly unusual circumstances, e.g. an extremely long procedure which breaks
+up in obvious places.  (Of course, in this case there ought to be more
+than one procedure.)
+
+-----
+
+Using various things.
+
+Use ELSE, not T, in COND forms.
+
+Never use IF if the expression goes over more than one line.  When in
+doubt always use COND.
+
+Don't use the OR-style COND clause variant, e.g.
+        (COND ((FOO X)) ...)
+Use of OR, or of => IDENTITY, is preferable:
+        (COND ((FOO X) => IDENTITY) ...)
+
+Always use XCASE and XSELECT in preference to CASE and SELECT, where
+possible.
+
+Error message strings should begin with lower case.  The first word
+should not be capitalized.  The message should not end with a period.
+        Bad:    (error "The dishwasher is not on")
+        Bad:    (error "the dishwasher is not on.")
+        Good:   (error "the dishwasher is not on")
+
+Program defensively: e.g. when counting down, use <= instead of =; use
+ATOM? instead of SYMBOL? in situations like the following:
+        (cond ((atom? obj) ...)
+              (else ... (car obj) ...))
+
+-----
+
+Macros.
+
+Macros are very hard to write.  Avoid writing them wherever possible.
+
+Macro expanders should be applicative - they shouldn't perform externally
+noticeable side-effects.  Their only business is to return an expression
+to be processed by someone else.
+
+Never introduce bound variables (other than "gensyms") not named by the
+macro's client.  Always require the client to name bound variable, even at
+the cost of conciseness.
+        Bad:    (define-syntax (foo . body) `(lambda (z) . ,body))
+                (foo (cdr z))
+        Good:   (define-syntax (foo vars . body) `(lambda ,vars . ,body))
+                (foo (z) (cdr z))
+
+Code replication is very easy to accomplish with macros; avoid it at all
+costs!  Use closures and auxiliary procedures to help the expansion of a
+macro be as small as possible.
+        Bad:    (define-syntax (foo a b)
+                  `(... lots of code involving ,a and ,b ...))
+        Good:   (define-syntax (foo a b)
+                  `(*foo (lambda () ,a) (lambda () ,b))
+                (define (*foo a-thunk b-thunk)
+                  ... lots of code involving (a-thunk) and (b-thunk) ...)
+        Bad:    (define-syntax (define-fooer pat . body)
+                  `(define ,pat ... hairy stuff ... ,body ...))
+        Good:   (define-syntax (define-fooer pat . body)
+                  `(define ,(car pat) (make-fooer (lambda ... ,body ...))))
+                (define (make-fooer ...) (lambda ... hairy stuff ...))

@@ -1,0 +1,26 @@
+;;; Free variables (126): (FIXNUM-NOT-GREATER? FX<= FIXNUM-NOT-LESS? FX>=
+FIXNUM-NOT-EQUAL? FXN= FIXNUM-GREATER? FX> FIXNUM-LESS? FX< FIXNUM-EQUAL?
+FX= FIXNUM-DIVIDE FX/ FIXNUM-MULTIPLY FX* FIXNUM-SUBTRACT FX- FIXNUM-ADD
+FX+)
+;;; Early binding (128): FIXNUM-NOT-GREATER?
+;;; Defining 'SUPPORT/CONSTANT' support for FX<=
+;;; Early binding (129): FIXNUM-NOT-LESS?
+;;; Defining 'SUPPORT/CONSTANT' support for FX>=
+;;; Early binding (130): FIXNUM-NOT-EQUAL?
+;;; Defining 'SUPPORT/CONSTANT' support for FXN=
+;;; Early binding (131): FIXNUM-GREATER?
+;;; Defining 'SUPPORT/CONSTANT' support for FX>
+;;; Early binding (132): FIXNUM-LESS?
+;;; Defining 'SUPPORT/CONSTANT' support for FX<
+;;; Early binding (133): FIXNUM-EQUAL?
+;;; Defining 'SUPPORT/CONSTANT' support for FX=
+;;; Early binding (134): FIXNUM-DIVIDE
+;;; Defining 'SUPPORT/CONSTANT' support for FX/
+;;; Early binding (135): FIXNUM-MULTIPLY
+;;; Defining 'SUPPORT/CONSTANT' support for FX*
+;;; Early binding (136): FIXNUM-SUBTRACT
+;;; Defining 'SUPPORT/CONSTANT' support for FX-
+;;; Early binding (137): FIXNUM-ADD
+;;; Defining 'SUPPORT/CONSTANT' support for FX+
+;;; Free variables (0): ()
+;;; Defined variables (138): (FX<= FX>= FXN= FX> FX< FX= FX/ FX* FX- FX+)

@@ -1,0 +1,63 @@
+
+;----- beginning t compilation on "fact"
+
+;;; Getting support
+;;; Alphatizing
+;;; Free variables (87): (FX= FX- FX* FACT)
+;;; Assignment analysis
+;;; Complexity analysis
+;;; CPS conversion
+;;; Early binding
+;;; Early binding FX=
+;;; Early binding FX-
+;;; Early binding FX*
+;;; Defining 'SUPPORT/DEFINE' support for FACT
+;;; Free variables (0): ()
+;;; Defined variables (89): (FACT)
+;;; Simplifying
+;;; Simplification done
+  ((P_1 () K_0)     (K_0 P_3))
+   ((P_3 () K_2)     ((MAKE-DEFINER DEFINE) K_2 FACT FACT_7))
+    ((FACT_7 () K_5 N_6)
+                      (Y P_9 P_12))
+     ((P_9 () B_8 ())  (B_8 K_5))
+     ((P_12 () K_10 F_11)
+                       (K_10 P_14 F_18))
+      ((P_14 () K_13)   (F_11 K_5 '1 N_6))
+      ((F_18 () K_15 A_16 I_17)
+                        (CONDITIONAL P_19
+                                     P_20
+                                     (MAKE-COMPARATOR JNEQ NUMBER?)
+                                     I_17
+                                     '0))
+       ((P_19 ())        (K_15 A_16))
+       ((P_20 ())        (FIXNUM-MULTIPLY C_27 A_16 I_17))
+        ((C_27 () V_26)   (FIXNUM-SUBTRACT C_29 I_17 '1))
+         ((C_29 () V_28)   (F_11 K_15 V_26 V_28))
+;;; join-point (90) F_18 env = ()
+;;; Unit = ((#{Object 55 MAKE-NONSTANDARD-CALL} . 4) (#{Object 56 MAKE-NONSTANDARD-CALL}
+. 8) (#{Variable 91 FACT_4} . 12) (#{LAMBDA-node 92} . 16))
+
+93
+t_p_3:
+            movl    (sp),t
+            jmp     (t)
+
+92
+t_fact_7:
+            movl    a1,a2
+            movl    $1<<2,a1
+            jmp     f_18
+
+90
+f_18:
+            cmpl    a2,$0<<2
+            jneq    p_20
+p_19:
+            movl    (sp),t
+            jmp     (t)
+p_20:
+            ashl    $-2,a1,s0
+            mull3   a2,s0,a1
+            subl2   $1<<2,a2
+            jmp     f_18

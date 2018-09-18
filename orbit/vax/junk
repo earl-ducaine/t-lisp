@@ -1,0 +1,785 @@
+(herald reg)
+(define (r) 
+  (set *lambda-queue* '()) 
+  (vector-fill *registers* nil) 
+  (set *temps* (list nil)))
+;;; Copyright (c) 1984 David Kranz
+
+;;; MC68000 i.e. two-address machine with mem-mem move
+
+;;; Variables: 
+;;;      reg  -- number, nil    
+;;;      temp -- number, nil
+
+;;; References     
+;;;      access -- register number or (register . offset) or 
+;;;                 ((base . index) . offset)  or (lit .  x)
+;;;      via -- locative 
+                  
+;;; GENERATE-CODE Establish initial state of registers and temps, emit code to
+;;; set up temps on stack, clear state, and process next lambda.
+
+(define (generate-code-top top)
+  (set (variable-reg cons-extend-var) nil)
+  (set (variable-temp cons-extend-var) nil)
+  (generate-code top))
+
+
+(define (generate-code node)
+  (format t "~%~d ~a" (object-hash node) (lambda-name node))
+  (check-clear)
+  (set *temps* (list nil))
+  (set *stack-pos* 0)
+  (set *lambda* node)
+  (set *temp-lambda* node)
+  (allocate-registers node)                                          
+  (let ((temps (fx- (length *temps*) 1))
+        (body (lambda-body node))) 
+    (set (environment-temps (lambda-env node)) temps)
+    (push-temporary-slots temps body))
+  (process-lambda-queue))
+
+(define (lambda-queue node)
+  (set *lambda-queue* (append *lambda-queue* (list node))))
+
+(define (process-lambda-queue)
+  (cond (*lambda-queue*
+         (generate-code (pop *lambda-queue*)))))
+(lset *lambda-queue* '())
+(lset *stack-pos* 0)
+(lset *temps* (list nil))
+(lset *lambda* nil)
+(lset *temp-lambda* nil)
+           
+
+(define reg-node
+  (object (lambda (reg) 
+            (vref *registers* reg))
+          ((setter self) 
+           (lambda (reg node)
+             (vset *registers* reg node)))))
+                         
+(define temp-node 
+  (object (lambda (temp)
+            (nth *temps* (fx+ temp 1)))
+          ((setter self) 
+           (lambda (temp node)
+             (set (nth *temps* (fx+ temp 1)) node)))) )
+
+(define (reg-type reg)
+    (if (fx< reg *argument-registers*) 'pointer 'scratch))
+
+
+(define (allocate-registers node)
+    (initialize-registers node) 
+    (allocate-call (lambda-body node)))
+    
+;;; INITIALIZE-REGISTERS Here we mark the arguments of a lambda as being in
+;;; the argument registers.  For a heaped lambda this is also the environment
+;;; in the P register.                                                              
+
+
+(define (initialize-registers node)
+  (cond ((eq? (lambda-strategy node) 'strategy/heap)
+         (if (environment-env (lambda-env node))
+             (mark (car (lambda-variables node)) P))
+         (do ((vars (cddr (lambda-variables node)) (cdr vars))
+              (reg 1 (fx+ reg 1)))
+             ((null? vars))       
+           (cond ((car vars)
+                  => (lambda (var) 
+                       (mark var reg))))))
+        (else
+         (do ((vars (cdr (lambda-variables node)) (cdr vars))
+              (reg 1 (fx+ reg 1))) 
+             ((null? vars)) 
+           (cond ((car vars)
+                  => (lambda (var) 
+                       (mark var reg))))))))
+     
+
+
+(define (allocate-call node)
+  (let ((proc (call-proc node)))
+    (cond ((primop-node? proc)
+           (allocate-primop-call node))
+          ((lambda-node? proc)
+           (allocate-let-call node (call-proc node))
+           (set (node-instructions node) (reverse! (node-instructions node))))
+          ((variable-known (reference-variable proc))
+           => (lambda (proc)
+                (allocate-label-call node proc)))
+          ((fx= (call-exits node) 0)
+           (allocate-return node)
+           (set (node-instructions node) (reverse! (node-instructions node))))
+          ((fx= (call-exits node) 1)
+           (allocate-general-call node)
+           (set (node-instructions node) (reverse! (node-instructions node))))
+          (else (bug "too many exits - ~s" node)))))
+  
+(define (allocate-let-call node proc)
+  (cond ((and (fx= (length (call-args node)) 1) 
+              (join-point? (cadr (lambda-variables proc))))
+         (make-stack-closure node (car (call-args node)))
+         (allocate-call (lambda-body proc)))
+        (else
+         (parallel-assign-let node)
+         (allocate-registers proc))))
+  
+           
+
+(define (join-point? var)
+ (and var
+  (every? (lambda (ref) 
+            (fx= (call-arg-number (node-role ref)) (call-exits (node-parent ref))))
+          (variable-refs var))) )
+
+
+                                               
+(define (allocate-general-call node)
+  (let ((cont ((call-arg 1) node)))
+    (cond ((lambda-node? cont)     
+           (make-stack-closure node cont)
+           (parallel-assign-general node)                          
+           (fetch-procedure node (call-proc node)))
+          (else                          
+           (parallel-assign-general node)          
+           (fetch-procedure node (call-proc node)) 
+           (fetch-continuation node (reference-variable cont)))))
+  (clear-slots)
+  (generate-general-call node (fx- (length (call-args node)) 1)))
+
+
+                                   
+(define (allocate-return node)
+  (parallel-assign-return node)      
+  (fetch-continuation node (reference-variable (call-proc node)))
+  (clear-slots)
+  (generate-return node 1))
+                         
+
+(define (parallel-assign-general node)
+  (parallel-assign node (cdr (call-args node)) nil))
+
+
+(define (parallel-assign-return node)
+  (parallel-assign node (call-args node) nil))
+
+
+(define (parallel-assign-let node) 
+  (parallel-assign node (call-args node) nil))
+  
+
+(define (refs->active-variables refs)
+  (map reference-variable (filter reference-node? refs)))
+
+
+
+;;; Parallel assignment
+;;; divide arguments into two lists of pairs (arg-position . node) lambdas, refs
+;;; If there are no closures to be consed we do the parallel assignment using
+;;; an auxilliary register gotten on the fly if necessary (or temp).
+;;; If there is one closure we cons it and move it into its register, then
+;;; parallel assign the refs.  If there is more than one closure, we generate
+;;; a closure-internal closure and move it into all of its places.
+
+(define (parallel-assign node args pos-list)
+  (iterate loop ((a args) 
+                 (lambdas '()) 
+                 (refs '())
+                 (l (if pos-list pos-list (reg-positions (length args)))))
+    (xcond ((null? a)
+            (let ((vars (refs->active-variables (call-proc+args node))))
+             (case (length lambdas)
+                ((0) (really-parallel-assign node refs vars))
+                ((1)
+                 (make-closure node (cdar lambdas))
+                 (lock cons-pointer-register)
+                 (really-parallel-assign node refs vars)  
+                 (unlock cons-pointer-register)
+                 (let ((reg (caar lambdas)))
+                   (free-register node reg)
+                   (generate-move node cons-pointer-register reg)))
+                (else
+                 (error "too many closures in parallel-assign")))))
+           ((lambda-node? (car a))
+            (loop (cdr a) 
+                  (cons (cons (car l) (car a)) lambdas) 
+                  refs 
+                  (cdr l)))
+           ((reference-node? (car a))
+            (loop (cdr a) 
+                  lambdas 
+                  (cons (cons (car l) (car a)) refs) 
+                  (cdr l))))))
+
+
+(define (really-parallel-assign node refs vars)        
+  (do ((refs refs (cdr refs)))
+      ((null? refs))
+    (let ((reg (caar refs))
+          (ref (cdar refs)))
+      (cond ((reg-node reg)
+             => (lambda (var)
+                  (cond ((eq? var (reference-variable ref)))
+                        ((memq? var vars)
+                         (free-register node reg)
+                         (->register 'pointer node ref reg))
+                        (else 
+                         (kill var)
+                         (->register 'pointer node ref reg)))))
+            (else 
+             (->register 'pointer node ref reg)))              
+      (delq! (reference-variable ref) vars)
+      (lock reg)))
+  (do ((refs refs (cdr refs)))            ;;; clean up
+      ((null? refs))
+    (unlock (caar refs))))
+
+
+(define (make-stack-closure node cont)
+  (lambda-queue cont)
+  (do ((env (reverse (environment-env (lambda-env cont))) (cdr env)))
+      ((null? env)                                  
+       (set *stack-pos* (fx+ *stack-pos* 4))
+       (generate-push-address node (lambda-name cont)))
+    (cond ((or (stack-closure? (caar env)) (null? (cdar env))))
+          (else
+           (generate-push node (make-env-variable-accessable node (caar env)))
+           (set *stack-pos* (fx+ *stack-pos* 4))))))
+ 
+                                                                            
+(define (stack-closure? var) 
+  (and (fx= (variable-number var) 0)
+       (let ((binder (variable-binder var))) 
+         (and binder (eq? (lambda-strategy binder) 'strategy/stack)))))
+
+
+(define (make-closure node l)           
+  (lambda-queue l)
+  (let ((env (lambda-env l)))
+    (generate-extend node (fx+ (environment-size env) 4))
+    (generate-move-address node (lambda-name l)
+        (cons cons-pointer-register (fx- 0 %extend-tag%)))
+    (do ((env (environment-env env) (cdr env)))
+        ((null? env))
+      (let ((var (caar env))
+            (offset (cdar env)))
+        (generate-move node (make-env-variable-accessable node var)
+             (cons cons-pointer-register (fx- (fx+ offset 4) %extend-tag%)))))))                                                                    
+
+(define (make-closure-internal-closure node lambdas environment)
+  (generate-extend node (environment-size environment))
+  (let ((env (environment-env environment))
+        (no-of-labels (length lambdas))
+        (migrate-variable (lambda (pair)
+                            (generate-move node 
+                                  (make-env-variable-accessable node (car pair))
+                                  (cons cons-pointer-register 
+                                        (fx- (cdr pair) %extend-tag%))))))
+    (do ((l lambdas (cdr l)))
+        ((null? l))
+      (lambda-queue (car l))
+      (generate-move-address node (lambda-name (car l)) 
+          (cons cons-pointer-register 
+                (fx- (environment-cic-offset (lambda-env (car l))) %extend-tag%))))
+    (walk migrate-variable (first-n env (fx- (environment-pointer environment)
+                                             no-of-labels)))
+    (walk migrate-variable (nthcdr env (environment-pointer environment))))
+    (set (environment-env environment)
+         (append! (environment-env environment) (environment-hack environment))))
+
+
+
+(define (generate-extend node n)                      
+  (free-register node cons-scratch-register-1)
+  (free-register node cons-scratch-register-2)
+  (free-register node cons-pointer-register)
+  (generate-move node (cons 'lit n) cons-scratch-register-1)
+  (if (locked? P) (unlock P)) 
+  (let ((access (make-env-variable-accessable node cons-extend-var)))
+    (free-register node P)
+    (generate-move node access P))
+  (generate-jump-to-subroutine node (cons P 0))
+  cons-pointer-register)
+
+(define (allocate-primop-call node)
+  (let* ((proc (call-proc node))
+         (primop (primop-value proc)))
+    (cond ((primop-conditional? primop)
+           (allocate-conditional-primop node primop)
+           (walk kill-if-dead (cddr (call-args node))))
+          ((primop-special? primop)
+           ((primop-generate primop) node primop))
+          ((primop-accessor primop)
+           (allocate-accessor node primop))
+          (else           
+           (really-allocate-primop-call node primop))))
+  (set (node-instructions node) (reverse! (node-instructions node))))
+                                       
+
+(define (allocate-conditional-primop node primop)
+  ((primop-generate primop) node primop)     
+  (bind ((*registers* (copy-registers))
+         (*temps* (copy-temps))
+         (*temp-lambda* *temp-lambda*)
+         (*lambda* *lambda*)
+         (*stack-pos* *stack-pos*))
+    (allocate-call (lambda-body (then-cont node)))
+    (check-clear))
+  (restore-slots)
+  (allocate-call (lambda-body (else-cont node))))
+
+    
+(define (really-allocate-primop-call node primop)
+  (let ((c (cont node)))
+    ((primop-generate primop) node primop)                          
+    (walk kill-if-dead (cdr (call-args node)))
+    (cond ((lambda-node? c)
+           (allocate-call (lambda-body c)))
+          (else                            
+           (fetch-continuation node (reference-variable c))
+           (clear-slots)
+           (generate-return node 1)))))
+           
+                                
+(define (allocate-accessor node primop)
+  (let ((var (reference-variable ((call-arg 2) node))))
+    (cond ((need-to-dereference-accessor? node var)
+           (really-allocate-primop-call node primop))
+          (else                            
+           (walk (lambda (ref)
+                   (set (reference-via ref) node))
+                 (variable-refs (cadr (lambda-variables ((call-arg 1) node)))))
+           (allocate-call (lambda-body ((call-arg 1) node)))))))
+
+
+(define (need-to-dereference-accessor? node var)
+  (or (reference-node? ((call-arg 1) node))
+      (and (fx> (length (variable-refs var)) 1)
+           (any? (lambda (ref)
+                   (let ((parent (node-parent ref)))
+                     (and (fx= (call-exits parent) 1)
+                          (or (not (primop-node? (call-proc parent)))
+                              (eq? (primop-value (call-proc parent)) 
+                                   set-value-primop)))))
+                 (variable-refs var)))))
+           
+
+(define (make-reference-accessable node ref)
+  (cond ((reference-via ref)
+         => (lambda (loc)
+              ((primop-accessor (primop-value (call-proc loc))) node ref loc)))
+        (else
+         (let ((var (reference-variable ref)))
+           (cond ((variable-reg var))
+                 ((variable-temp var)
+                  => (lambda (temp) (cons SP (fx+ *stack-pos* (fx* temp 4)))))
+                 (else
+                  (case (reference-variant ref)
+                        ((literal)
+                         (cons 'lit (variable-name (reference-variable ref))))
+                        ((primop)
+                         (select (primop-value ref)
+                           ((nil-primop) nil-reg)
+                           ((t-primop) 'true)
+                           (else
+                            (cons TP (cdr (assq var *unit-env*))))))
+                        (else
+                         (make-variable-accessable node (reference-variable ref))))))))))
+
+
+(define (make-env-variable-accessable node var)
+  (cond ((variable-reg var))
+        ((variable-temp var)
+         => (lambda (temp) (cons SP (fx+ *stack-pos* (fx* temp 4)))))
+        (else 
+         (make-variable-accessable node var))))
+
+
+(define (make-variable-accessable node var)
+  (cond ((variable-binder var)
+         (if (eq? (lambda-strategy *lambda*) 'strategy/stack)
+             (fetch-from-stack node var)
+             (fetch-from-heap node var)))
+        (else                                                
+         (cons TP (cdr (assq var *unit-env*))))))
+
+                            
+(define (get-env var)
+  (lambda-env (variable-binder var)))
+
+                                      
+(define (buried-stack-closure-offset env)
+  (cond ((environment-continuation env)
+         => (lambda (var)
+              (fx+ (environment-size 
+                       (lambda-env 
+                           ((call-arg 1) (node-parent (variable-binder var)))))
+                   4)))
+        (else 0)))
+                       
+
+
+;;; Yukk.  Here we get a variable from a stack frame.  If it is in the frame
+;;; we are OK.  Otherwise we chain down stack frames as long as they are there.
+;;; These frames are all simple offsets from SP.  When we arrive at a pointer
+;;; into the heap, we load that pointer into a register and go to the heap
+;;; code to do the rest.
+
+
+(define (fetch-from-stack node var)
+  (iterate loop ((offset 0) 
+                 (temps (list (lambda-env *temp-lambda*)))
+                 (env (lambda-env *lambda*)))
+    (cond ((assq var (environment-env env))
+           => (lambda (env-pair)
+                (cons SP (cons (fx+ *stack-pos* (fx+ offset (cdr env-pair)))
+                               temps))))
+          (else
+           (let ((binder (variable-binder (caar (environment-env env)))))
+             (cond ((eq? (lambda-strategy binder) 'strategy/stack)
+                    (loop (fx+ (fx+ (environment-size env) offset)
+                               (buried-stack-closure-offset env))
+                          (cons (lambda-env binder) temps)          
+                          (lambda-env binder)))
+                   (else 
+                    (let ((contour (caar (environment-env env)))
+                          (accessor (cons SP (cons (fx+ *stack-pos* offset) temps))))
+                      (into-register 'pointer node contour accessor '*)
+                      (continue-into-heap node contour var)))))))))
+                          
+
+
+(define (fetch-from-heap node var)           
+  (let ((contour (car (lambda-variables *lambda*)))) 
+    (into-register 'pointer node contour 
+        (make-env-variable-accessable node contour) '*)
+    (continue-into-heap node contour var)))
+
+(define (closure-internal-closure? env)                
+  (and (null? (cdr env)) (fx= (variable-number (caar env)) 0)))
+
+
+(define (continue-into-heap node contour var)
+  (iterate loop ((env (get-env contour)) (contour contour))
+    (cond ((environment-cic-offset env)
+           => (lambda (current-offset)
+                (cond ((assq var (environment-env env))
+                       => (lambda (pair-env)
+                            (cons (variable-reg contour)
+                                  (fx- (cdr pair-env) 
+                                       (fx+ current-offset %extend-tag%)))))
+                      (else  
+                       (let ((c (caar (environment-env env)))) 
+                         (into-register 'pointer node c
+                            (cons (variable-reg contour) 
+                                  (fx- 0 (fx+ current-offset %extend-tag%)))
+                            '*)
+                         (loop (get-env c) c))))))
+          ((assq var (environment-env env))
+           => (lambda (pair-env) 
+                (cons (variable-reg contour)
+                      (fx+ (cdr pair-env) 2)))) ; %extend-tag%
+          (else
+           (let ((c (caar (environment-env env))))
+             (into-register 'pointer node c (cons (variable-reg contour) 4) '*)
+             (loop (get-env c) c))))))
+
+                 
+(define (fetch-continuation node var)            
+  (let ((access (fetch-continuation-from-stack node var)))
+    (generate-move-address node access SP)))
+                                          
+;;; Code to get a continuation off the stack.
+
+(define (fetch-continuation-from-stack node var)
+  (iterate loop ((offset 0) 
+                 (temps (cons (lambda-env *temp-lambda*)
+                              (if (and (neq? (variable-binder var) *temp-lambda*)
+                                       (eq? (lambda-strategy (variable-binder var))
+                                            'strategy/heap))
+                                  (list (lambda-env (variable-binder var)))
+                                  '())))
+                 (env (lambda-env *lambda*)))
+    (cond ((eq? var (environment-continuation env)) 
+           (cons SP (cons (fx+ (fx+ *stack-pos* offset)
+                                (environment-size env))
+                          temps)))
+          ((or (null? (environment-env env))
+               (fxn= (variable-number (caar (environment-env env))) 0))
+           (cons SP (cons 0 temps)))
+          (else
+           (let ((binder (variable-binder (caar (environment-env env)))))
+             (case (lambda-strategy binder)
+                   ((strategy/stack)
+                    (loop (fx+ (environment-size env) offset)
+                          (cons (lambda-env binder) temps)          
+                          (lambda-env binder)))
+                   (else 
+                    (cons SP (cons 0 temps)))))))))
+
+(define (fetch-procedure node proc)
+  (let ((access (make-reference-accessable node proc)))
+    (generate-move node access P)))
+  
+                   
+
+(define (->register type node ref where)
+  (let ((accessor (make-reference-accessable node ref)))
+    (cond ((and (fixnum? accessor) (or (eq? where '*) (fx= accessor where)))
+           accessor)
+          (else  
+           (into-register type node (reference-variable ref) accessor where)))))
+
+          
+(define (gently->register type node ref where)
+  (->register type node ref (if (reg-node where) '* where))) 
+
+                                           
+(define (in-register? type var where)
+    (let ((reg (variable-reg var)))
+       (cond ((not reg) nil)
+             ((neq? (reg-type reg) type) nil)
+             (else
+              (or (eq? where '*)
+                  (eq? reg where))))))
+
+(define (get-register type node where)        
+  (cond ((eq? where '*)
+         (cond ((eq? type 'pointer)
+                (iterate loop ((i 0))
+                  (cond ((fx>= i *argument-registers*)
+                         (select-and-kick-register node 'pointer)) 
+                        ((not (reg-node i)) i)
+                        (else (loop (fx+ i 1))))))
+               (else
+                (iterate loop ((i *argument-registers*))
+                  (cond ((fx>= i *no-of-registers*)
+                         (select-and-kick-register node 'scratch)) 
+                        ((not (reg-node i)) i)
+                        (else (loop (fx+ i 1))))))))
+         (else
+          (free-register node where)
+          where)))
+
+(define (into-register type node var access where) 
+  (cond ((in-register? type var where) (variable-reg var))
+        (else         
+         (let ((reg (get-register type node where)))
+           (generate-move node access reg)
+           (cond ((variable-reg var)
+                  => (lambda (reg) (set (reg-node reg) nil))))
+           (mark var reg)
+           reg))))
+
+    
+                                  
+
+
+;;; SELECT-REGISTER The first register which is not reserved or used soon is
+;;; selected.  If none satisfy then the first register  is selected,  to make
+;;; parallel assignment work reasonably.  This is because the parallel assign-
+;;; ment is set up to try to move the argument to pointer register 1 last.
+                                          
+(define (select-and-kick-register node type)
+  (cond ((eq? type 'pointer) 
+         (iterate loop ((i 1) (default nil))             ;;; never kick P
+           (cond ((fx>= i *argument-registers*)
+                  (kick-register node default)
+                  default)
+                 ((locked? i) 
+                  (loop (fx+ i 1) default))
+                 ((not (used-soon? node (reg-node i)))
+                  (kick-register node i) 
+                  i)
+                 (else (loop (fx+ i 1) i)))))
+        (else
+         (iterate loop ((i *argument-registers*) (default nil))
+           (cond ((fx>= i *no-of-registers*) 
+                  (free-register node default)
+                  default)
+                 ((locked? i) 
+                  (loop (fx+ i 1) default))
+                 ((not (used-soon? node (reg-node i))) 
+                  (free-register node i)
+                  i)
+                 (else (loop (fx+ i 1) i)))))))
+                                         
+
+;;; USED-SOON? Is this variable used at this node or at one of its continuations?
+
+(define (used-soon? node var)
+    (let ((var-used? (lambda (arg) 
+              (and (var-reference-node? arg) (eq? (reference-variable arg) var)))))
+       (or (any? var-used? (call-args node))
+           (any? (lambda (cont)
+                       (any? var-used? (call-args cont)))
+                 (continuations node)))))
+
+(define (free-register node reg)
+  (cond ((reg-node reg)
+         => (lambda (var)
+              (cond ((eq? (reg-type reg) 'pointer)
+                     (kick-register node reg))
+                    ((vector-posq nil *registers*)
+                      => (lambda (new-place)
+                           (mark var new-place)
+                           (set (reg-node reg) nil)
+                           (generate-move node reg new-place)))
+                    (else
+                     (error "scratch-registers all full")))))))
+
+
+(define (kick-register node reg)
+  (let ((var (reg-node reg)))
+    (cond ((locked? reg)
+           (error "attempt to kick out of locked register"))
+          ((or (variable-temp var) (fixnum? (variable-name var)))
+           (set (variable-reg var) nil)
+           (set (reg-node reg) nil))      
+          (else
+           (let ((temp (get-temp var)))
+             (set (variable-reg var) nil)
+             (set (variable-temp var) temp)
+             (set (reg-node reg) nil)
+             (generate-move node reg (cons SP (fx+ *stack-pos* (fx* temp 4)))))))))
+
+
+(define (get-temp var)           
+  (iterate loop ((i 0) (temps (cdr *temps*)))
+    (cond ((null? temps)
+           (append! *temps* (list var))
+           i)
+          ((not (car temps)) 
+           (set (car temps) var)
+           i)               
+          (else 
+           (loop (fx+ i 1) (cdr temps))))))
+
+(define (cont node)
+  (car (call-args node)))
+
+
+             
+(define (continuations node)
+    (sublist (call-args node) 0 (call-exits node)))
+
+(define (then-cont node)
+  (car (call-args node)))
+
+(define (else-cont node)
+  (cadr (call-args node)))
+
+
+(define (cont-vars node)
+    (lambda-variables (car (call-args node))))
+                                                 
+
+(define (cont-var node)
+    (car (cont-vars node)))
+
+
+(define (kill-if-dead node)
+  (if (and (reference-node? node) 
+           (dying? (reference-variable node) (node-parent node)))
+      (kill (reference-variable node))))      
+
+
+
+(define (kill var)
+    (cond ((variable-reg var) =>
+           (lambda (reg) 
+                (set (reg-node reg) nil)
+                (set (variable-reg var) nil))))
+    (cond ((variable-temp var) =>
+           (lambda (reg) 
+                (set (temp-node reg) nil)
+                (set (variable-temp var) nil)))))
+
+
+(define (live? var node)
+  (cond ((reference-node? ((call-arg 1) node)) nil)
+        (else 
+         (any? (lambda (cont) (memq? var (lambda-live cont)))
+               (continuations node)))))
+                                                        
+
+(define (dying? var node) (not (live? var node)))
+                                               
+(define (dead? var node)
+  (let ((parent (node-parent node)))
+    (not (or (memq? var (lambda-variables parent))
+             (memq? var (lambda-live parent))))))
+
+
+(define (copy-registers)
+  (copy-vector *registers*))
+
+(define (copy-temps)
+  (copy-list *temps*))
+
+(define (restore-slots)
+    (restore-registers)
+    (restore-temps))
+
+
+(define (restore-registers)
+  (do ((i 0 (fx+ i 1)))
+      ((fx>= i *no-of-registers*))
+    (cond ((variable? (reg-node i))
+           (set (variable-reg (reg-node i)) i)))))
+
+(define (restore-temps)
+  (do ((temps *temps* (cdr temps))
+       (i 0 (fx+ 1 i)))
+      ((null? temps))
+    (cond ((car temps)
+           => (lambda (node) (set (variable-temp node) i)))))) 
+
+(define (clear-slots)
+  (clear-registers)
+  (clear-temps))
+
+
+(define (clear-registers)
+  (do ((i 0 (fx+ i 1)))
+      ((fx>= i *no-of-registers*))
+    (cond ((reg-node i)
+           => (lambda (var) (kill var))))))
+
+(define (clear-temps)
+  (do ((temps *temps* (cdr temps)))
+      ((null? temps))
+    (cond ((car temps) 
+           => (lambda (var) (kill var))))))
+
+
+(define (lock reg)
+  (set (reg-node reg) (cons 'locked (reg-node reg))))
+
+(define (unlock reg)
+  (set (reg-node reg) (cdr (reg-node reg))))
+
+(define (locked? reg)
+  (pair? (reg-node reg)))
+              
+(define (mark var reg)
+  (set (reg-node reg) var)
+  (set (variable-reg var) reg))
+
+(define (check-clear)
+  (if (or (vector-pos neq? nil *registers*)
+          (any? true? *temps*))
+      (breakpoint *registers*)))
+                         
+
+(lset *pos-lists* (make-vector 6))
+(vset *pos-lists* 1 '(1))
+(vset *pos-lists* 2 '(1 2))
+(vset *pos-lists* 3 '(1 2 3))
+(vset *pos-lists* 4 '(1 2 3 4))
+(vset *pos-lists* 5 '(1 2 3 4 5))
+(define (reg-positions i)       
+    (vref *pos-lists* i))
+

@@ -1,0 +1,977 @@
+(herald orbit)
+
+(import *t-implementation-env*
+        self-evaluating?
+        blockify
+        print-type-string
+        make-symbol-generator
+        symbol-generator-count
+        make-table
+        table-entry)
+
+(define *empty*
+  (object nil ((print self stream) (writes stream "#{Empty}"))))
+(define (empty) *empty*)
+(define (empty? obj) (eq? obj *empty*))
+
+(define gen-name (make-symbol-generator))
+
+;;; Four node types:
+;;;  - Literal
+;;;  - Variable reference
+;;;  - LAMBDA-expression
+;;;  - Call
+
+(define-structure-type node
+  type              ; Node type
+  children          ; Inferior nodes
+  parent
+  role
+  stuff-1           ; Variant components
+  stuff-2
+  stuff-3
+  )
+
+(define-methods handle-node
+  ((print node stream)
+   (print-node (node-type node) node stream))
+  ((disclose node)
+   (express node)))           ; for P command in CRAWL
+
+(let ((m (stype-master node-stype)))
+  (set (node-parent m) (empty)))
+
+(define (create-node-type id)
+  (labels ((self
+            (object (lambda (obj)
+                      (eq? (node-type obj) self))
+                    ((print self stream)
+                     (format stream "#{Node-type~_~S}" id))
+                    ((print-node self node stream)
+                     (format stream "#{~S-node~_~S}" id (object-hash node)))
+                    ((create-node self q)
+                     (let ((node (make-node)))
+                       (set (node-type node) self)
+                       (set (node-children node)
+                            (do ((i 0 (1+ i))
+                                 (l '() (cons (empty) l)))
+                                ((= i q) l)))
+                       node)))))
+    (set (table-entry *node-types* id) self)
+    self))
+
+(define-operation (print-node type node stream))
+(define-operation (create-node type q))
+
+(define *node-types* (make-table '*node-types*))
+
+(define (node-field type field id)
+  (object (lambda (node)
+            (field (check-arg type node id)))
+          ((setter self)
+           (lambda (node val)
+             (set (field (check-arg type node id)) val)))
+          ((identification self) id)))
+
+;;; ---------------------------------------------------------------------
+;;; Relations
+
+(define (make-relation id type index pred)
+  (object (lambda (node)
+            (let ((node (check-arg type node id)))
+              (nth (node-children node) index)))
+          ((relate self parent child)
+           (proclaim-empty (swap (node-parent child) parent))
+           (proclaim-empty (self parent))
+           (set (nth (node-children parent) index) child)
+           (set (node-role child) self))
+          ((pred self) t)               ; hack
+          ((relation-index self) index) 
+          ((print self stream)
+           (format stream "#{Relation~_~S}" id))))
+
+(define-operation (relate relation parent child))
+(define-operation (relation-index relation))
+
+(define (estrange node)
+  (set (nth (node-children (node-parent node))
+            (relation-index (node-role node)))
+       *empty*)
+  (set (node-role node) nil)
+  (set (node-parent node) *empty*)
+  node)
+
+(define (replace node1 node2)
+  (let ((role (node-role node1))
+        (parent (node-parent node1)))
+    (estrange node1)
+    (relate role parent node2)))
+
+(define (proclaim-empty probe)
+  (cond ((not (empty? probe))
+         (error "not empty - ~S" probe))))
+
+;;; ---------------------------------------------------------------------
+;;; Specific node types
+
+;;; Literal
+
+(define literal-node? (create-node-type 'literal))
+
+(define literal-value
+  (node-field literal-node? node-stuff-1 'literal-value))
+
+(define (create-literal-node lit)
+  (let ((node (create-node literal-node? 0)))
+    (set (literal-value node) lit)
+    node))
+
+;;; Variable reference
+
+(define reference-node? (create-node-type 'reference))
+
+(define reference-variable
+  (node-field reference-node? node-stuff-1 'reference-variable))
+
+(define (create-reference-node variable)
+  (let ((node (create-node reference-node? 0)))
+    (set (reference-variable node) variable)
+    (push (variable-refs variable) node)
+    node))
+
+;;; Lambda-expression
+
+(define lambda-node? (create-node-type 'lambda))
+
+(define lambda-variables
+  (node-field lambda-node? node-stuff-1 'lambda-variables))
+
+(define lambda-body
+  (make-relation 'lambda-body lambda-node? 0 nil))
+
+(define (create-lambda-node vars)
+  (let ((node (create-node lambda-node? 1)))
+    (set (lambda-variables node) vars)
+    (walk (lambda (var)
+            (cond (var
+                   (set (variable-refs var) '())
+                   (set (variable-binder var) node))))
+          vars)
+    node))
+
+;;; Call
+
+(define call-node? (create-node-type 'call))
+
+(define-integrable call-proc+args node-children)
+
+(define-integrable (call-args node)
+  (cdr (call-proc+args node)))
+
+;;; Argument relations are created on demand whenever a newly created
+;;; call node is going to have mre arguments than any previous call node
+;;; has had.
+
+(define-predicate call-arg?)
+
+(define (make-arg-relation i)
+  (make-relation `(call-arg ,i) call-node? i call-arg?))
+
+(define call-arg-number relation-index)
+
+(define *call-arg-relations*
+  (list (make-arg-relation 0)))
+
+(define call-proc (car *call-arg-relations*))
+
+(define (call-arg i)
+  (nth *call-arg-relations* i))
+
+(define (relate-call-proc+args parent children)
+  (relate call-proc parent (car children))
+  (relate-call-args parent (cdr children)))
+
+(define (relate-call-args parent args)
+  (walk (lambda (relation child)
+          (relate relation parent child))
+        (cdr *call-arg-relations*)
+        args))
+        
+(define (create-call-node n)
+  (iterate loop ((i 0)
+                 (l *call-arg-relations*))
+    (cond ((fx= i n)
+           (create-node call-node? n))
+          (else
+           (cond ((null? (cdr l))
+                  ;; Avoid FORCE/DELAY - they make it harder to use MAP
+                  (set (cdr l)
+                       (list (make-arg-relation (fx+ i 1))))))
+           (loop (fx+ i 1) (cdr l))))))
+
+;;; ---------------------------------------------------------------------
+;;; Variables
+
+(define-structure-type variable
+  name
+  binder
+  refs
+  value
+  home)
+
+(define-methods handle-variable
+  ((print self stream)
+   (format stream "#{Variable~_~S~_~S}"
+           (object-hash self)
+           (variable-name self))))
+
+(define (create-variable name)
+  (let ((variable (make-variable)))
+    (set (variable-name variable) name)
+    variable))
+
+(define (maybe-variable-name var)
+  (if var (variable-name var) nil))
+
+(define-operation (obtain-variable shape name))
+
+(define (bind-variables variables binder super)
+  (object nil
+          ((obtain-variable self name)
+           (or (find (lambda (var) (and var (eq? (variable-name var) name)))
+                     variables)
+               (obtain-variable super name)))))
+
+(define (make-handle support)     ; A repository for free variables
+  (let ((table (make-table 'handle))
+        (l '()))
+    (object nil
+            ((obtain-variable self name)
+             (or (table-entry table name)
+                 (support-env-entry support name)
+                 (let ((var (create-variable name)))
+                   (push l var)
+                   (set (variable-refs var) '())
+                   (set (table-entry table name) var))))
+            ((handle-variables self) l)
+            ((print self stream)
+             (format stream "#{Handle~_~S}" (object-hash self))))))
+
+(define-operation (handle-variables handle))
+
+;;; ---------------------------------------------------------------------
+;;; Tree-walk utilities
+
+(define (make-dispatcher id)
+  (let ((table (make-table id)))
+    (object (lambda (node)
+              (let* ((type (node-type node))
+                     (probe (table-entry table type)))
+                (cond ((not probe)
+                       (error "no ~S specialist for node type ~S" id type))
+                      (else probe))))
+            ((get-dispatch-table self) table))))
+
+(define (set-node-dispatch generalist type-name proc)
+  (set (table-entry (get-dispatch-table (get-dispatcher generalist))
+                    (table-entry *node-types* type-name))
+       proc))
+
+(define-operation (get-dispatcher generalist))
+
+(define-operation (get-dispatch-table dispatcher))
+
+;;; ---------------------------------------------------------------------
+;;; Alpha-conversion
+
+(define (alpha-top exp syntax support)
+  (let* ((h (make-handle support))
+         (node (alpha exp syntax h))
+         (lnode (create-lambda-node (cons nil (handle-variables h)))))
+    (relate lambda-body lnode node)
+    lnode))
+
+
+;;; --- Dispatch.
+
+;;; ALPHA - return a node.
+
+(define (alpha exp syntax shape)
+  (cond ((symbol? exp)
+         (alpha-reference exp shape))
+        ((pair? exp)
+         (cond ((symbol? (car exp))
+                (let ((probe (syntax-table-entry syntax (car exp))))
+                  (cond ((null? probe)
+                         (alpha-call exp syntax shape))
+                        (else
+                         (alpha-special-form probe exp syntax shape)))))
+               ((syntax-descriptor? (car exp))
+                (alpha-special-form (car exp) exp syntax shape))
+               (else
+                (alpha-call exp syntax shape))))
+        ((or (self-evaluating? exp) (primop? exp))
+         (alpha-literal exp))
+        (else
+         (alpha (syntax-error "uncompilable object~%  ~S" exp) syntax shape))))
+
+(define quote-syntax  (syntax-table-entry *standard-syntax-table* 'quote))
+(define lambda-syntax (syntax-table-entry *standard-syntax-table* 'lambda))
+(define if-syntax     (syntax-table-entry *standard-syntax-table* 'if))
+(define labels-syntax (syntax-table-entry *standard-syntax-table* 'labels))
+(define block-syntax  (syntax-table-entry *standard-syntax-table* 'block))
+
+(define procedure-syntax
+  (macro-expander (procedure vars . body)
+    `(labels ((,vars . ,body)) ,(car vars))))
+
+(define (alpha-special-form descr exp syntax shape)
+  (select descr
+    ((quote-syntax)
+     (alpha-literal (cadr exp)))
+    ((lambda-syntax)
+     (alpha-lambda nil (cons nil (cadr exp)) (cddr exp) syntax shape))
+    ((procedure-syntax)
+     (alpha-lambda t (cadr exp) (cddr exp) syntax shape))
+    ((if-syntax)
+     (alpha-if (cadr exp) (caddr exp) (cdddr exp) syntax shape))
+    ((labels-syntax)
+     (alpha-labels (cadr exp) (cddr exp) syntax shape))
+    ((block-syntax)
+     (alpha-block (cdr exp) syntax shape))
+    (else
+     (cond ((macro-expander? descr)
+            (alpha (invoke-macro-expander descr exp) syntax shape))
+           (else
+            (alpha (syntax-error "special form unknown to this compiler~%  ~S"
+                                 exp)
+                   syntax
+                   shape))))))
+
+;;; Basic node type conversion: literal, reference, lambda, call
+
+(define (alpha-literal lit)
+  (create-literal-node lit))
+
+(define (alpha-reference exp shape)
+  (let ((probe (obtain-variable shape exp)))
+    (cond ((variable? probe)
+           (create-reference-node probe))
+          (else
+           (create-literal-node probe)))))
+
+(define (alpha-lambda self? names body syntax shape)
+  (cond ((proper-list? names)
+         (let* ((names (cond ((car names) names)
+                             (else (cons (gen-name 'p) (cdr names)))))
+                (vars (map (lambda (name)
+                             (if name (create-variable name) nil))
+                           names))
+                (node (create-lambda-node vars)))
+           (relate lambda-body node
+                   (alpha-block body syntax
+                                (bind-variables (if self? vars (cdr vars))
+                                                node
+                                                shape)))
+           node))
+        ((car names)
+         (bug "this case not yet handled" "lose"))
+        (else
+         (do ((l (cdr names) (cdr l))
+              (z '() (cons (car l) z)))
+             ((atom? l)
+              (alpha `(,nary-primop (,lambda-syntax (,l . ,(reverse! z))
+                                       . ,body))
+                     syntax
+                     shape))))))
+
+(define (alpha-call exp syntax shape)
+  (let ((node (create-call-node (length exp))))
+    (relate-call-proc+args node (map (lambda (exp) (alpha exp syntax shape))
+                                exp))
+    node))
+
+;;; Everything else is done source-to-source.
+
+;;; (if p c a)
+;;;   ==> (if-true p (lambda () a) (lambda () b))
+;;; (if p c)
+;;;   ==> (if-true p (lambda () a) undefined-value)
+
+(define (alpha-if test con maybe-alt syntax shape)
+  (alpha `(,if-true-primop ,test
+                           (,lambda-syntax () ,con)
+                           ,(cond ((null? maybe-alt)
+                                   undefined-value-primop)
+                                  (else
+                                   `(,lambda-syntax () ,(car maybe-alt)))))
+          syntax
+          shape))
+
+;;; (labels ((v1 e1) (v2 e2) ... (vn en)) . b)
+;;;   ==> (Y (lambda (dummy v1 v2 ... vn)
+;;;            (dummy (lambda () . b) e1 e2 ... en)))
+;;; (labels (((v1 . args) . b1)) . b)
+;;;   ==> (let ((v1 (procedure (v1 . args) . b1))) . b)
+
+(define (alpha-labels specs body syntax shape)
+  (let ((vars (map (lambda (spec)
+                     (let ((pat (car spec)))
+                       (if (atom? pat) pat (car pat))))
+                   specs))
+        (vals (map (lambda (spec)
+                     (let ((pat (car spec)))
+                       (cond ((atom? pat) (cadr spec))
+                             (else `(,procedure-syntax ,pat . ,(cdr spec))))))
+                   specs))
+        (dummy (gen-name 'Y)))
+    (cond ((null? specs) (alpha-block body syntax shape))
+          ((and (null? (cdr specs))
+                (pair? (caar specs)))
+           (alpha `((,lambda-syntax (,(car vars)) . ,body)
+                    ,(car vals))
+                  syntax
+                  shape))
+          (else
+           (alpha `(,Y-primop (,lambda-syntax (,dummy . ,vars)
+                                 (,dummy (,lambda-syntax () . ,body)
+                                         . ,vals)))
+                  syntax
+                  shape)))))
+
+;;; (block a . b)
+;;;   ==>  ((lambda (()) . b) a)
+
+(define (alpha-block exp-list syntax shape)
+  (cond ((null? (cdr exp-list))
+         (alpha (car exp-list) syntax shape))
+        (else
+         (alpha `((,lambda-syntax (()) . ,(cdr exp-list))
+                  ,(car exp-list))
+                syntax
+                shape))))
+
+;;; ---------------------------------------------------------------------
+;;; Support environments
+
+(define (make-support-env super id)
+  (let ((table (make-table id)))
+    (object (lambda (name)
+              (or (table-entry table name)
+                  (super name)))
+            ((set-support-env-entry self name val)
+             (set (table-entry table name) val))
+            ((print self stream)
+             (format stream "#{Support-env~_~S}" id)))))
+
+(define-operation (set-support-env-entry env name val))
+
+(define (make-empty-support-env id)
+  (make-support-env false id))
+
+(define support-env-entry
+  (object (lambda (env name) (env name))
+          ((setter self) set-support-env-entry)))
+
+(define *standard-support-env*
+  (make-empty-support-env '*standard-support-env*))
+
+;;; ---------------------------------------------------------------------
+;;; Primops
+
+(define (create-primop name install? gen)
+  (let* ((gen (cond ((null? gen)
+                     (lambda (node) (generate-unknown-call node)))
+                    ((eq? gen t)
+                     (lambda (node) (generate-primop-call node)))
+                    (else gen)))
+         (primop (object nil
+                         ((primop? self) t)
+                         ((primop-code-generator self) gen)
+                         ;; ... many other things will be inserted here ...
+                         ((identification self) name)
+                         ((print self stream)
+                          (format stream "#{Primop~_~S}" name)))))
+    (cond (install?
+           (set (support-env-entry *standard-support-env* name)
+                primop)))
+    primop))
+
+(define-operation (primop-code-generator primop))
+(define-predicate primop?)
+
+(define nary-primop
+  (create-primop 'nary nil t))
+
+(define Y-primop
+  (create-primop 'Y nil t))
+
+(define if-true-primop
+  (create-primop 'if-true nil t))
+
+(define undefined-value-primop
+  (create-primop 'undefined-value t t))
+
+(create-primop 'fx+ t t)
+(create-primop 'fx- t t)
+(create-primop 'fx= t t)
+(create-primop 'values t nil)
+(create-primop 'receive-values t nil)
+
+;;; ---------------------------------------------------------------------
+;;; CPS conversion
+
+;;; Utilities
+
+(define (make-return cont value)
+  (let ((node (create-call-node 3)))
+    (relate call-proc node cont)
+    (relate (call-arg 1) node (create-literal-node *undefined-value*))
+    (relate (call-arg 2) node value)
+    node))
+
+(define *undefined-value*
+  (object nil ((identification self) '*undefined-value*)))
+
+(define (create-continuation var)
+  (create-lambda-node (list (create-variable (gen-name 'c)) ; self
+                            nil       ; continuation
+                            var)))    ; value
+
+;;; Recursive entry
+
+(define (convert node cont)
+  (cond ((call-node? node)
+         (convert-call node cont))
+        (else
+         (make-return cont (convert-trivial node)))))
+
+(define-generalist convert-trivial dispatch
+  (lambda (node)
+    ((dispatch node) node)))
+
+;;; Specialists
+
+;;; 'foo => (#cont# 'foo)
+
+(define-specialist ((convert-trivial literal) node)
+  (create-literal-node (literal-value node)))
+
+;;; foo => (#cont# foo)
+
+(define-specialist ((convert-trivial reference) node)
+  (create-reference-node (reference-variable node)))
+
+;;; (lambda vars (foo)) =>
+;;;   (#cont# (lambda (c . vars) (foo c)))
+
+(define-specialist ((convert-trivial lambda) node)
+  (convert-lambda-body node))
+
+(define (convert-lambda-body node)
+  (let* ((cvar (create-variable (gen-name 'k)))
+         (vars (lambda-variables node))
+         (cnode (create-lambda-node (cons* (car vars) cvar (cdr vars)))))
+    (relate lambda-body cnode
+            (convert (lambda-body node)
+                     (create-reference-node cvar)))
+    cnode))
+
+;;; (f a b c)  with evaluation order  (2 0 1 3)  [i.e. (b f a c)]:
+;;;  Create one continuation for each position:
+;;;                              (c1 b)
+;;;   where c1 = (lambda (() v1) (c2 f))
+;;;   where c2 = (lambda (() v2) (c3 a))
+;;;   where c3 = (lambda (() v3) (c4 c))
+;;;   where c4 = (lambda (() v4) (v2 #cont# v3 v1 v4))
+
+(define (convert-call node cont)
+  (let* ((args (call-proc+args node))
+         (last-cnode (create-call-node (fx+ (length args) 1))))
+    (relate (call-arg 1) last-cnode cont)
+    (iterate loop ((order (reverse (call-order node)))
+                   (cnode last-cnode)
+                   (flag t))
+      (cond ((null? order) cnode)
+            (else
+             (let* ((n (car order))
+                    (arg (nth args n))
+                    (r (if (fx= n 0) call-proc (call-arg (fx+ n 1)))))
+               (cond ((and flag (trivial? arg))
+                      (relate r last-cnode (convert-trivial arg))
+                      (loop (cdr order)
+                            cnode
+                            flag))
+                     (else
+                      (let* ((var (create-variable (gen-name 'v)))
+                             (cont (create-continuation var)))
+                        (relate lambda-body cont cnode)
+                        (relate r last-cnode
+                                (create-reference-node var))
+                        (loop (cdr order)
+                              (convert arg cont)
+                              t))))))))))
+
+(define (trivial? arg)
+  (not (call-node? arg)))
+
+(comment ;Old definition
+(define (trivial? arg)
+  (and (not (call-node? arg))
+       (or (lambda-node? (call-proc (node-parent arg)))
+           (and (eq? (node-role arg) call-proc)
+                (literal-node? arg))))))
+
+;;; Returns, as a list of integers, a permutation of the call's children.
+
+(define (call-order node)
+  (map (lambda (node) (call-arg-number (node-role node)))
+       (sort (call-proc+args node)
+             (lambda (node1 node2)
+               (let ((i1 (node-importance node1))
+                     (i2 (node-importance node2)))
+                 (or (fx> i1 i2)  ; Do the most important ones first
+                     (and (fx= i1 i2)     ; Ensure stability
+                          (fx< (call-arg-number (node-role node1))
+                               (call-arg-number (node-role node2))
+                               ))))))))
+
+(define (node-importance node)
+  (xselect (node-type node)
+    ((lambda-node?)
+     (if (eq? (node-role node) call-proc) 0 1))     ; Evaluate proc last
+    ((literal-node?)
+     (if (eq? (node-role node) call-proc) 0 2))     ; Evaluate proc last
+    ((reference-node?) 4)
+    ((call-node?)      6)))
+
+;;; Post-CPS code has these properties:
+;;;   For every LAMBDA node L:
+;;;     - L's body is a call.
+;;;     - L's parent is a call.
+;;;   For every call node N:
+;;;     - N's procedure and arguments are all non-calls.
+;;;     - N's parent is a LAMBDA.
+;;;     - The evaluation of no argument depends on a location which will
+;;;       be clobberred by the call, if TRIVIAL? returns false for variables.
+
+;;; ---------------------------------------------------------------------
+
+(define (substitute var val)
+  (let ((refs (variable-refs var)))
+    (cond ((null? refs) (erase val))
+          (else
+           (replace (car refs) val)
+           (walk (lambda (ref)
+                   (replace ref (copy val '())))
+                 (cdr refs))
+           (walk erase refs))))
+  (assert (null? (variable-refs var)))
+  (iterate loop ((vars (lambda-variables (variable-binder var))))
+    (cond ((null? vars)
+           (bug "lost substituted variable"))
+          ((eq? (car vars) var)
+           (set (car vars) nil))
+          (else
+           (loop (cdr vars))))))
+
+;;; ---------------------------------------------------------------------
+;;; Erase node structure.  Mostly to update the REFS slot of variables
+;;; free to this node.
+
+(define (erase node)
+  (walk erase (node-children node))
+  (if (reference-node? node)
+    (let ((var (reference-variable node)))
+      (modify (variable-refs var)
+              (lambda (refs) (delq! node refs)))))
+  (set (node-role node) '<erased>))
+
+;;; ---------------------------------------------------------------------
+;;; Copy node structure.
+
+(define-generalist copy dispatch
+  (lambda (node rename)
+    ((dispatch node) node rename)))
+
+(define-specialist ((copy literal) node rename)
+  (create-literal-node (literal-value node)))
+
+(define-specialist ((copy reference) node rename)
+  (let ((var (reference-variable node)))
+    (cond ((assq var rename)
+           => (lambda (z)
+                (create-reference-node (cdr z))))
+          (else
+           (create-reference-node var)))))
+
+(define-specialist ((copy lambda) node rename)
+  (let* ((vars (lambda-variables node))
+         (new-vars (map (lambda (var)
+                          (and var
+                               (create-variable (gen-name (variable-name var)))))
+                        vars)))
+    (let ((new-node (create-lambda-node new-vars)))
+      (relate lambda-body new-node
+              (copy (lambda-body node)
+                    (append! (map cons vars new-vars) rename)))
+      new-node)))
+
+(define-specialist ((copy call) node rename)
+  (let* ((args (call-proc+args node))
+         (new-node (create-call-node (length args))))
+    (walk (lambda (arg)
+            (relate (node-role arg) new-node (copy arg rename)))
+          args)
+    new-node))
+
+;;; ---------------------------------------------------------------------
+
+;;; Fill in the value slot of each variable structure.
+
+(define (nail node)
+  (cond ((lambda-node? node)
+         (let ((vars (lambda-variables node)))
+           (nail-variable-value (car vars) node)
+           (walk (lambda (var) (nail-variable-value var nil))
+                 (cdr vars)))
+         (nail-call (lambda-body node)))))
+
+(define (nail-call body)
+  (let ((proc (call-proc body))
+        (args (call-args body)))
+    (cond ((and (lambda-node? proc)
+                (null? (variable-refs (car (lambda-variables proc)))))
+           (let ((vars (lambda-variables proc)))
+             (nail-variable-value (car vars) proc)
+             (walk nail-variable-value
+                   (cdr (lambda-variables proc))
+                   args))
+           (walk nail (call-proc+args (lambda-body proc)))))
+    (walk nail args)))
+
+(define (follow node)
+  (or (and (reference-node? node)
+           (variable-value (reference-variable node)))
+      node))
+
+(define (nail-variable-value var val)
+  (cond (var
+         (let ((val (or (and val
+                             (reference-node? val)
+                             (variable-value (reference-variable val)))
+                        val)))
+           (set (variable-value var) val)))))
+
+;;; Need to be able to traverse all calls to a given LAMBDA.
+;;; Would be nice the list of references to the LAMBDA were, identically,
+;;; the list of references to some variable.
+;;; Unfortunately, there is no appropriate variable: e.g. in the above,
+;;; does one choose P, or X, to be that variable?
+
+;;; ---------------------------------------------------------------------
+;;; Perform register allocation.
+
+(define (allocate node)
+  (cond ((lambda-node? node)
+         (walk (lambda (var)
+                 (if var (set (variable-home var) (variable-name var))))
+               (lambda-variables node))
+         (walk allocate (call-proc+args (lambda-body node))))))
+
+;;; ---------------------------------------------------------------------
+;;; Generate code.
+
+;;; Returns a list of compilations of procedures.
+
+(define (generate node output)
+  (do ((args (call-proc+args (lambda-body node)) (cdr args))
+       (output output (cond ((lambda-node? (car args))
+                             (generate (car args) output))
+                            (else output))))
+      ((null? args)
+       (cons (generate-body node) output))))
+
+;;; Cases:
+;;;  - Open-coded primops.
+;;;  - Known procedures.
+;;;  - Unknown procedures.
+
+(define (lambda-name node)
+  (let ((probe (car (lambda-variables node))))
+    (if probe (variable-name probe) nil)))
+
+(define (generate-body node)
+  (cons (lambda-name node)
+        (let* ((body (lambda-body node))
+               (proc (follow (call-proc body))))
+          (cond ((and (literal-node? proc)
+                      (primop? (literal-value proc))
+                      (primop-code-generator (literal-value proc)))
+                 => (lambda (gen) (gen body)))
+                ((lambda-node? proc)
+                 (generate-known-call proc body))
+                (else
+                 (generate-unknown-call body))))))
+
+(define (generate-known-call proc node)
+  (iterate loop ((args (call-args node))
+                 (vars (cdr (lambda-variables proc)))
+                 (code '()))
+    (cond ((null? args)
+           (reverse! (cons `(jump ,(lambda-name proc)) code)))
+          (else
+           (loop (cdr args)
+                 (cdr vars)
+                 (cond ((car vars)
+                        (append! (generate-load (variable-home (car vars))
+                                                (car args))
+                                 code))
+                       (else code)))))))
+
+(define (generate-unknown-call node)
+  (iterate loop ((args (call-proc+args node))
+                 (code '()))
+    (cond ((null? args) (reverse! (cons '(icall) code)))
+          (else
+           (loop (cdr args)
+             (append! (generate-load (call-arg-number (node-role (car args)))
+                                     (car args))
+                      code))))))
+
+(define (generate-primop-call node)
+  `((,(identification (literal-value (call-proc node)))
+     ,@(map operand (call-args node)))))
+
+(define (operand arg)
+  (xselect (node-type arg)
+    ((literal-node?)
+     (let ((obj (literal-value arg)))
+       (cond ((eq? obj *undefined-value*) '$)
+             (else `',obj))))
+    ((reference-node?)
+     (variable-name (reference-variable arg)))
+    ((lambda-node?)
+     `(label ,(lambda-name arg)))))
+
+
+(define (generate-load reg arg)
+  (if reg
+      (let ((z (operand arg)))
+        (if (eq? z '$) '() `((load ,reg ,z))))))
+
+;;; ---------------------------------------------------------------------
+;;; Convert node to s-expression
+
+;;; Think about making this actually be a true inverse.
+;;; Have to deal with variable renaming, etc.
+;;; Have to deal with reverting if-true to if and Y to labels.
+
+(define-generalist express dispatch
+  (lambda (node)
+    ((dispatch node) node)))
+
+(define-specialist ((express literal) node)
+  (let ((lit (literal-value node)))
+    (cond ((and lit (self-evaluating? lit)) lit)
+          ((eq? lit *undefined-value*) '$)
+          (else `',lit))))
+
+(define-specialist ((express reference) node)
+  (variable-name (reference-variable node)))
+
+(define-specialist ((express lambda) node)
+  (let ((vars (lambda-variables node))
+        (body (express (lambda-body node))))
+    (cond ((and (car vars)
+                (not (null? (variable-refs (car vars)))))
+           `(procedure ,(map maybe-variable-name vars)
+              ,body))
+          (else
+           `(lambda ,(map maybe-variable-name (cdr vars))
+              ,body)))))
+
+(define-specialist ((express call) node)
+  (let ((proc (call-proc node)))
+    (cond ((and (lambda-node? proc)
+                (fx= (length (call-args node))
+                     (length (cdr (lambda-variables proc)))))
+           `(let ,(map (lambda (v n) `(,(maybe-variable-name v) ,(express n)))
+                       (cdr (lambda-variables proc))
+                       (call-args node))
+              ,(express (lambda-body proc))))
+          (else
+           (map express (call-proc+args node))))))
+
+;;; ---------------------------------------------------------------------
+;;; Print CPS code in linear form.
+
+;;; (lambda () (f (g x) y))  =>
+;;; (lambda (c) (g (lambda (() v) (f c v y)) x))  =>
+;;; L1 : (lambda (c) (g L2 x)))
+;;; L2 : (lambda (() v) (f c v y))
+
+(define (pp-cps node)
+  (let ((z (pp-cps-2 node)))
+    (cond ((lambda-node? node)
+           (let ((vars (lambda-variables node)))
+             (format t "  (~s ~20T~s)~%"
+                     (map maybe-variable-name vars)
+                     (pp-cps-2 (lambda-body node))))))
+    (walk pp-cps (node-children node))
+    z))
+
+(define (pp-cps-2 node)
+  (xselect (node-type node)
+    ((lambda-node?)
+     (lambda-name node))
+    ((literal-node?)
+     (cond ((primop? (literal-value node))
+            (identification (literal-value node)))
+           (else (express node))))
+    ((reference-node?)
+     (express node))
+    ((call-node?)
+     (map pp-cps-2 (call-proc+args node)))))
+
+;;; ---------------------------------------------------------------------
+;;; Print object code.
+
+(define (pp-code code)
+  (walk (lambda (chunk)
+          (format t "  ~s :" (car chunk))
+          (walk (lambda (z)
+                  (format t "~10t~s~%" z))
+                (cdr chunk)))
+        code))
+
+;;; ---------------------------------------------------------------------
+
+(define (test exp)
+  (bind (((symbol-generator-count gen-name) 0))
+    (let* ((exp (or (and (procedure? exp) (disclose exp)) exp))
+           (pre-cps (alpha-top exp
+                               *standard-syntax-table*
+                               *standard-support-env*)))
+      (format t "Pre-CPS code (~s):~%  " (object-hash pre-cps))
+      (pretty-print (express pre-cps) (standard-output))
+      (format t "~2%")
+      (let ((post-cps (convert-lambda-body pre-cps)))
+        (format t "Post-CPS code (~s):~%  " (object-hash post-cps))
+        (pretty-print (express post-cps) (standard-output))
+        (format t "~2%Linearized CPS:~%")
+        (pp-cps post-cps)
+        (nail post-cps)
+        ;(allocate post-cps)
+        ;(let ((output (generate post-cps '())))
+        ;  (format t "~%Output (~s):~%" (object-hash output))
+        ;  (pp-code output))
+        ))))
+
+(define (find pred l)
+  (iterate loop ((l l))
+    (cond ((null? l) nil)
+          ((pred (car l)) (car l))
+          (else (loop (cdr l))))))
+
+(define syn *standard-syntax-table*)

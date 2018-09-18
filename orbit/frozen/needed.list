@@ -1,0 +1,16 @@
+Things need for full system:
+
+Type analysis (at least enough to do proclaim or declare e.g. fx=)
+
+Representations -- needs types
+
+Define-foreign -- needs representations to do right, could do version with
+                  pointer->integer etc. now.
+
+Lap, icall, etc. stuff now in kernel (where does stuff go?) things can be
+global to module (in unit), process (off task register), or system
+(nil register).
+
+More primops, e.g. flonum stuff.  Needs type and representations.
+
+structures? operations? set?

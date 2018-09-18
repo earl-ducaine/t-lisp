@@ -1,0 +1,179 @@
+
+   Primops are made with the PRIMOP special form (what else).  The syntax is
+(PRIMOP ID VARS . CLAUSES) where ID is a symbol, VARS is a list of variables
+that are free in CLAUSES, and CLAUSES are handler clauses.  The variables are
+analagous to the variables of a lambda.  For their use, see the section on
+variant primops below.  Procedures handled by primops have names of the form
+PRIMOP.name.
+
+   No primop currently produces code for a closed compiled version.  There
+are no known outstanding problems, it just hasn't been done.
+
+  The following is a list of the phases of the compiler (from overview.doc)
+telling how primops are used in each phase.  Primops that the compiler needs
+to use are assigned to PRIMOP/..., e.g. the TEST primop is PRIMOP/TEST.
+
+  1) Alphatize
+      The primops that correspond to compliler special forms are put into the
+  tree.  Examples of these are PRIMOP/*BLOCK, PRIMOP/TEST (for IF), etc.
+
+  2) Assignment analysis
+      This knows about the primops that deal with assignment and dereferencing.
+
+  3) Complexity analysis
+      Nothing.
+
+  4) CPS conversion
+      Removes PRIMOP/CONTINUATION from the tree.
+
+  5) Early binding
+      Primops that add early binding information answer TRUE to PRIMOP.DEFINES-
+  SUPPORT?.  The type of support is gotten from PRIMOP.SUPPORT-VARIANT.
+
+  6) Simplification
+      (PRIMOP.SIMPLIFY <primop> <primop-node>) is called on every primop node
+  to do any primop specific simplification.  Currently all primops that do
+  any simplification call procedures in simplify.t to it, e.g. PRIMOP/*BLOCK
+  just calls SIMPLIFY-BLOCK.
+      PRIMOP.SETS-VARIABLE? returns T if the first argument to the primop
+  wants a variable instead of a variables value.  This is keeps the simplifier
+  from substituting a value for the variable.
+      (PRIMOP.INTEGRATE? <primop> <node>) returns T if the primop can be
+  integrated at <node>.  <node> is presumably a reference ot a variable that
+  has been early bound to the primop.  The default is to integrate in call
+  position only.
+      Calls to CONDITIONAL are simplified by calling PRIMOP.SIMPLIFY-AS-
+  CONDITIONAL on the primop (third) argument.
+      Eventually, PRIMOP.TYPE will be used here to get type information.
+
+  7) Live variable analysis
+      PRIMOP/*BLOCK and PRIMOP/Y are handled specially.
+
+  8) Closure analysis
+      PRIMOP/Y is handled specially.
+
+  9) Code generation
+      Whatever the particular code generator wants.
+
+    There is set of basic primops that the front end knows about.  Within orbit
+they are bound to PRIMOP/name.  The lack of any of these causes some parts
+of the front end to break.
+
+(*PRIMOP <cont> <primop> . <vars>)
+  <primop> is a primop node containing the primop that is being defined.
+  <vars> is a list of variables that are arguments to the primop definition.
+  See the section below on variant primops.
+
+CONTINUATION
+  This is ephemeral.  It is introduced into the tree by during alphatization
+  and removed by CPS conversion.
+
+UNDEFINED
+UNDEFINED-EFFECT
+  These are used for unknown values and unknown procedures respectively.
+
+N-ARY
+  This indicates that the following call is a lexpr call.  Exactly what happens
+after that is currently under discussion.
+
+(*BLOCK <cont> <lambda node>)
+  Calls <lambda node>, throws away whatever it returns, and then calls <cont>.
+
+*LSET
+*DEFINE
+*DEFINE-CONSTANT
+*DEFINE-INTEGRABLE
+*DEFINE-WIRED
+  These all have the form (<primop> <cont> <var> <value>).  They answer T to
+  PRIMOP.DEFINES-SUPPORT? and PRIMOP.SETS-VAR? as well as returning a support
+  variant to PRIMOP.SUPPORT-VARIANT.  Support variants are bound to
+  SUPPORT/LSET, SUPPORT/CONSTANT, etc.
+
+(Y <ignored lambda> <other lambda>)
+  Yuck.  Look in alpha to see where these lambdas are coming from.  Y has a
+  semantic meaning that has influenced its format, although it has to be
+  treated separately by everthing anyway.
+
+(VALUES <cont> . <stuff>) => (<cont> . <stuff>)
+  This is simplified out of existence by its simplifier.
+
+(CONDITIONAL <cont1> <cont2> <comparator> <arg1> <arg2>)
+  This is the only two continuation primop that remains after simplification.
+  <comparator> is one of the primops TEST, EQ?, FX<, etc. all of which
+  simplify to a call to CONDITIONAL with themselves as the third argument.
+  The PRIMOP.GENERATE of CONDITIONAL simply calls PRIMOP.GENERATE on its
+  third argument (which has to be a primop).
+
+(TEST <cont1> <cont2> <predicate> <argument>)
+  This simplifies to (CONDITIONAL <cont1> <cont2> TEST <predicate> <argument>).
+
+(TRUE? <cont> <arg>)
+  Simplifies to (TEST (lambda () (<cont> '#t))
+                      (lambda () (<cont> '#f))
+                      TRUE?
+                      <arg>).
+
+*SET-VAR
+  Assignment analysis knows about *SET-VAR.  It returns T to PRIMOP.SETS-
+  VARIABLE.
+
+
+
+     VARIANT PRIMOPS
+
+     A variant primop is one that has a nonempty argument list.  The classic
+example is structure accessors.  All structure accessors are the same except
+for the slot offset.  To avoid duplicating the code, the following could be
+done:
+
+   (DEFINE-WIRED (ACCESSOR OFFSET)
+     (PRIMOP ACCESSOR (OFFSET) . clauses))
+
+   (DEFINE-WIRED ACCESS-SLOT-1
+     (ACCESSOR 0))
+
+   (DEFINE-WIRED ACCESS-SLOT-2
+     (ACCESSOR 4))
+
+     The effect of this is cause ACCESS-SLOT-1 to be early bound to the primop
+ACCESSOR with argument list (0).  With the default simplification method the
+primop will be integrated wherever it occurs in call position.  That is the
+only simplification that occurs; the definition of ACCESS-SLOT-1 is not
+simplified, nor is ACCESS-SLOT-1 in (MAP ACCESS-SLOT-1 . <stuff>).
+
+     The following operations deal with variant primops:
+
+(PRIMOP.FORMALS <primop>) -> The list of formal arguments, e.g. '(OFFSET)
+
+(PRIMOP.CONSTRUCTED? <primop>) -> T if this is a variant primop that has a
+   list of actual arguments.
+
+(PRIMOP.ARGLIST <primop>) -> The list of actual arguments.  In the example
+   above the ACCESSOR primop can get the value of OFFSET using
+   (CAR (PRIMOP.ARGLIST SELF)).
+
+
+
+
+      PREDICATES AND CONDITIONALS
+
+   There is a problem with defining predicates as primops.  One would like
+LIST? in (IF (LIST? X) A B) to be evaluated for effect instead of returning
+a value.  One way to do this is to introduce the primop IF-LIST? and simplify
+   (LIST? <cont> X) =>
+   (IF-LIST? (LAMBDA () (<cont> t))
+             (LAMBDA () (<cont> nil))
+             X)
+This requires that there be two primops for every predicate.
+
+    The current solution is to introduce one extra primop TEST that takes the
+place of all of the IF-FOO? primops.  The simplification is
+   (LIST? <cont> X) =>
+   (TEST (LAMBDA () (<cont> t))
+         (LAMBDA () (<cont> nil))
+         LIST?
+         X)
+
+    The same problem occurs with the two argument conditionals like EQ?, <,
+etc.  They all simplify to a call to the primop CONDTIONAL.  For uniformity,
+TEST does so as well.

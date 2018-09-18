@@ -1,0 +1,28 @@
+
+Agenda for building T version 3.
+
+  In-core compilation
+  System building
+  References and calls to Pascal/C routines
+  GC
+    Segment scheme
+  Asynchronous interrupts
+  without-interrupts and gc-defer
+  GC out of same
+    Tracing partial stack frames
+  JOIN and operations
+  Dynamic loading
+  Locales
+
+---
+
+  Kernel incorporated into compiler
+    n-ary
+    apply
+
+  Compiler hacks
+    Very clever n-ary's
+
+---
+
+    Data representations

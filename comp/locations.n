@@ -1,0 +1,27 @@
+
+;----- beginning t compilation on "locations"
+
+;;; Getting support
+;;; Alphatizing
+;;; Free variables (490): (CDR-LOC CDR CAR-LOC CAR STRING-OFFSET-LOC STRING-OFFSET
+STRING-TEXT-LOC STRING-TEXT EXTEND-TEMPLATE-LOC EXTEND-TEMPLATE SET-CONTENTS
+LOCATIZER SETTER XENOID-POINTER-LOC CONTENTS XENOID-POINTER)
+;;; Assignment analysis
+;;; Complexity analysis
+;;; CPS conversion
+;;; Early binding
+;;; Defining 'SUPPORT/CONSTANT' support for CDR
+;;; Defining 'SUPPORT/CONSTANT' support for CAR
+;;; Defining 'SUPPORT/CONSTANT' support for STRING-OFFSET
+;;; Defining 'SUPPORT/CONSTANT' support for STRING-TEXT
+;;; Defining 'SUPPORT/CONSTANT' support for EXTEND-TEMPLATE
+;;; Early binding SET-CONTENTS
+;;; Early binding CONTENTS
+;;; Defining 'SUPPORT/CONSTANT' support for XENOID-POINTER
+;;; Free variables (492): (CDR-LOC CAR-LOC STRING-OFFSET-LOC STRING-TEXT-LOC
+EXTEND-TEMPLATE-LOC LOCATIZER SETTER XENOID-POINTER-LOC)
+;;; Defined variables (493): (CDR CAR STRING-OFFSET STRING-TEXT EXTEND-TEMPLATE
+XENOID-POINTER)
+;;; Simplifying
+;;; Simplification done
+;;; Writing support file

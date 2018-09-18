@@ -1,0 +1,199 @@
+
+;----- Beginning T compilation on "$ORBIT/defs.t"
+
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (() () () () STREAM) ...) compiled
+;(LAMBDA (OBJECT.1 STATE.2) ...) compiled
+;EMPTY? compiled
+;BUG compiled
+;WARNING compiled
+;NOISE compiled
+;ORBIT-DEBUG compiled
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-NAME
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-ID
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-BINDER
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-SUPPORT-ENV
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-NUMBER
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-REFS
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-TYPE
+;Processing INTEGRABLE-PROCEDURE definition of VARIABLE-REP
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;CREATE-VARIABLE compiled
+;USED? compiled
+;OBTAIN-VARIABLE compiled
+;  Consed environment = (SUPER VARIABLES)
+;  Consed environment = (NAME)
+;(LAMBDA (VAR) ...) compiled
+;(LAMBDA (NAME) ...) compiled
+;BIND-VARIABLES compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;  Consed environment = (L TABLE)
+;(LAMBDA (() () () ()) L) compiled
+;(LAMBDA (OBJECT.38 STATE.39) ...) compiled
+;(LAMBDA (NAME) ...) compiled
+;MAKE-HANDLE compiled
+;Processing INTEGRABLE-PROCEDURE definition of NODE-VARIANT
+;Processing INTEGRABLE-PROCEDURE definition of NODE-PARENT
+;Processing INTEGRABLE-PROCEDURE definition of NODE-ROLE
+;Processing INTEGRABLE-PROCEDURE definition of NODE-SIMPLIFIED?
+;Processing INTEGRABLE-PROCEDURE definition of NODE-CHILDREN
+;Processing INTEGRABLE-PROCEDURE definition of NODE-INSTRUCTIONS
+;Processing INTEGRABLE-PROCEDURE definition of NODE-STUFF-1
+;Processing INTEGRABLE-PROCEDURE definition of NODE-STUFF-2
+;Processing INTEGRABLE-PROCEDURE definition of NODE-STUFF-3
+;Processing INTEGRABLE-PROCEDURE definition of NODE-STUFF-4
+;Processing INTEGRABLE-PROCEDURE definition of NODE-STUFF-5
+;(LAMBDA (() () () NODE STREAM) ...) compiled
+;(LAMBDA (() () () NODE) ...) compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (() () () SELF Q) ...) compiled
+;  Consed environment = (SELF ID)
+;(LAMBDA (() () () () STREAM) ...) compiled
+;(LAMBDA (() () () () NODE STREAM) ...) compiled
+;(LAMBDA (OBJECT.62 STATE.63) ...) compiled
+;(LAMBDA (OBJ) ...) compiled
+;CREATE-NODE-VARIANT compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;  Consed environment = (ID FIELD VARIANT)
+;  Closure
+;(LAMBDA (NODE VAL) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (() () () ()) ID) compiled
+;(LAMBDA (OBJECT.70 STATE.71) ...) compiled
+;(LAMBDA (NODE) ...) compiled
+;NODE-FIELD compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;  Consed environment = (PRED INDEX VARIANT ID)
+;(LAMBDA (() () () SELF PARENT CHILD) ...) compiled
+;(LAMBDA (() () () ()) INDEX) compiled
+;(LAMBDA (() () () () STREAM) ...) compiled
+;(LAMBDA (OBJECT.74 STATE.75) ...) compiled
+;(LAMBDA (NODE) ...) compiled
+;MAKE-RELATION compiled
+;DETACH compiled
+;MOVE compiled
+;REPLACE compiled
+;MARK-CHANGED compiled
+;PROCLAIM-EMPTY compiled
+;CREATE-LEAF-NODE compiled
+;CREATE-PRIMOP-NODE compiled
+;PRIMOP-NODE? compiled
+;PRIMOP-REF? compiled
+;CREATE-LITERAL-NODE compiled
+;LITERAL-NODE? compiled
+;(LAMBDA () ...) compiled
+;CREATE-REFERENCE-NODE compiled
+;REFERENCE-NODE? compiled
+;LAMBDA-VARIABLES compiled
+;LAMBDA-REST+VARIABLES compiled
+;LAMBDA-SELF-VAR compiled
+;LAMBDA-REST-VAR compiled
+;LAMBDA-CONT-VAR compiled
+;CREATE-LAMBDA-NODE compiled
+;Processing INTEGRABLE-PROCEDURE definition of CALL-PROC+ARGS
+;Processing INTEGRABLE-PROCEDURE definition of CALL-ARGS
+;CALL-ARGS compiled
+;CALL-EXIT-ARGS compiled
+;CALL-NON-EXIT-ARGS compiled
+;MAKE-ARG-RELATION compiled
+;CALL-ARG compiled
+;CALL-EXIT? compiled
+;RELATE-CALL-PROC+ARGS compiled
+;  Consed environment = (NODE)
+;(LAMBDA (RELATION CHILD) ...) compiled
+;RELATE-CALL-ARGS compiled
+;REPLACE-CALL-ARGS compiled
+;RELATE-SHORTER-CALL-ARGS compiled
+;CREATE-CALL-NODE compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (WRITES PRINT %DISPATCH-NEXT ERROR LIST APPLY FORMAT OBJECT-HASH
+PRIMOP? IDENTIFICATION 1+ FIND MAKE-TABLE TABLE-ENTRY SETTER EXPRESS = *LOOSE*
+CHECK-ARG NTH ERASE-ALL %OBJECT STYPE-COMPATIBLE? MAKE-OLD-STYPE *NONVALUE-HACK*
+STYPE-CONSTRUCTOR STYPE-PREDICATOR STYPE-HANDLER STYPE-SELECTOR *DEFINE-METHOD
+DISPLAY STYPE-MASTER HANDLE-OPERATION %OPERATION *NONVALUE-HACK* DISCLOSE
+FIXNUM? NODE-CHILDREN NODE-CHILDREN SUBLIST NODE-CHILDREN NTHCDR WALK NODE-CHILDREN
+LENGTH %PREDICATE))
+
+(DEFINED-VARIABLES (EMPTY? *EMPTY* BUG WARNING NOISE ORBIT-DEBUG CREATE-VARIABLE
+MAKE-VARIABLE USED? OBTAIN-VARIABLE BIND-VARIABLES MAKE-HANDLE THE-FREE-VARIABLES
+PRINT-NODE MAKE-NODE CREATE-NODE-VARIANT *NODE-VARIANTS* CREATE-NODE NODE-FIELD
+MAKE-RELATION RELATE RELATION-INDEX PROCLAIM-EMPTY DETACH MOVE MARK-CHANGED
+REPLACE CREATE-LEAF-NODE LEAF-NODE? LEAF-VALUE LEAF-VARIANT LEAF-VIA LEAF-SOURCE
+CREATE-PRIMOP-NODE PRIMOP-NODE? PRIMOP-REF? PRIMOP-VALUE CREATE-LITERAL-NODE
+LITERAL-NODE? VARIABLE-STYPE VARIABLE? HANDLE-VARIABLE VARIABLE-NAME VARIABLE-ID
+VARIABLE-BINDER VARIABLE-SUPPORT-ENV VARIABLE-NUMBER VARIABLE-REFS VARIABLE-TYPE
+VARIABLE-REP NODE-STYPE NODE? HANDLE-NODE NODE-VARIANT NODE-PARENT NODE-ROLE
+NODE-SIMPLIFIED? NODE-CHILDREN NODE-INSTRUCTIONS NODE-STUFF-1 NODE-STUFF-2
+NODE-STUFF-3 NODE-STUFF-4 NODE-STUFF-5 LITERAL? LITERAL-VALUE CREATE-REFERENCE-NODE
+REFERENCE-NODE? LAMBDA-VARIABLES LAMBDA-ALL-VARIABLES LAMBDA-REST+VARIABLES
+LAMBDA-SELF-VAR LAMBDA-REST-VAR LAMBDA-CONT-VAR CREATE-LAMBDA-NODE LAMBDA-NODE?
+LAMBDA-STRATEGY LAMBDA-LIVE LAMBDA-ENV CALL-ARGS CALL-EXIT-ARGS CALL-EXITS
+CALL-NON-EXIT-ARGS MAKE-ARG-RELATION CALL-NODE? CALL-ARG? CALL-ARG *CALL-ARG-RELATIONS*
+CALL-EXIT? CALL-PROC CALL-ARG-NUMBER RELATE-CALL-PROC+ARGS RELATE-CALL-ARGS
+REPLACE-CALL-ARGS RELATE-SHORTER-CALL-ARGS CREATE-CALL-NODE CALL-COMPLEXITY
+REFERENCE-VARIABLE REFERENCE-COPY-SOURCES LAMBDA-TEMPS LAMBDA-BODY CALL-PROC+ARGS))
+
+(LSET-VARIABLES (*NOISE-STREAM* *NOISE-FLAG* *DEBUG-FLAG* *VARIABLE-ID*))
+
+;;;     233  number of templates/code chunks emitted
+;;;    6820  LAP instructions emitted
+;;;     152  number of value cell pointers in unit
+;;;     463  number of entries into data section
+;;;     143  calls not requiring stack padding
+;;;      16  calls requiring stack padding
+;;;    1742  number of TN's generated
+;;;       9  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;      65  successes at propagating substitution into a LET body
+;;;      65  attempts to propagate substitution into a LET body
+;;;     247  substitutions of an argument for a parameter
+;;;     177  ((LAMBDA () FOO)) becomes FOO
+;;;     182  unreferenced argument with no side effects is flushed
+;;;      24  (SETTER FOO) becomes SET-FOO
+;;;       3  a CALL to an open-codeable function is open-coded
+;;;       6  IF of a LET becomes LET of an IF
+;;;      22  IF of a constant has dead arm eliminated
+;;;      12  IF of an IF is involuted (anchor pointing)
+;;;       7  (IF (NOT A) B C) becomes (IF A C B)
+;;;      57  one BLOCK within another is flattened out
+;;;      50  statements eliminated from a BLOCK
+;;;     192  unreferenced parameter is flushed
+;;;    3252  number of internal-format program nodes created
+
+
+;----- Finished compiling "$ORBIT/defs.t"
+

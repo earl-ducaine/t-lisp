@@ -1,0 +1,30 @@
+
+
+Relocation descriptor
+
+    Quoted structure
+    Primops
+
+    Closure-internal closures
+        Sequence of (bitv-offset unit-offset) pairs
+    Closure-internal templates
+
+    Free variables
+        Defined
+        Referenced, not potentially assigned
+        Referenced, potentially assigned
+        Assigned
+    Early binding assumptions
+
+    Definitions
+        Sequence of (symbol unit-offset) pairs
+
+Reflective data
+
+    Source filename(s)
+    [Line numbers]
+    Identification
+    Template lexical nesting tree
+    Dead ends
+    Called procedures
+    Closure formats

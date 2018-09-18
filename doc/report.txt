@@ -1,0 +1,36 @@
+Progress report??
+
+- Review of implementation goals
+  - Correct
+  - Very efficient compiled code (closures and numbers)
+  - Portable, retargetable
+  - Flexible, extensible, powerful
+  - Building stand-alone programs
+  - SCHEME as UNCOL - ideal for expressing program transformations
+  - Pedagogical?
+
+- Compiler
+  - SET conversion, front end (Kelsey)
+  - Simplifier (procedure integration, IF-of-IF) (Kelsey)
+  - Trace scheduling (Kranz)
+  - Instruction selection/code generation (Kranz)
+  - Defining primitive procedures (Kelsey)
+  - N-ary's and spilling (?)
+  - Data flow; loop invariants; safety (Lamping)
+  - Types (Kelsey, Shivers)
+  - Representations (?)
+  - Calling foreign code (Adams, Philbin)
+  - Retargetable assembler (Adams)
+  - Semantic integrity to lowest level
+
+- New system
+  - GC (Kelsey)
+  - System building (Rees, Shivers)
+  - Modules (Lamping)
+  - Coroutines, tasks, continuations (Rees)
+  - Shadowing (Rees)
+
+- Editor (Philbin)
+  - Works on Unix
+  - Keyboard abstraction
+  - Inklings of portable window management & tasks

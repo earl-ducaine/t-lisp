@@ -1,0 +1,14 @@
+
+(define-constant tag/fixnum    0)
+(define-constant tag/immediate 1)
+(define-constant tag/extend    2)
+(define-constant tag/pair      3)
+
+(define-constant header/char            1)
+(define-constant header/bitv            9)
+(define-constant header/text           17)
+(define-constant header/general-vector 25)
+(define-constant header/bignum         37)
+(define-constant header/slice          41)
+(define-constant header/string         41)
+(define-constant header/symbol         49)

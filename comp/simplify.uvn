@@ -1,0 +1,98 @@
+
+;----- Beginning T compilation on "$ORBIT/simplify.t"
+
+;SIMPLIFY compiled
+;REALLY-SIMPLIFY compiled
+;SIMPLIFY-NON-EXIT-CHILDREN compiled
+;SIMPLIFY-EXITS compiled
+;SIMPLIFY-LEAF compiled
+;SIMPLIFY-USING-SUPPORT compiled
+;INTEGRABLE-SUPPORT? compiled
+;INTEGRABLE-VALUE compiled
+;INTEGRATE-SUPPORT compiled
+;SIMPLIFY-LAMBDA compiled
+;SIMPLIFY-CALL compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (() () () ()) (QUOTE T)) compiled
+;  Consed environment = (ARGLIST.55)
+;  Consed environment = (NEW.56)
+;(LAMBDA (() () () ()) ARGLIST.55) compiled
+;(LAMBDA (OBJECT.48.51.58 STATE.49.52.59) ...) compiled
+;(LAMBDA (REF.57) ...) compiled
+;SIMPLIFY-PARAMETERIZED-PRIMOP compiled
+;UNBOUND-SUPPORT-REFS compiled
+;CHANGE-SUPPORT-VALUE compiled
+;REPLACE-CALL-WITH-VALUE compiled
+;KNOWN-PRIMOP-VALUE compiled
+;VARIABLE-KNOWN compiled
+;(LAMBDA (REF) ...) compiled
+;ALL-REFS-ARE-CALLS? compiled
+;ERASE-UNUSED-ARGUMENTS compiled
+;REMOVE-UNREFERENCED-VARIABLES compiled
+;  Consed environment = (VAL)
+;(LAMBDA (REF) ...) compiled
+;SUBSTITUTE compiled
+;  Consed environment = (NEW-BODY.83 L-NODE.82)
+;(LAMBDA (NODE.84) ...) compiled
+;REPLACE-VAR compiled
+;NONVALUE-REFERENCE? compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (NODE-SIMPLIFIED? NODE-PARENT NODE-ROLE TRANSFORM CALL-NODE?
+SETTER NODE-VARIANT LEAF-NODE? LAMBDA-NODE? LOSING-XSELECT CALL-PROC CALL-ARGS
+CALL-EXITS NTHCDR WALK LAMBDA-BODY REFERENCE-NODE? REFERENCE-VARIABLE SUPPORTED?
+VARIABLE-SUPPORT PRIMOP-NODE? PRIMOP-VALUE PRIMOP.INTEGRATE? SUPPORT.VARIANT
+EQ? REFERENCE-COPY-SOURCES MEM VARIABLE-NAME WARNING SUPPORT/CONSTANT SUPPORT.VALUE
+SUITABLE-CONSTANT-SUPPORT? SUPPORT/INTEGRABLE SUPPORT/WIRED ORBIT-DEBUG
+COPY-NODE-TREE REPLACE CALL-EXIT? LAMBDA-REST-VAR LAMBDA-VARIABLES DETACH
+LITERAL-NODE? PRIMOP/UNDEFINED-EFFECT CREATE-PRIMOP-NODE PRIMOP.FORMALS
+PRIMOP.CONSTRUCTED? PRIMOP.SIMPLIFY LENGTH EVERY? CALL-ARG LAMBDA-CONT-VAR
+LITERAL-VALUE MAP %OBJECT JOIN PRIMOP.ARGLIST %DISPATCH-NEXT VARIABLE-REFS
+SUPPORTS-DEFINITION? PRIMOP? PRIMOP.SUPPORT-VARIANT ADD-SUPPORT-VALUE ERASE-ALL
+COMPOSE LIST RELATE-SHORTER-CALL-ARGS BUG VARIABLE-TYPE NODE? USED? EMPTY?
+MAP! REVERSE! LAMBDA-REST+VARIABLES VARIABLE-NUMBER COPY-LIST PP-CPS-2 CREATE-VARIABLE
+CREATE-REFERENCE-NODE CREATE-LAMBDA-NODE CREATE-CALL-NODE ERASE RELATE MOVE
+PRIMOP.SETS-VARIABLE?))
+
+(DEFINED-VARIABLES (SIMPLIFY SIMPLIFY-NON-EXIT-CHILDREN REALLY-SIMPLIFY
+SIMPLIFY-EXITS SIMPLIFY-CALL SIMPLIFY-LAMBDA SIMPLIFY-LEAF SIMPLIFY-USING-SUPPORT
+NONVALUE-REFERENCE? INTEGRABLE-SUPPORT? INTEGRATE-SUPPORT INTEGRABLE-VALUE
+KNOWN-PRIMOP-VALUE SIMPLIFY-PARAMETERIZED-PRIMOP UNBOUND-SUPPORT-REFS CHANGE-SUPPORT-VALUE
+REPLACE-CALL-WITH-VALUE VARIABLE-KNOWN ALL-REFS-ARE-CALLS? ERASE-UNUSED-ARGUMENTS
+REMOVE-UNREFERENCED-VARIABLES SUBSTITUTE REPLACE-VAR))
+
+(LSET-VARIABLES ())
+
+;;;     227  number of templates/code chunks emitted
+;;;    5506  LAP instructions emitted
+;;;     108  number of value cell pointers in unit
+;;;     346  number of entries into data section
+;;;     145  calls not requiring stack padding
+;;;      51  calls requiring stack padding
+;;;    1156  number of TN's generated
+;;;       2  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;      71  successes at propagating substitution into a LET body
+;;;      75  attempts to propagate substitution into a LET body
+;;;     111  substitutions of an argument for a parameter
+;;;     101  ((LAMBDA () FOO)) becomes FOO
+;;;      79  unreferenced argument with no side effects is flushed
+;;;       1  (SETTER FOO) becomes SET-FOO
+;;;       7  IF of a LET becomes LET of an IF
+;;;      32  IF of a constant has dead arm eliminated
+;;;      21  IF of an IF is involuted (anchor pointing)
+;;;      15  (IF (NOT A) B C) becomes (IF A C B)
+;;;       4  one BLOCK within another is flattened out
+;;;       4  statements eliminated from a BLOCK
+;;;      81  unreferenced parameter is flushed
+;;;    2449  number of internal-format program nodes created
+
+
+;----- Finished compiling "$ORBIT/simplify.t"
+

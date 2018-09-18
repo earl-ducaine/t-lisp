@@ -1,7 +1,0 @@
-;;; VAX TC support file for #[Filename VULCAN TSYS DISPATCH T 0]
-;;; TC version 1.4 (64)
-
-(COMMENT (SOURCE-FILENAME #[Filename VULCAN TSYS DISPATCH T 0]))
-(COMMENT (HERALDED-FILENAME #[Filename () () DISPATCH]))
-(SYSBUILD-ITEM END)
-

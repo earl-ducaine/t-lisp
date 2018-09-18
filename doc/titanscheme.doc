@@ -1,0 +1,48 @@
+T on Titan
+
+Repertoire of type hacks.  Not mutually exclusive.
+
+    - TLB hack
+
+    - BIBOP
+	- Pair space vs. extend space
+
+    - Put prefix word (i.e. templates) on cons cells
+
+    - Doublecell alignment
+
+    - Two fixnum types, positive and negative
+
+Criteria:
+
+    Runtime costs of PAIR?, EXTEND?, TEMPLATE?, PROCEDURE?
+	(want to increase the number of tag bits, maybe)
+    Runtime cost of fixnum arithmetic
+	(want to avoid putting tag bits at high end of word)
+	(want to use tag 0)
+
+    Memory use
+	(want to distinguish pairs from extends by tag bit)
+    Simplicity
+
+Options:
+
+    B - BIBOP     0 or 1 tag bits (effective)
+    H - high end  0, 1, or 2 tag bits (masked out either by code or by TLB)
+    L - low end   0 or 1 bit (by doublecell aligning or not)
+
+	B H L
+	0 0 1
+	0 1 0
+	0 1 1
+	0 2 0
+	1 0 1
+	1 1 0
+
+Calling sequence and the clean/dirty problem.
+
+  - Encode a vast amount of data somewhere
+
+  - Let the Mahler/linker conspiracy partition the registers for us
+
+  - Foo

@@ -1,0 +1,143 @@
+Dockymentation
+
+    Progress report
+	Reasons to do a progress report:
+	    (a) Produce a compendium of the knowledge and experience we
+		gathered this summer.  Much of what's been done won't even
+		be obvious to users of the new system.  Written material
+		gets the ideas and the experience disseminated, and gives
+		the project much exposure than the system itself gives.
+	    (b) Have something to show to people who ask "what did you
+		do this summer?"
+	    (c) Have something for Forest to point to when people ask HIM
+		what we did this summer.
+
+    Improved internals documentation
+
+    Blueprint for future hacking
+	So that if some new people appear who want to hack T, they won't go
+	too far down the wrong track.
+
+    T versus CL
+	So we can define what Lisp should aspire to, in defense against
+	the CL hordes.
+
+System building
+
+    Linker / virtual GC
+	In the works.  Has obvious importance.  Problems to be addressed:
+	cross-building (Aegis, VMS); machines with bigger words (-20).
+
+    Library manager
+	If we're serious about being able to build stand-alone systems, we
+	need to have a serious loader, one which can figure out which
+	modules are needed out of libraries.  This could work off of
+	a module graph (as with the Unix loader) or off of a call graph
+	(this would be "research").
+
+    Suspension
+	Many options on Unix regarding sharing, none of which is appealing.
+
+Language design problems
+
+    Types and structures
+
+    Calling foreign code
+	(Explain why this isn't easy.)
+
+    Condition system
+	- options
+
+    Operation "punt" syntax
+
+    Source rewrites?
+
+    Parallelism
+	What primitives?  SPAWN, FUTURE, PCALL?
+
+    Rename DIGIT->CHAR and friends
+
+Implementation problems
+    Upwards continuations
+    Critical regions, WITHOUT-INTERRUPTS, GC-DEFER
+	Uniprocessor and multiprocessor cases.
+    Can the deep binding state stack be stack-allocated?
+    Faster operation dispatch
+    "Open-coded references to procedural data" - structures
+    Synonyms
+
+Solved problems - busywork
+    Implement DEFINE-CONDITIONALLY
+    Flush channels in favor of streams
+    Interrupts
+    Areas
+    Improve the dumper
+    Upwards continuations
+
+Compiler busywork
+    (THE-ENVIRONMENT)
+    (LOCALE ...)
+    LOCALE -> LABELS conversion
+
+Modules
+    [ Lamping at work ]
+
+Rewrite XLOOP
+    How to do ASSQ ?
+    List, string, vector operations
+    Multiple values?
+
+Properly working DEFINE and LSET
+    I.e. the shadowing problem.
+
+System improvements
+    Specify internal interfaces ("VM")
+	Take a butcher knife to the thing, start using the module system,
+	make the linker understand the module system (?!!), move things
+	around as necessary.
+    Bufferred I/O
+	Why this isn't easy.  Making a general Unix/VMS/Aegis thing which
+	does unbufferred, line bufferred, block bufferred, and mapped.
+    I-and-O streams
+	JOIN and efficiency.
+    SET-IDENTIFICATION
+	Hack DEFINE and everything to actually use it.
+    Single step
+	To preserve source code or not to?
+    Backquote and FORMAT optimizations
+	Is this Really Worth It in the long run?
+
+The Titan Question
+    Titan data representations
+	This and other Titan problems deserve a report to themselves.
+    Register rooting problem
+	Ugh.
+    To Mahler or not to Mahler.
+
+Market appeal
+    6.001 SCHEME
+	Different DEFINE/LSET semantics (discuss with Indiana)
+    Common Lisp
+	multiple name contexts
+	disposing of unused multiple values
+	saving multiple values across specbinds
+	keyword args
+
+User interfaces
+    Error messages - if-proceeded, etc.
+    Help system
+    Recognition
+    History
+    Screen-oriented inspector (a la rogue)
+
+Administrivia
+    Revise the manual
+    Review T2 bugs list
+
+Fun and games
+    Prolog
+    SNOBOL4
+    ICON
+    APL
+    Modula-2
+    Ada

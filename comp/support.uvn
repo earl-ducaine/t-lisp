@@ -1,0 +1,107 @@
+
+;----- Beginning T compilation on "/t/t3/comp/support.t"
+
+;(LAMBDA (PAIR) ...) compiled
+;(LAMBDA (PAIR) ...) compiled
+;SUPPORT-ENV->EXPRESSION compiled
+;  Consed environment = (PRIMOPS)
+;LOOP compiled
+;NEEDED-SUPPORT-ENVS compiled
+;FIND-SUPPORT-ENVS compiled
+;EXPRESS-SUPPORT compiled
+;EXPRESS-NODE compiled
+;EXPRESS-LEAF compiled
+;EXPRESS-LAMBDA compiled
+;EXPRESS-CALL compiled
+;GET-SUPPORT-ENVIRONMENTS compiled
+;(LAMBDA (NAME.12) ...) compiled
+;  Consed environment = (SUPER)
+;  Consed environment = (FILENAME)
+;(LAMBDA (INPUT) ...) compiled
+;(LAMBDA #F ...) compiled
+;READ-SUPPORT-FROM-FILE compiled
+;GET-SUPPORT-ENV compiled
+;Warning: unreferenced variable ENV-NAMES
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;  Consed environment = (ENV SHAPE SUPPORT-ENVS)
+;(LAMBDA (DEF) ...) compiled
+;EXPRESSION->SUPPORT-ENV compiled
+;  Consed environment = (ENV NAME)
+;(LAMBDA (DEF) ...) compiled
+;PRIMOP-DEFS->ENV compiled
+;RESURRECT-SUPPORT compiled
+;RESURRECT-NODE compiled
+;RESURRECT-LAMBDA compiled
+;  Consed environment = (SUPPORT-ENVS SHAPE)
+;(LAMBDA (EXP) ...) compiled
+;RESURRECT-CALL compiled
+;Warning: unreferenced variable ENV-NAME
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;RESURRECT-PRIMOP compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (#F #F #F #F) (QUOTE T)) compiled
+;  Consed environment = (ARGLIST)
+;(LAMBDA (#F #F #F #F) ARGLIST) compiled
+;(LAMBDA (OBJECT.28.31 STATE.29.32) ...) compiled
+;GET-PRIMOP-FROM-ENV compiled
+;RESURRECT-REFERENCE compiled
+;(LAMBDA #F ...) compiled
+
+(FREE-VARIABLES (PRIMOP.FORMALS PRIMOP.SOURCE CONS* LOCAL-SUPPORT LOSING-RECEIVE
+*VALUES-VECTOR* MAP LIST MAKE-TABLE SUPPORT.VALUE TABLE->LIST EMPTY? NODE?
+PRIMOP-NODE? PRIMOP-VALUE PRIMOP.ENVIRONMENT EQ? MEM PRIMOP.ID TABLE-ENTRY
+SETTER LAMBDA-NODE? CALL-NODE? CALL-PROC+ARGS REFERENCE-NODE? REFERENCE-VARIABLE
+VARIABLE-BINDER VARIABLE-SUPPORT-ENV IDENTIFICATION LAMBDA-BODY BUG SUPPORT.DATA
+SUPPORT.VARIANT NODE-VARIANT LEAF-NODE? LOSING-XSELECT LEAF-VARIANT LITERAL-VALUE
+PRIMOP.ARGLIST VARIABLE-UNIQUE-NAME LOSING-XCASE LAMBDA-VARIABLES CALL-EXITS
+->FILENAME WITH-OPEN-STREAMS-HANDLER READ FILENAME-WITH-TYPE OPEN FALSE
+MAKE-HANDLE MAKE-SUPPORT-ENV WALK MAKE-PRIMOP-ENV CONSTRUCT-PRIMOP *ORBIT-ENV*
+*VALUE MAKE-SUPPORT-ENTRY CREATE-LITERAL-NODE CREATE-VARIABLE CREATE-LAMBDA-NODE
+BIND-VARIABLES RELATE LENGTH CREATE-CALL-NODE RELATE-CALL-PROC+ARGS ASSQ
+PRIMOP-SUPPORT EXP %OBJECT JOIN CREATE-PRIMOP-NODE PRIMOP.CONSTRUCTED? %DISPATCH-NEXT
+VAR CREATE-REFERENCE-NODE OBTAIN-VARIABLE))
+
+(DEFINED-VARIABLES (EXPRESS-SUPPORT SUPPORT-ENV->EXPRESSION NEEDED-SUPPORT-ENVS
+FIND-SUPPORT-ENVS EXPRESS-NODE EXPRESS-CALL EXPRESS-LAMBDA EXPRESS-LEAF
+GET-SUPPORT-ENVIRONMENTS READ-SUPPORT-FROM-FILE EXPRESSION->SUPPORT-ENV
+GET-SUPPORT-ENV PRIMOP-DEFS->ENV RESURRECT-SUPPORT RESURRECT-NODE RESURRECT-LAMBDA
+RESURRECT-CALL RESURRECT-PRIMOP RESURRECT-REFERENCE GET-PRIMOP-FROM-ENV))
+
+(LSET-VARIABLES #F)
+
+;;;     144  number of templates/code chunks emitted
+;;;    4191  LAP instructions emitted
+;;;      96  number of value cell pointers in unit
+;;;     269  number of entries into data section
+;;;      94  calls not requiring stack padding
+;;;      16  calls requiring stack padding
+;;;    1057  number of TN's generated
+;;;      33  successes at propagating substitution into a LET body
+;;;      46  attempts to propagate substitution into a LET body
+;;;      71  substitutions of an argument for a parameter
+;;;      55  ((LAMBDA () FOO)) becomes FOO
+;;;      67  unreferenced argument with no side effects is flushed
+;;;       1  a CALL to an open-codeable function is open-coded
+;;;       1  IF of a LET becomes LET of an IF
+;;;      12  IF of a constant has dead arm eliminated
+;;;       1  IF of an IF is involuted (anchor pointing)
+;;;       9  (IF (NOT A) B C) becomes (IF A C B)
+;;;       2  one BLOCK within another is flattened out
+;;;       2  statements eliminated from a BLOCK
+;;;      70  unreferenced parameter is flushed
+;;;    1570  number of internal-format program nodes created
+
+
+;----- Finished compiling "/t/t3/comp/support.t"
+

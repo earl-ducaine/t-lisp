@@ -1,0 +1,38 @@
+To build a system:
+
+Call the T process which is building the new system the "builder" and the
+system being built the "buildee".
+
+1. Load compiled expressions for all the buildee's modules into the
+builder.
+
+2. Instantiate the buildee's compiled expressions, yielding a list of
+closures (i.e. instantiations).
+   - Keep track of the bindings needed in the buildee's environments.
+Definitions will have to be propagated between closures, LSET variables will
+have to obtain unique value cells, and a cross-reference table will need
+to be built.
+
+3. Optional consistency check.  Look for unbound variables.  Look at
+annotation info, support files, etc. to see if there are type or number of
+args mismatches.
+
+4. Build optional "reflective" structures.
+   - If any module requires (the-environment), build a representation of
+the environment.
+   - If any module requires (the-symbol-table), similarly build a
+representation of it.
+   - [Is there some way to avoid this step somehow - let the structures be
+created only at startup time, as in T2?  Is this desirable?]
+
+5. Virtual GC.  Root from the list of instantiations, traversing all
+reachable objects.  Obtain new addresses for all objects encountered.
+Deal with circular structure.  Allocate new space in one of three
+virtual heaps.
+   - Pure-pi space gets: byte vectors (code vectors), floats & bignums,
+string texts, symbols.
+   - Pure-pd space gets: string headers, pairs, general vectors.
+   - Impure space gets the closures (i.e. units) themselves.
+   - Foreign procedures (what to do?).
+
+6. Dump.  Write out a relocatable object module.

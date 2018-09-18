@@ -1,0 +1,82 @@
+
+;----- Beginning T compilation on "$DUMP/retrieve.t"
+
+;Obtaining support file "$DUMP/codes.uvs"
+;(LAMBDA (CODE ()) ...) compiled
+;ADD-DISPATCH compiled
+;DECODE-PLAIN compiled
+;DECODE-SHARED compiled
+;DECODE-DATA compiled
+;DECODE-SHARED&DATA compiled
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;  Consed environment = (ACCESSORS MAKERS STRINGS OBJECTS IN STATUS FILENAME)
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (OBJECT.28 STATE.29) ...) compiled
+;OPEN-RETRIEVE compiled
+;GET-NEXT-CODE compiled
+;  Consed environment = (ACCESSORS MAKERS STRINGS OBJECTS STATUS IN)
+;  Consed environment = ((ACCESSORS MAKERS STRINGS OBJECTS STATUS IN) THING)
+;(LAMBDA (PROC) ...) compiled
+;NEXT compiled
+;RETRIEVE-OBJECT compiled
+;GET-NEXT-OBJECT compiled
+;  Consed environment = (IN)
+;(LAMBDA (()) ...) compiled
+;GET-STRING compiled
+;GET-BYTEV compiled
+;GET-FLOAT compiled
+;GET-BIGNUM compiled
+;GET-BYTE compiled
+;GET-TWO-BYTES compiled
+;GET-BYTES compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (ERROR *VALUES-VECTOR* LOSING-RECEIVE ->FILENAME MAKE-DUMP-STATUS
+OPEN MAKE-VECTOR FALSE %OBJECT PRINT READ CLOSE %DISPATCH-NEXT OBJECT-HASH
+FORMAT READC *EOF* *EOF* *EOF* DUMP-STATUS-OBJECT-ID SETTER DUMP-STATUS-STRING-ID
+WALK - STRING->SYMBOL MAKE-STRING MAP-STRING! MAKE-BYTEV FIXNUMS-REPLACE-FLONUM
+* + VECTOR-FILL))
+
+(DEFINED-VARIABLES (ADD-DISPATCH DECODE-SHARED&DATA DECODE-DATA DECODE-SHARED
+DECODE-PLAIN *DECODE-DISPATCH-VEC* GET-BYTES OPEN-RETRIEVE RETRIEVE-OBJECT
+GET-NEXT-CODE GET-NEXT-OBJECT GET-BIGNUM GET-BYTEV GET-FLOAT GET-STRING
+GET-BYTE GET-TWO-BYTES))
+
+(LSET-VARIABLES ())
+
+;;;      95  number of templates/code chunks emitted
+;;;    2946  LAP instructions emitted
+;;;      49  number of value cell pointers in unit
+;;;     168  number of entries into data section
+;;;      63  calls not requiring stack padding
+;;;       6  calls requiring stack padding
+;;;    1065  number of TN's generated
+;;;       4  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;      13  successes at propagating substitution into a LET body
+;;;      22  attempts to propagate substitution into a LET body
+;;;      88  substitutions of an argument for a parameter
+;;;      40  ((LAMBDA () FOO)) becomes FOO
+;;;      65  unreferenced argument with no side effects is flushed
+;;;       6  a CALL to a primop with constant arguments is folded
+;;;       6  (SETTER FOO) becomes SET-FOO
+;;;       8  IF of a constant has dead arm eliminated
+;;;       2  IF of an IF is involuted (anchor pointing)
+;;;       2  (IF (NOT A) B C) becomes (IF A C B)
+;;;       3  one BLOCK within another is flattened out
+;;;       3  BLOCK of one statement simplified to the statement
+;;;       6  statements eliminated from a BLOCK
+;;;      71  unreferenced parameter is flushed
+;;;    1706  number of internal-format program nodes created
+
+
+;----- Finished compiling "$DUMP/retrieve.t"
+

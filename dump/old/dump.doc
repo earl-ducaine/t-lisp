@@ -1,0 +1,46 @@
+Object Dumper
+=============
+ 
+The object dumper can be used to dump the T objects into a file in a
+compact encoding binary format, and read in later on in an efficient way.
+
+The data structures the dumper currently supports are integers, 
+characters, symbols, strings, lists, vectors, byte vectors, floating 
+point numbers, big numbers, fix numbers, and the data structures
+composed by them.  
+
+The encoding and decoding will not duplicate any non-immedicate data          s
+structures and allow circular data structures.
+
+The following is an example of how to use the dumper:
+
+    Before doing anything we need to load in the dumper file by
+
+    (load "loaddump.bin")
+
+Dumping:
+
+    (lset s(open-dump "foo.tmp"))
+
+    (dump s obj1)
+    (dump s obj2)
+
+       ...
+    (dump s objN)
+
+    (close-dump s)
+
+
+Reading from the dumped file:
+
+    (lset d (open-dumped "foo.tmp"))
+
+    (lset obj1 (get-dump d))
+    (lset obj2 (get-dump d))
+
+       ...
+    (lset objN (get-dump d))
+
+    (close-dumped d)
+
+If you call "(get-dump d)" more than N times, it will return end-of-file.

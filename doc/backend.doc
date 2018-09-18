@@ -1,0 +1,78 @@
+Overview of register-allocator and code generator:
+
+These tasks are accomplished by a tree walk.  Each closure or label is compiled
+separately.  The tree is walked by generating code for each call and then
+1) if there are two continuations, the state of the registers and stack is
+   saved and one arm is walked, then the state is restored and the other is
+   traversed.
+
+2) if there are zero continuations we just generate a return.
+
+3) if the continuation is a closure or a variable, we stop.
+
+4) the call is open coded and after generating it we go on to the continuation.
+
+The data-structures the allocator uses consists of:
+
+the structure *REGISTERS*
+this contains entries for scratch-registers, pointer-registers, scratch-temps,
+and pointer-temps.  Each entry is nil or a value which could be a variable,
+primop, or literal.  To go along with this there is a table which maps values
+to registers and temporaries where they are at the time the information is
+asked for.
+
+the variable *lambda*
+
+in the case of a closure, this represents the environment of the closure.
+for a label, this is nil if there is no environment needed, or the lexically
+closest closure as given in the join-point structure of the label.
+
+
+the variable *stack-pos*
+
+this represents how much different the actual stack pointer is from the
+virtual "frame pointer".
+
+The allocator dispatches on the procedure of each call node.
+If it is a general-call or return then a parallel-assignment is performed.
+The code that does this is very gross.  The register called AN is a pointer
+register but not an argument-register.  There is a guarantee that for each
+call, only one closure will have to be consed, and AN is the register that
+%make-extend (the conser) returns its value in.  The parallel assignment
+is very hairy but really just tries to minimize the number of moves to
+put the arguments in the right place.  For the purposes of parallel
+assignment, register and temporaries are treated uniformly.
+
+If the procedure being called is a label to be jumped to, we establish the
+state of the registers for this label is it has not already been done.
+If it has then we must honor that state which means augmenting the arguments
+to the parallel assignment by the free variables that need to be moved to
+the places the code we are jumping to expects them.  In other words, the
+procedure being called may have extra arguments.
+
+If the procedure is a primop then we dispatch to the primop.generate code.
+
+It is in the generate code for primops that the interesting things happen.
+Each primop has information about the representations of its arguments and
+in what kind of register it wants its arguments or maybe which one precisely.
+The general action of a primop is to look at where its arguments are and where
+its result(s) want to go, and then generate code to bring its arguments to
+where it can use them, trying to make sure that this is consistant with where
+the result wants to go.  The rule of allocation used is that if a value is
+wanted in a particular register and that register is occupied by something
+which is live after the current call, that something is forced out into a
+temporary or different register.
+
+Another rule of the allocator is that if something is represented in the
+*registers* structure, then it is assumed to be alive.  This means that
+after generating code for a call, the values that die at that call must
+be purged from the structure.
+
+How is the register that a primop wants to put ists value in determined?
+
+If the continuation is a variable then we are returning and so want to put
+the value in the first argument register A1. Otherwise we look at the
+references to the variable which the result is bound to and pick the one
+we like (currently the first).  We then look at the call that this
+reference is an argument to and determine, by the calling sequence or
+information from a primop, what register or what kind of register is desired.

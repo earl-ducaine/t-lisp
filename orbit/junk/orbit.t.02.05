@@ -1,0 +1,1039 @@
+(herald orbit
+        (syntax-table *orbit-syntax-table*))
+
+;;; Orbit compiler, part 2.
+
+;;;  Optimization of CPS code tree
+;;;  Live variable analysis
+;;;  Code generation
+
+;;; Post-CPS code has these properties:
+;;;   For every LAMBDA node L:
+;;;     - L's body is a call.
+;;;     - L's parent is a call, or else L is the top of the tree.
+;;;   For every call node N:
+;;;     - N's procedure and arguments are all non-calls.
+;;;     - N's parent is a LAMBDA.
+
+;;; ---------------------------------------------------------------------
+;;; Post-CPS optimizer.
+
+;;; This phase performs transformations on the CPS tree.
+;;; This includes:
+;;;   - Variable substitution (alias elimination)
+;;;   - Primop simplifications
+;;;   - Data flow (type) analysis
+
+(define-generalist simplify dispatch
+  (lambda (node)
+    (iterate loop ((node node))
+      (cond ((node-simplified? node) node)
+            (else
+             (walk simplify (node-children node))      ; bottom-up
+             (set (node-simplified? node) t)
+             (let ((parent (node-parent node))
+                   (role (node-role node)))
+               ((dispatch node) node)
+               (if parent (loop (role parent)) node)))))))
+
+(define-specialist ((simplify literal) node) nil)
+(define-specialist ((simplify reference) node) nil)
+
+;;; For LAMBDA, we establish the value of the LAMBDA's self-variable,
+;;; and delete any unused parameters.
+
+(define-specialist ((simplify lambda) node)
+  (establish-value (car (lambda-variables node)) node)
+  (map! (lambda (var)
+          (cond ((and (used? var) (null? (variable-refs var))) nil)
+                (else var)))
+        (cdr (lambda-variables node))))
+
+;;; Calls: deal with LET [i.e. ((lambda ...) ...)] and the various primops.
+
+(define-specialist ((simplify call) node)
+  (let ((proc (call-proc node)))
+    (select (node-type proc)
+      ((lambda-node?)
+       (simplify-let node))
+      ((literal-node?)
+       (let ((primop (literal-value proc)))
+         (cond ((not (primop? primop))
+                (format t "literal in procedure position - ~s~%" node)
+                (replace proc (create-literal-node undefined-effect-primop)))
+               ((integrable-procedure-definition primop)
+                => (lambda (def) (simplify-integrable-call node def)))
+               ((primop-simplifier primop)
+                => (lambda (simp) (simp node)))))))))
+
+(define (primop-simplifier primop)
+  (select primop
+    ((Y-primop) simplify-Y)
+    ((values-primop) simplify-values)
+    ((receive-values-primop) simplify-receive-values)
+    ((if-eq-primop if-fx=-primop if-fx<-primop)
+     (lambda (node)
+       (propagate-continuations node '(() () 0 0))))
+    (else nil)))
+
+;;; Integrable procedures
+
+(define (simplify-integrable-call node def)
+  (replace (call-proc node)
+           (lambda (lit)
+             (erase lit)
+             (convert-trivial (alpha-integrable def)))))
+
+;;; (values cont a b c)
+;;;  ==>  (cont a b c)
+
+(define (simplify-values node)
+  (let ((cont (car (call-args node))))
+    (replace-call-args node (cdr (copy-list (call-args node))))
+    (replace (call-proc node)
+             (lambda (proc) (erase proc) cont))))
+
+;;; (receive-values cont (lambda (k x y) (k ...)) proc a b c)
+;;;   ==>  (proc (lambda (x y) (cont ...)) a b c)
+
+(define (simplify-receive-values node)
+  (destructure (((cont recip proc . args) (call-args node)))
+    (let ((cont (namify cont)))
+      (cond ((lambda-node? recip)
+             ;; The following detaches cont, recip, proc.
+             (replace-call-args node (cons recip (copy-list args)))
+             (if (eq? (lambda-rep recip) 'rep/pointer)     ;might be label
+                 (alter-lambda-rep recip 'rep/continuation))
+             (replace (call-proc node)
+                      (lambda (lit)
+                        (erase-all lit)
+                        proc))
+             ;; Propagate continuation into recipient's body.
+             (set-variable-value (cadr (lambda-variables recip))
+                                 cont)
+             (modify (cdr (lambda-variables recip)) cdr)
+             (walk (lambda (var) (if var (decrement (variable-number var))))
+                   (cdr (lambda-variables recip))))
+            (else
+             (bug "this case not yet handled - ~s" node))))))
+
+;;; --- Other interesting transformations:
+
+;;; (call-with-current-continuation cont proc)
+;;;   =>  (dynamic-state
+;;;         (lambda (state)
+;;;           (proc cont (lambda (c x y z)
+;;;                        (set-dynamic-state (lambda ()
+;;;                                             (cont x y z))
+;;;                                           state)))))
+
+;;; In (n-ary (lambda (c) ... (c x y z) ...)
+;;;           (lambda (k a b r) ...))
+;;; substitute a := x, b := y.
+
+;;; (<pred> (lambda (bool) (if-eq? cont bool nil f g))
+;;;         x y)
+;;;   =>  (if-<pred> cont x y f g)
+
+;;; (undefined-value c ...) => (c '#{Object *undefined-value*})
+
+;;; Deal with multiple-return-point primops such as IF-EQ.
+
+;;; Three things happen in this routine:
+;;;  (a) Make sure that the conditional's continuation is not a lambda.
+;;;       (if-eq (lambda ...) x y p q)
+;;;         ==>  (let ((j (lambda ...))) (if-eq j x y p q))
+;;;  (b) Make sure that each arm of the conditional is a lambda node.
+;;;       (if-eq j x y p q)
+;;;         ==>  (if-eq j x y (lambda (c v) (p c v)) (lambda (c v) (q c v)))
+;;;  (c) Propagate the conditional's continuation into the arms.
+;;;       (if-eq j x y p q)
+;;;         ==>  (if-eq $ x y (lambda (() v) (p j v)) (lambda (() v) (q j v)))
+
+(define (propagate-continuations node mask)
+  (let ((cont (namify (car (call-args node)))))
+    ;; cont must now be either a reference or a literal.
+    (walk (lambda (arg nvals)
+            (if nvals
+                (let* ((new-arg (node->label arg (fx+ nvals 1)))
+                       (var (cadr (lambda-variables new-arg))))
+                  (set-variable-value var cont))))
+          (cdr (call-args node))
+          mask)
+    (if (reference-node? cont)
+        (replace cont
+                 (lambda (cont)
+                   (erase cont)
+                   (create-literal-node *undefined-value*))))))
+
+;;; Make sure that the argument node is either a reference or a literal.
+;;; Introduce a LET around the parent call node if necessary in order
+;;; to give a name to the LAMBDA.
+;;;  (foo ... (lambda ...) ...)
+;;;    ==>  (let ((j (lambda ...))) (foo ... j ...))
+
+(define (namify node)
+  (cond ((lambda-node? node)
+         ;; Introduce a LET in order to give a name to the lambda.
+         (let* ((var (create-variable 'j))  ; j is for join point
+                (lnode (create-lambda-node (list nil var)))
+                (cnode (create-call-node 2))
+                (rnode (create-reference-node var)))
+           (relate call-proc cnode lnode)
+           (replace (node-parent node)
+                    (lambda (parent)
+                      (relate lambda-body lnode parent)
+                      (replace node
+                               (lambda (node)
+                                 (relate (call-arg 1) cnode node)
+                                 rnode))
+                      cnode))
+           (format t "  - Creating label ~a = ~a~%"
+                   var
+                   (lambda-name lnode))
+           rnode))
+        (else node)))
+
+;;; Convert FOO to (LAMBDA (...) (FOO ...)).
+
+(define (node->label node nargs)
+  (cond ((not (lambda-node? node))
+         (do ((i 0 (fx+ i 1))
+              (vars '() (cons (create-variable 'l) vars)))
+             ((fx>= i nargs)
+              (replace node
+                (lambda (node)
+                  (let* ((vars (reverse! vars))
+                         (new-node (create-lambda-node (cons nil vars)))
+                         (body (create-call-node (fx+ nargs 1))))
+                    (relate lambda-body new-node body)
+                    (relate call-proc body node)
+                    (relate-call-args body
+                       (map create-reference-node vars))
+                    (format t "  - Creating label ~a~%"
+                            (lambda-name new-node))
+                    (set (lambda-rep new-node) 'rep/label)
+                    new-node))))))
+        ((not (fx= (length (cdr (lambda-variables node))) nargs))
+         (set (lambda-rep node) 'rep/label)
+         (bug "wrong number of args")
+         node)
+        (else
+         (set (lambda-rep node) 'rep/label)
+         node)))
+
+;;; Level propagation for extended Y operator.
+;;; Pre-CPS:
+;;;   (Y (lambda (f1 f2 f3 ...)
+;;;        (values (lambda () b) e1 e2 e3 ...)))
+;;; Post-CPS:
+;;;   (Y k1 (lambda (k2 f1 f2 f3 ...)
+;;;           ... evaluating the e's if they're calls ...
+;;;             (k2 (lambda (k3) b') e1' e2' e3' ...)))
+;;;
+;;; (1) Substitute k1 for occurrences of k3 in body.
+;;; (2) Set up feeders for the fi/ei pairs.
+;;; (3) Call simplify-labels to deal with known procedures.
+;;; (4) Flush unreferenced var/value pairs.
+
+;;; We ought also to handle the degenerate case, but don't.
+;;; (Y k1 (lambda (k2) (... (k2 (lambda (k3) (k3 b))))))
+;;;   ==>  (... (k1 b))
+
+(define (simplify-Y node)
+  (let* ((arg ((call-arg 2) node))
+         (rvar (cadr (lambda-variables arg)))   ; Dummy variable
+         (returner (node-parent (car (variable-refs rvar)))))
+    (set (lambda-rep arg) 'rep/label)
+    (alter-variable-rep rvar 'rep/Y)
+    ;; The args to the returner node are the labels themselves,
+    ;; except for the first, which is called to produce the value of the
+    ;; overall LABELS expression (i.e. its body is the LABELS's body).
+    ;; Propagate Y's continuation into the body.
+    (let* ((body ((call-arg 1) returner))
+           (var (cadr (lambda-variables body)))
+           (cont (namify ((call-arg 1) node))))
+      (set-variable-value var cont)
+      (if (reference-node? cont)            ; Cf. propagate-continuations
+          (replace cont (lambda (cont)
+                          (erase cont)
+                          (create-literal-node *undefined-value*))))
+      (set (lambda-rep body) 'rep/label))
+    (walk establish-variable-value
+          (cddr (lambda-variables arg))
+          (cdr (call-args returner)))
+    (simplify-labels arg)
+    (erase-unused-arguments returner (cdr (lambda-variables arg)))  ;???
+    (remove-unreferenced-variables arg)))
+
+;;; --- Simplify a LET.
+
+;;; Two tasks here:
+;;; 1. Must substitute for the lambda's variables.
+;;;    When we're done with this, all remaining arg nodes will be lambdas.
+;;; 2. Must substitute for variables of the labels, i.e. the lambdas which
+;;;    are arguments and which are only called.
+
+;;; (let ((x 1) (y a) (f (lambda ...)))
+;;;   ... x ... y ... f ...)
+
+(define (simplify-let let-node)
+  (let ((node (call-proc let-node)))
+    (set (lambda-rep node) 'rep/label)
+    (cond ((null? (cdr (lambda-variables node)))
+           ;; ((lambda () x)) => x
+           (replace let-node
+                    (lambda (let-node)
+                      (erase let-node)
+                      (detach (lambda-body node)))))
+          (else
+           ;; Set the feeders slots of all bound variables.
+           (walk establish-variable-value
+                 (cdr (lambda-variables node))
+                 (call-args let-node))
+           ;; Substitute, where possible.
+           (simplify-label node (list let-node))
+           ;; This looks at said slots, and acts.
+           (simplify-labels node)))))
+
+;;; Code for dealing with any LAMBDA for which all calls are known.
+;;; Assumes that feeders slots of bound variables have been filled in already.
+;;; The term "label" is not exactly appropriate because many LAMBDA
+;;; nodes which do not fall into this category may have representation
+;;; REP/LABEL (e.g., primop continuations).
+
+(define (simplify-label node calls)
+  (let ((vars (cdr (lambda-variables node))))
+    ;; Substitute for any known value, if possible.
+    (walk (lambda (var)
+            (if var (maybe-substitute var nil)))     ; be more liberal?  how?
+          vars)
+    (cond ((any null? vars)
+           ;; Erase arguments corresponding to unreferenced variables.
+           (walk (lambda (c)
+                   (erase-unused-arguments c vars))
+                 calls)
+           ;; Remove unreferenced variables from bound variable list.
+           (remove-unreferenced-variables node)))))
+
+;;; Common code for LET and LABELS for dealing with known procedures.
+
+(define (simplify-labels node)
+  (let* ((vars (filter (lambda (var)
+                         (and (used? var)
+                              (variable-known var)
+                              (all-refs-are-calls? var)))
+                       (cdr (lambda-variables node))))
+         (procs (map variable-known vars))
+         (callses (map (lambda (var)
+                         (map node-parent (variable-refs var)))
+                       vars)))
+    (walk (lambda (var)
+            (alter-variable-rep var 'rep/label))
+          vars)
+    (walk (lambda (proc calls)
+            (compute-feeders (cdr (lambda-variables proc)) calls))
+          procs
+          callses)
+    (iterate loop ()    ; In a LET, the 2nd time through will be the last.
+      (if (enny (lambda (proc)
+                  (enny propagate
+                        (lambda-variables proc)))
+                procs)
+          (loop)))
+    (walk (lambda (proc calls)
+            (simplify-label proc calls))
+          procs
+          callses)))
+
+;;; Propagate argument values in calls to LABELS functions to the variables
+;;; which will become bound to them.
+
+(define (compute-feeders vars calls)
+  (walk (lambda (var)
+          (cond (var
+                 (walk (lambda (c)
+                         (set-feeder var (nth (call-proc+args c)
+                                              (variable-number var))))
+                       calls)
+                 (set (variable-known? var) t))))   ; yeah!
+        vars))
+
+;;; Establish the VAL node as the value of VAR.
+
+(define (establish-value var node)
+  (set-feeder (car (lambda-variables node)) node)
+  (if (not (null? (cdr (variable-feeders node))))
+      (bug "lost in ESTABLISH-VALUE - ~s" node))
+  (set (variable-known? var) t))
+
+;;; Establish value, and maybe even substitute.
+
+(define (set-variable-value var node)
+  (cond (var
+         (establish-variable-value var node)
+         (maybe-substitute var nil))))          ; ??? fix later
+
+;;; Assert that the value of NODE finds its way to variable VAR.
+
+(define (set-feeder var node)
+  (cond ((and (or (not (reference-node? node))
+                  (neq? var (reference-variable node)))
+              (not (memq? node (variable-feeders var))))
+         (if (reference-node? node)
+             (set (variable-propagated? (reference-variable node))
+                  nil))
+         (push (node-feeders var) node)
+         (push (node-feedees node) var))))
+
+;;; Each reference to VAR may be feeding VAR's value to other variables.
+;;; The task here is to feed VAR's feeders to these other variables,
+;;; thus eliminating VAR itself from the circuit.
+
+;;; The "propagated?" flag is nil iff there might exist any variable
+;;; V which has a reference to VAR in its feeders list.  Note how
+;;; this invariant is preserved through the action of this routine and
+;;; of SET-FEEDER.
+
+(define (propagate var)
+  (cond ((and (used? var) (not (variable-propagated? var)))
+         (set (variable-propagated? var) t)
+         (enny (lambda (ref)
+                 (enny (lambda (v)
+                         (format t "  - Propagating: ~a := ~a~%"
+                                 (variable-name v) (variable-name var))
+                         (modify (variable-feeders v)
+                                 (lambda (l) (delq! ref l)))
+                         (modify (variable-feedees ref)
+                                 (lambda (l) (delq! v l)))
+                         (enny (lambda (node)
+                                 (set-feeder v node))
+                               (variable-feeders var)))
+                       (node-feedees ref)))
+               (variable-refs var)))
+        (else nil)))
+
+;;; Returns label procedure for this variable.
+
+(define (variable-known var)
+  (and (variable-known? var)
+       (let ((f (variable-feeders var)))
+         (and (not (null? f))
+              (null? (cdr f))
+              (let ((node (car f)))
+                (and (lambda-node? node)
+                     (eq? (lambda-rep node) 'rep/label)
+                     (car f)))))))
+
+;;; If true, then the LAMBDA to which this variable is being bound
+;;; can always be jumped to (although an environment adjustment may
+;;; be needed).
+
+(define (all-refs-are-calls? var)
+  (every? (lambda (ref)
+            (eq? (node-role ref) call-proc))
+          (variable-refs var)))
+
+;;; Flush ignored arguments from calls to a known procedure.
+
+(define (erase-unused-arguments c vars)
+  (iterate loop ((vars vars)
+                 (args (call-args c))
+                 (new-args '()))
+    (cond ((null? vars)
+           (relate-shorter-call-args c (reverse! new-args)))
+          ((null? (car vars))
+           (if (not (empty? (car args)))
+               (erase-all (detach (car args))))
+           (loop (cdr vars)
+                 (cdr args)
+                 new-args))
+          (else
+           (loop (cdr vars)
+                 (cdr args)
+                 (cons (detach (car args)) new-args))))))
+
+;;; Used in conjunction with above.
+
+(define (remove-unreferenced-variables node)
+  (iterate loop ((vars (lambda-variables node)) (n 1))
+    (cond ((null? (cdr vars)) 'done)
+          ((not (cadr vars))
+           (set (cdr vars) (cddr vars))
+           (loop vars n))
+          (else
+           (set (variable-number (cadr vars)) n)
+           (loop (cdr vars) (fx+ n 1))))))
+
+;;; ---------------------------------------------------------------------
+;;; Perform variable substitution
+
+(define (maybe-substitute var detach?)
+  (let ((f (variable-feeders var)))
+    (cond ((null? f)
+           (substitute var
+                       (create-literal-node *undefined-value*)
+                       nil))
+          ((null? (cdr f))
+           (cond ((ok-to-substitute? var (car f) detach?)
+                  (substitute var (car f) detach?)))))))
+
+;;; Substitution is permissible only if variables needed by the value are
+;;; in scope at the point where the variable is bound.
+;;; --- Is this too liberal?  What's the complexity of simplification given
+;;; that INFERIOR? may be quite expensive?  We would be safer if we only
+;;; tried to substitute LET and LABELS parameter/value pairs, but this
+;;; is necessary in order to to do recursion/loop discrimination (i.e.
+;;; propagate a loop's continuation into its exit points).
+
+(define (ok-to-substitute? var val detach?)
+  (xselect (node-type val)
+    ((literal-node?) t)
+    ((reference-node?)
+     (inferior? (lambda-body (variable-binder var))
+                (variable-binder (reference-variable val))))
+    ((lambda-node?)
+     (and detach?
+          (null? (cdr (variable-refs var)))
+          (inferior? (lambda-body (variable-binder var))
+                     (node-parent (node-parent val)))))))
+
+(define (inferior? node1 node2)
+  (iterate loop ((node node1))
+    (cond ((eq? node node2) t)
+          ((null? node) nil)
+          (else (loop (node-parent node))))))
+
+(define (substitute var val detach?)
+  (let ((refs (variable-refs var)))
+    (format t "  - Substituting: ~a := ~a~%"
+            var
+            (pp-cps-2 val))
+    (replace (car refs)
+             (lambda (ref)
+               (erase ref)
+               (if detach? (detach val) (copy val '()))))
+    (walk (lambda (ref)      ; careful - refs list is delq!'ed by erase
+            (replace ref (lambda (ref)
+                           (erase ref)
+                           (copy val '()))))
+          (cdr refs))))
+
+;;; ---------------------------------------------------------------------
+;;; Copy node structure.
+
+(define-generalist copy dispatch
+  (lambda (node rename)
+    ((dispatch node) node rename)))
+
+(define-specialist ((copy literal) node rename)
+  (create-literal-node (literal-value node)))
+
+(define-specialist ((copy reference) node rename)
+  (let ((var (reference-variable node)))
+    (cond ((assq var rename)
+           => (lambda (z)
+                (create-reference-node (cdr z))))
+          (else
+           (create-reference-node var)))))
+
+(define-specialist ((copy lambda) node rename)
+  (let* ((vars (lambda-variables node))
+         (new-vars (map (lambda (var)
+                          (if var
+                              (let ((new-var (create-variable
+                                               (variable-name var))))
+                                (set (variable-rep new-var)
+                                     (variable-rep var))
+                                new-var)
+                              nil))
+                        vars)))
+    (let ((new-node (create-lambda-node new-vars)))
+      (relate lambda-body new-node
+              (copy (lambda-body node)
+                    (append! (map cons vars new-vars) rename)))
+      (set (lambda-rep new-node) (lambda-rep node))
+      new-node)))
+
+(define-specialist ((copy call) node rename)
+  (let* ((args (call-proc+args node))
+         (new-node (create-call-node (length args))))
+    (walk (lambda (arg)
+            (relate (node-role arg) new-node (copy arg rename)))
+          args)
+    new-node))
+
+;;; ---------------------------------------------------------------------
+;;; Lifetime analysis.
+
+;;; For every LAMBDA node in the tree, we fill in:
+;;;   lambda-live - list of live variables on entry to the lambda.
+
+;;; For every VARIABLE structure V, we fill in:
+;;;   closures - list of LAMBDA nodes N for which the following hold:
+;;;                (a) N is a closure (rep/pointer)
+;;;                (b) V is live at N
+;;;                (c) there are no nodes superior to N at which V is live
+;;;   frames - similarly, for continuation LAMBDA's.
+
+(define (lifetime-analyze node)
+  (cond ((lambda-node? node)
+         (set (lambda-live node) nil)
+         (walk (lambda (var)
+                 (cond ((and (used? var) (not (variable-known var)))
+                        (set (variable-closures var) '())
+                        (set (variable-frames var) '())
+                        (walk (lambda (ref)
+                                (set-live var ref))
+                              (variable-refs var)))))
+               (lambda-variables node))
+         (lifetime-analyze-call (lambda-body node)))))
+
+(define (lifetime-analyze-call node)
+  (walk lifetime-analyze (call-proc+args node))
+  (let ((proc (call-proc node)))
+    (cond ((lambda-node? proc)
+           (lifetime-analyze-labels (cdr (lambda-variables proc))))
+          ((and (literal-node? proc)
+                (eq? (literal-value proc) Y-primop))
+           (let ((l (cddr (lambda-variables (cadr (call-args node))))))
+             (iterate loop ()
+                (if (lifetime-analyze-labels l) (loop))))))))
+
+(define (lifetime-analyze-labels vars)
+  (enny (lambda (var)
+          (cond ((and (used? var) (variable-known var))
+                 ;; The live variables of a known procedure are live
+                 ;; at every call to the procedure.
+                 => (lambda (label)
+                      (enny (lambda (ref)
+                              (enny (lambda (z)
+                                      (set-live z ref))
+                                    (lambda-live label)))
+                            (variable-refs label))))))
+        vars))
+
+(define (enny proc l)       ; Sort of like ANY, but keeps going after success
+  (do ((flag nil (or flag (proc (car l))))
+       (l l (cdr l)))
+      ((null? l) flag)))
+
+;;; Assert that the variable is live at the given leaf node.
+
+(define (set-live var node)
+  (let ((node (node-parent (node-parent node)))
+        (stop (variable-binder var)))
+    (cond ((or (eq? node stop)
+               (memq? var (lambda-live node)))
+           nil)
+          (else
+           (iterate loop ((node node)
+                          (frame nil)
+                          (closure nil))
+             (cond ((or (eq? node stop)
+                        (memq? var (lambda-live node)))
+                    (if closure (push closure (variable-closures var)))
+                    (if (and frame (neq? frame closure))        ; hack
+                        (push frame (variable-frames var)))
+                    t)
+                   (else
+                    (push var (lambda-live node))
+                    (let ((p (node-parent (node-parent node))))
+                      (xcase (lambda-rep node)
+                        ((rep/label) closure)
+                         (loop p frame closure))
+                        ((rep/continuation)
+                         (loop p node closure))
+                        ((rep/pointer)
+                         (if frame
+                             (set-live (car (lambda-variables node))
+                                       frame))
+                         (if closure
+                             (set-live (car (lambda-variables node))
+                                       closure))     ; env backpointer
+                         (loop p node node))))))))))
+
+;;; ---------------------------------------------------------------------
+;;; Closure analysis.
+
+(define (close-analyze node proc)
+  (cond ((lambda-node? node)
+         (cond ((eq? (lambda-rep node) 'rep/label)
+                (close-analyze-body node proc))
+               ((or (null? (node-parent node))
+                    (and (eq? (node-role node) (call-arg 2))
+                         (let ((p (call-proc (call-parent node))))
+                           (and (literal-node? p)
+                                (eq? (literal-value p) closure-primop)))))
+                (close-analyze-body node node))
+               (else
+                (close-analyze-closure node proc))))
+        ((reference-node? node)
+         (set (reference-how node)
+              (lookup (reference-variable node) proc)))))
+
+(define (lookup var proc)
+  (cond ((null? (node-parent proc)) nil)
+        (else
+         (let ((env (cddr (call-args (node-parent proc)))))
+           (cond ((pos (lambda (var ref)
+                         (eq? var (reference-variable ref)))
+                       var
+                       (cdr env))
+                  => (lambda (n) (cons n (car (lambda-variables proc)))))
+                 ((lookup var
+                          (variable-binder (reference-variable (car env))))
+                  => (lambda (l)
+                       (cons 0 l)))
+                 (else nil))))))
+
+(define (close-analyze-body node proc)
+  (walk (lambda (arg) (close-analyze arg proc))
+        (call-proc+args (lambda-body node))))
+
+(define closure-primop (create-primop 'closure nil))
+
+;;; (foo ... (lambda (...) ... x ...) ...)
+;;;   ==>  (closure (lambda (q) (foo ... q ...))    ; continuation
+;;;                 (lambda (...) ... x ...)        ; the closure
+;;;                 outer                           ; outer contour
+;;;                 x ...)
+
+(define (close-analyze-closure node proc)
+  (let* ((delta (cons (car (lambda-variables proc))
+                      (setdiff (lambda-live node) (lambda-live proc))))
+         (delta-nodes (map create-reference-node delta))
+         (var (create-variable 'q))
+         (lnode (create-continuation var))    ; continuation
+         (cnode (create-call-node (fx+ (length delta) 3))))
+    (alter-lambda-rep lnode 'rep/label)
+    (relate call-proc cnode (create-literal-node closure-primop))
+    (replace (node-parent node)
+             (lambda (parent)
+               (relate lambda-body lnode parent)
+               (replace node
+                        (lambda (node)
+                          (relate-call-args cnode
+                                            (cons* lnode
+                                                   node
+                                                   delta-nodes))
+                          (let ((rnode (create-reference-node var)))
+                            (set (reference-how rnode) nil)
+                            rnode)))
+               cnode))
+    (format t "  - Closure ~a (proc = ~a, env = ~a)~%"
+            var
+            (lambda-name node)
+            (map variable-name delta))
+    (walk (lambda (ref) (set (reference-how ref) nil))
+          delta-nodes)
+    (close-analyze-body node node)))
+
+;;; ---------------------------------------------------------------------
+;;; Representation analysis.
+
+;;; The lambda-rep slot of each lambda node:
+;;;   - is initially rep/pointer;
+;;;   - for continuations, is set to rep/continuation during CPS conversion;
+;;;   - for various LAMBDA nodes, is set to rep/label during optimization.
+
+;;; The variable-rep slot is computed according to the variable's feeders.
+;;; Whatever representation is chosen must be able to accomodate the types
+;;; of all the feeders; but it would additionally be nice if the
+;;; the representation is something amenable to the majority of the
+;;; variable's clients.
+
+;;; ****** Totally broken ******
+
+(define (label-reference? ref)
+  (let ((role (node-role ref)))
+    (or (eq? role call-proc)
+        (and (eq? role (call-arg 1))
+             (literal-node? (call-proc (node-parent node)))))))
+
+(define (alter-variable-rep var rep)
+  (set (variable-rep var) rep))         ; vestigial
+
+;;; ---------------------------------------------------------------------
+;;; Register allocation.
+
+;;; This works the same way as RABBIT's DEPTH-ANALYZE.
+
+;;; depth = number of next available register.
+;;; P = procedure reg = register 0.
+;;; SP = continuation register.
+;;; 1 = first argument (or return value) register, 2 is 2nd arg, etc.
+
+(define (allocate node depth)
+  (cond ((lambda-node? node)
+         (let* ((vars (lambda-variables node))
+                (depth
+                 (xcase (lambda-rep node)
+                   ((rep/pointer)
+                    (set (variable-home (car vars)) 'P)
+                    (if (cadr vars)
+                        (set (variable-home (cadr vars)) 'SP))
+                    (walk (lambda (var)
+                            (if var (set (variable-home var)
+                                         (fx- (variable-number var) 1))))
+                          (cddr vars))
+                    (fx- (length vars) 1))
+                   ((rep/continuation)
+                    (set (variable-home (car vars)) 'P)
+                    (walk (lambda (var)
+                            (if var (set (variable-home var)
+                                         (variable-number var))))
+                          (cdr vars))
+                    (length vars))
+                   ((rep/label)
+                    (allocate-label node depth)))))
+           (walk (lambda (arg) (allocate arg depth))
+                 (call-proc+args (lambda-body node)))))))
+
+(define (allocate-label node depth)
+  (iterate loop ((vars (cdr (lambda-variables node)))
+                 (d depth))
+    (cond ((null? vars) d)
+          ((and (car vars)
+                (neq? (variable-rep (car vars)) 'rep/label)
+                (neq? (variable-rep (car vars)) 'rep/Y))
+           (set (variable-home (car vars)) d)
+           (loop (cdr vars) (fx+ d 1)))
+          (else
+           (loop (cdr vars) d)))))
+
+;;; ---------------------------------------------------------------------
+;;; Generate code.
+
+;;; Returns a list of compilations of procedures.
+
+(define (generate node output)
+  (do ((args (reverse (call-proc+args (lambda-body node))) (cdr args))
+       (output output (cond ((lambda-node? (car args))
+                             (generate (car args) output))
+                            (else output))))
+      ((null? args)
+       (generate-body node output))))
+
+;;; Returns a pair (label . code) where code is a list of instructions.
+
+(define (generate-body node output)
+  (cons (cons (lambda-name node)
+              (let ((code (generate-call (lambda-body node))))
+                (xcase (lambda-rep node)
+                  ((rep/label) code)
+                  ((rep/pointer)
+                   (generate-header node 'entry-point  'P  code))
+                  ((rep/continuation)
+                   (generate-header node 'return-point 'SP code)))))
+        output))
+
+(define (generate-header node opcode reg code)
+  (ignore node reg)     ; vestigial
+  `((,opcode) ,@code))
+
+(define (generate-call body)
+  (let ((proc (call-proc body)))
+    (xselect (node-type proc)
+      ((literal-node?)
+       ((primop-code-generator (literal-value proc)) body))
+      ((lambda-node?)
+       (generate-label-call body))
+      ((reference-node?)
+       (xselect (variable-rep var)
+         ((rep/label)
+          (generate-label-call body))
+         ((rep/Y)
+          (generate-Y-values body))
+         ((rep/pointer)
+          (generate-general-call body))
+         ((rep/continuation)
+          (generate-return body)))))))
+
+;;; Call a known procedure (label).
+
+(define (generate-label-call node)
+  (let* ((proc (call-proc node))
+         (label (xselect (node-type proc)
+                  ((reference-node?)
+                   (variable-known (reference-variable proc)))
+                  ((lambda-node?)
+                   proc))))
+    (iterate loop ((args (call-args node))
+                   (vars (cdr (lambda-variables label)))
+                   (code '()))
+      (cond ((null? args)
+             (reverse! (cons `(jump ,(lambda-name label)) code)))
+            (else
+             (loop (cdr args)
+                   (cdr vars)
+                   (cond ((and (car vars)
+                               (neq? (variable-rep (car vars)) 'rep/label))
+                          (append! (generate-arg (variable-home (car vars))
+                                                 (car args))
+                                   code))
+                         (else code))))))))
+
+(define (generate-Y-values node)
+  `((jump ,(lambda-name (car (call-args node))))))
+
+;;; This is not quite right, because the assignments really ought
+;;; to happen in parallel; we may have problems.
+
+(define (generate-general-call node)
+  (append! (apply append!
+                  (map (lambda (arg)
+                         (generate-arg (fx- (call-arg-number (node-role arg))
+                                            1)
+                                       arg))
+                       (cdr (call-args node))))
+           (generate-arg 'P (call-proc node))
+           (generate-arg 'SP (car (call-args node)))
+           (list '(call))))
+
+(define (generate-return node)
+  (append! (apply append!
+                  (map (lambda (arg)
+                         (generate-arg (call-arg-number (node-role arg))
+                                       arg))
+                       (call-args node)))
+           (generate-arg 'SP (call-proc node))
+           (list '(return))))
+
+;;; Primops
+
+(define (primop-code-generator primop)
+  generate-primop-call)
+
+;;; Totally ad-hoc.
+
+(define (generate-primop-call node)
+  (let ((op (identification (literal-value (call-proc node))))
+        (cont (car (call-args node)))
+        (inputs (map operand (cdr (call-args node)))))
+    (xselect (node-type cont)
+      ((literal-node?)
+       ;; No continuation, e.g. as in IF
+       `((,op ,@inputs)))
+      ((lambda-node?)
+       (xcase (lambda-rep cont)
+         ((rep/label)
+          (generate-primop-jump cont op inputs))
+         ((rep/continuation)
+          (generate-primop-return cont op inputs))))
+      ((reference-node?)
+       (let ((var (reference-variable cont)))
+         (xcase (variable-rep var)
+           ((rep/label)
+            (generate-primop-jump (variable-known var) op inputs))
+           ((rep/continuation)
+            (generate-primop-return cont op inputs))))))))
+
+(define (generate-primop-return proc op inputs)
+  `((,op ,@inputs 1)      ;Fix later
+    ,@(generate-arg 'SP proc)
+    (return)))
+
+(define (generate-primop-jump proc op inputs)
+  `((,op ,@inputs
+         ,@(map variable-home (cdr (lambda-variables proc))))
+    (jump ,(lambda-name proc))))
+
+;;; Code generation utilities.
+
+(define (generate-arg reg arg)
+  (cond ((not reg) '())
+        (else
+         (generate-load reg (operand arg)))))
+
+(define (generate-load dst src)
+  (if (or (eq? src '$) (eq? src dst)) '() `((load ,dst ,src))))
+
+(define (operand arg)
+  (xselect (node-type arg)
+    ((literal-node?)
+     (let ((lit (literal-value arg)))
+       (cond ((eq? lit *undefined-value*) '$)
+             (else `',lit))))
+    ((reference-node?)
+     (let ((var (reference-variable arg)))
+       (cond ((eq? (variable-rep var) 'rep/label) '?)
+             (else
+              (var-operand (or (reference-how arg) var))))))
+    ((lambda-node?)
+     `(label ,(lambda-name arg)))))
+
+(define (var-operand how)
+ (cond ((atom? how) (variable-home how))
+       (else
+        `(r ,(car how)
+            ,(var-operand (cdr how))))))
+
+;;; ---------------------------------------------------------------------
+;;; Print object code.
+
+(define (pp-code code)
+  (walk (lambda (chunk)
+          (format t "  ~s :" (car chunk))
+          (walk (lambda (z)
+                  (format t "~10t~s~%" z))
+                (cdr chunk)))
+        code))
+
+;;; ---------------------------------------------------------------------
+;;; Phase coordination.
+
+(lset *variable-id* 0)
+
+(define (test exp)
+  (bind ((*variable-id* 0))
+    (pass-2 (pass-1 (or (and (procedure? exp) (disclose exp)) exp)))))
+
+(define (pass-2 post-cps)
+  (format t "~%Simplifying.~%")
+  (simplify post-cps)
+
+  (format t "~%Analyzing.~%")
+  (rep-analyze post-cps)
+  (env-analyze post-cps)
+  (close-analyze post-cps nil)
+
+  (format t "~%Final version (~s):~%" (object-hash post-cps))
+  (pp-cps post-cps)
+
+  (allocate post-cps 0)
+  (let ((output (generate post-cps '())))
+    (format t "~%Output (~s):~%" (object-hash output))
+    (pp-code output)))
+
+;;; ---------------------------------------------------------------------
+;;; Test routines.
+
+(define (foo n)
+  (labels (((loop a i)
+            (if (fx= i 0) a (loop (fx+ a i) (fx- i 1)))))
+    (loop 0 n)))
+
+(define (fact n)
+  (labels (((loop a i)
+            (if (= i 0) a (loop (* a i) (- i 1)))))
+     (loop 1 n)))
+
+(define (fact2 n)
+  (labels ((loop (lambda (a i)
+                   (if (= i 0) a (loop (* a i) (- i 1))))))
+     (loop 1 n)))
+
+(define (rfact n)
+  (labels (((fact n)
+            (if (fx= n 0) 1 (fx* n (fact (fx- n 1))))))
+    (fact n)))
+
+(define (par l flag)
+  (labels (((odd l)
+            (if (null? l) 'odd
+               (if (car l) (even (cdr l)) (odd (cdr l)))))
+           ((even l)
+            (if (null? l) 'even
+                (if (car l) (odd (cdr l)) (even (cdr l))))))
+    (if flag (even l) (odd l))))

@@ -1,0 +1,65 @@
+
+;----- Beginning T compilation on "assign.t"
+
+;(LAMBDA (LIT.3) ...) compiled
+;ASSIGNMENT-ANALYZE compiled
+;(LAMBDA (REF) ...) compiled
+;VARIABLE-ASSIGNED? compiled
+;(LAMBDA (VAR) ...) compiled
+;(LAMBDA (VAR) ...) compiled
+;  Consed environment = (ARGS NEW-VARS VARS)
+;(LAMBDA (BODY) ...) compiled
+;INTRODUCE-CELLS compiled
+;  Consed environment = (LOC NEW-VAR)
+;(LAMBDA (REF) ...) compiled
+;(LAMBDA (VAR NEW-VAR LOC) ...) compiled
+;HACK-REFERENCES compiled
+;  Consed environment = (NEW-VAR)
+;(LAMBDA (()) ...) compiled
+;HACK-REFERENCE compiled
+;  Consed environment = (NEW-VAR)
+;(LAMBDA (REF) ...) compiled
+;DEREFERENCE-VAR compiled
+;DEREFERENCER compiled
+;  Consed environment = (NEW-REF)
+;(LAMBDA (REF) ...) compiled
+;ASSIGNER compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (ERASE CALL-PRIMOP CREATE-PRIMOP-NODE LAMBDA-NODE? CALL-NODE?
+CALL-PROC PRIMOP-NODE? PRIMOP-VALUE LET-REFERENCE-PRIMOP REPLACE CALL-ARGS
+LAMBDA-VARIABLES FILTER NODE-CHILDREN WALK NODE-ROLE CALL-ARG NODE-PARENT
+SET-PRIMOP LOCATIVE-PRIMOP USED? VARIABLE-REFS ANY? VARIABLE-NAME CREATE-VARIABLE
+CREATE-CALL-NODE MAKE-LOCATIVE-PRIMOP RELATE CONTINUATION-PRIMOP CREATE-REFERENCE-NODE
+MAP LAMBDA-BODY CONS* CREATE-LAMBDA-NODE LENGTH RELATE-CALL-ARGS ERASE-ALL
+VALUE-PRIMOP SET-VALUE-PRIMOP SETTER))
+
+(DEFINED-VARIABLES (ASSIGNMENT-ANALYZE HACK-REFERENCES VARIABLE-ASSIGNED?
+INTRODUCE-CELLS HACK-REFERENCE DEREFERENCE-VAR ASSIGNER DEREFERENCER))
+
+(LSET-VARIABLES ())
+
+;;;      94  number of templates/code chunks emitted
+;;;    2333  LAP instructions emitted
+;;;      48  number of value cell pointers in unit
+;;;     146  number of entries into data section
+;;;      59  calls not requiring stack padding
+;;;      16  calls requiring stack padding
+;;;     490  number of TN's generated
+;;;       2  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;       2  successes at propagating substitution into a LET body
+;;;       2  attempts to propagate substitution into a LET body
+;;;       5  substitutions of an argument for a parameter
+;;;       5  ((LAMBDA () FOO)) becomes FOO
+;;;       5  unreferenced argument with no side effects is flushed
+;;;       3  IF of a constant has dead arm eliminated
+;;;       1  IF of an IF is involuted (anchor pointing)
+;;;       3  (IF (NOT A) B C) becomes (IF A C B)
+;;;       1  BLOCK of one statement simplified to the statement
+;;;       1  statements eliminated from a BLOCK
+;;;       6  unreferenced parameter is flushed
+;;;     520  number of internal-format program nodes created
+
+
+;----- Finished compiling "assign.t"
+

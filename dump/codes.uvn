@@ -1,0 +1,40 @@
+
+;----- Beginning T compilation on "$DUMP/codes.t"
+
+;Processing CONSTANT definition of DUMP/NULL
+;Processing CONSTANT definition of DUMP/CHAR
+;Processing CONSTANT definition of DUMP/TRUE
+;Processing CONSTANT definition of DUMP/PAIR
+;Processing CONSTANT definition of DUMP/FLOAT
+;Processing CONSTANT definition of DUMP/CODED
+;Processing CONSTANT definition of DUMP/OBJECT-REF
+;Processing CONSTANT definition of DUMP/STRING-REF
+;Processing CONSTANT definition of DUMP/POSITIVE-FIXNUM
+;Processing CONSTANT definition of DUMP/NEGATIVE-FIXNUM
+;Processing CONSTANT definition of DUMP/STRING
+;Processing CONSTANT definition of DUMP/SYMBOL
+;Processing CONSTANT definition of DUMP/VECTOR
+;Processing CONSTANT definition of DUMP/BYTE-VECTOR
+;Processing CONSTANT definition of DUMP/POSITIVE-BIGNUM
+;Processing CONSTANT definition of DUMP/NEGATIVE-BIGNUM
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES ())
+
+(DEFINED-VARIABLES (DUMP/NULL DUMP/CHAR DUMP/TRUE DUMP/PAIR DUMP/FLOAT DUMP/CODED
+DUMP/OBJECT-REF DUMP/STRING-REF DUMP/POSITIVE-FIXNUM DUMP/NEGATIVE-FIXNUM
+DUMP/STRING DUMP/SYMBOL DUMP/VECTOR DUMP/BYTE-VECTOR DUMP/POSITIVE-BIGNUM
+DUMP/NEGATIVE-BIGNUM))
+
+(LSET-VARIABLES ())
+
+;;;       1  number of templates/code chunks emitted
+;;;     280  LAP instructions emitted
+;;;      16  number of value cell pointers in unit
+;;;      20  number of entries into data section
+;;;      17  number of TN's generated
+;;;      51  number of internal-format program nodes created
+
+
+;----- Finished compiling "$DUMP/codes.t"
+

@@ -1,0 +1,295 @@
+(herald (#f link t 52)
+        (syntax-table (block (require (hax values))
+                             (require (hax receive))
+                             (env-syntax-table (the-environment)))))
+
+(require (t3 comex))
+
+;;; A "cymbal" is what the Unix loader calls a "symbol".  We can't call
+;;; them "symbols" because then they might be confused with T symbols.
+;;; Similarly with "stryngs" and "strings".
+
+(define-structure-type lstate   ; "linker state"
+  comexes               ;list of comexes being linked
+  cymbals               ;list of cymbol thunks
+  cymbal-count          ;number of cymbol thunks
+  reloc-items           ;list of reloc item thunks
+  reloc-item-count      ;number of same
+  pure-pi-size          ;size of pure position-independent section
+  pure-pd-size          ;size of pure position-dependent section
+  impure-size           ;size of impure section
+  )
+
+(let ((lstate (stype-master lstate-stype)))
+  (set (lstate-cymbals          lstate) '())
+  (set (lstate-cymbal-count     lstate) 0)
+  (set (lstate-reloc-items      lstate) '())
+  (set (lstate-reloc-item-count lstate) 0)
+  (set (lstate-pure-pi-size     lstate) 0)
+  (set (lstate-pure-pd-size     lstate) 0)
+  (set (lstate-impure-size      lstate) 0))
+
+(lset *debug?* t)
+
+;;; Top-level entry to linker.
+;;;  (link comexes '(#f z o))
+;;; Think of this as a collator.  The data is provided in rows; we have
+;;; to write it out in columns.
+
+(define (link comexes spec)
+  (let ((spec (->filename spec))
+        (lstate (pass-1 comexes)))
+    (with-open-streams ((stream (open spec '(out))))
+      (write-header   lstate stream)
+      (pass-2-pure-pi lstate stream)    ; write text section
+      (pass-2-pure-pd lstate stream)
+      (pass-2-impure  lstate stream)    ; write data section
+      (pass-2-reloc   lstate stream)    ; write relocation data
+      (pass-2-cymbals lstate stream)    ; write symbol & string tables
+      spec)))
+
+;;; (pass-1 comexes) returns an "lstate" (linker state) structure
+
+(define (pass-1 comexes)
+  (if *debug?* (format t "Pass 1~%"))
+  (let ((lstate (make-lstate)))
+    (set (lstate-comexes lstate) comexes)
+    (walk (lambda (comex) (comex-pass-1 comex lstate))
+          (lstate-comexes lstate))
+    lstate))
+
+;;; Perform incremental changes to lstate structure to account for one
+;;; compiled expression.
+;;; Assume for now (wrongly) that the length of the bytev is divisible by 4.
+
+(define (comex-pass-1 comex lstate)
+  (if *debug?* (format t "  Compiled expression: ~s~%" comex))
+  (let ((b (comex-opcodes comex))
+        (v (comex-objects comex)))
+    (modify (lstate-pure-pi-size lstate)
+            (lambda (z)
+              (fx+ z (fx+ (align (bytev-length (comex-code comex)) 2)
+                          *cell*))))
+    (modify (lstate-impure-size lstate) (lambda (z) (fx+ z *cell*)))
+    (iterate loop ((i 0))
+      (cond ((fx>= i (vector-length v)) 'done)
+            (else
+             (item-pass-1 (vref *item-processors* (bref b i))
+                          (vref v i)
+                          lstate)
+             (loop (fx+ i 1)))))))
+
+(define *item-processors* (make-vector *number-of-opcodes*))
+
+(define-local-syntax (define-item-processor opcode . clauses)
+  `(set (vref *item-processors* ,opcode)
+        (object nil . ,clauses)))
+
+(define-operation (item-pass-1 foo obj lstate))
+(define-operation (item-pass-2 foo obj stream))
+
+(define-item-processor op/definition
+  ((item-pass-1 self obj lstate)
+   ;; obj is pair (symbol . cv-offset)
+   (let ((dot (lstate-impure-size lstate)))
+     (set (lstate-impure-size lstate) (fx+ dot *cell*))
+     (push (lstate-cymbals lstate)
+           (cymbal-thunk (c-ify (car obj))
+                         (logior N_DATA N_EXT)
+                         dot))
+     (increment (lstate-cymbal-count lstate))
+     (push (lstate-reloc-items lstate)
+           (reloc-thunk 0 dot))
+     (increment (lstate-reloc-item-count lstate))))
+  ((item-pass-2 self obj stream)
+   (write-int stream (cdr obj))))
+
+(define-item-processor op/foreign
+  ((item-pass-1 self obj lstate)
+   (let ((dot (lstate-impure-size lstate)))
+     (set (lstate-impure-size lstate) (fx+ dot *cell*))
+     (push (lstate-cymbals lstate)
+           (cymbal-thunk obj
+                         (logior N_UNDF N_EXT)
+                         0))
+     (increment (lstate-cymbal-count lstate))
+     (push (lstate-reloc-items lstate)
+           (reloc-thunk (lstate-cymbal-count lstate) dot))
+     (increment (lstate-reloc-item-count lstate))))
+  ((item-pass-2 self obj stream)
+   (write-int stream 0)))
+
+(define (c-ify sym)
+  (string-append "_" (string-downcase! (symbol->string sym))))
+
+(define (cymbal-thunk stryng type value)
+  (object (lambda (stream a)
+            ;; a is offset into stryng table
+            (if *debug?*
+                (format t "  Cymbal ~s, type ~s, value ~s, offset ~s~%"
+                        stryng type value a))
+            (write-int stream a)
+            (write-byte stream type)
+            (write-byte stream 0)       ; other
+            (write-half stream 0)       ; see <stab.h>
+            (write-int stream value))
+          ((cymbal-thunk.stryng self) stryng)))
+
+(define-operation (cymbal-thunk.stryng thunk))
+
+(define (reloc-thunk ordinal address)
+  (lambda (lstate stream)
+    (let ((address (fx+ address
+                        (fx+ (lstate-pure-pi-size lstate)
+                             (lstate-pure-pd-size lstate)))))
+      (if *debug?*
+          (format t "  Relocate addr ~s, ordinal ~s~%" address ordinal))
+      (write-int stream address)        ; address to be relocated
+      (write-int stream (logior ordinal
+                                (logior (ash 2 25)   ; 2 = longword
+                                        (ash 1 27)))))))  ; "external"
+
+;;; Pass 2 actually writes things out.
+
+;;; Text section consists of the bytev for the compiled expression's code.
+
+(define (pass-2-pure-pi lstate stream)
+  (if *debug?* (format t "Text section~%"))
+  (walk (lambda (comex)
+          (let ((code (comex-code comex)))
+            (write-bytev-image stream code)))
+        (lstate-comexes lstate)))
+
+(define (pass-2-pure-pd lstate stream)
+  nil)          ;??
+
+(define (pass-2-impure lstate stream)
+  (if *debug?* (format t "Pass 2~%"))
+  (walk (lambda (comex)
+          (write-int stream 0)  ;unit's template??
+          (let ((v (comex-objects comex))
+                (b (comex-opcodes comex)))
+            (do ((i 0 (fx+ i 1)))
+                ((fx>= i (vector-length v)))
+              (item-pass-2 (vref *item-processors* (bref b i))
+                           (vref v i)
+                           stream))))
+        (lstate-comexes lstate)))
+
+;;; Write out the cymbal table.  CYMS is a list of procedures.
+;;; Returns the size of the stryng table.
+
+(define (write-cyms stream cyms)
+  (if *debug?* (format t "Cymbal table~%"))
+  (iterate loop ((a 4)
+                 (l cyms))
+    (cond ((null? l) a)
+          (else
+           (let ((e (car l)))
+             (e stream a)
+             (loop (+ a (string-length (cymbal-thunk.stryng e)) 1)
+                   (cdr l)))))))
+
+(define N_UNDF 0)
+(define N_TEXT 4)
+(define N_DATA 6)
+(define N_EXT  1)
+
+(define (write-header lstate stream)
+  (if *debug?* (format t "Header~%"))
+  (write-int stream #o0407)
+  (write-int stream (+ (lstate-pure-pi-size lstate)
+                       (lstate-pure-pd-size lstate)))
+  (write-int stream (lstate-impure-size lstate))  ; data size
+  (write-int stream 0)                  ; bss
+  (write-int stream (* (lstate-cymbal-count lstate) 12))        ; cymbals
+  (write-int stream 0)          ; entry point
+  (write-int stream 0)          ; size of text relocation
+  (write-int stream (* (lstate-reloc-item-count lstate) 8)))
+
+;;; Text relocation followed by data relocation
+
+(define (pass-2-reloc   lstate stream)
+  (if *debug?* (format t "Data relocation items~%"))
+  (walk (lambda (r) (r lstate stream))
+        (lstate-reloc-items lstate)))
+
+;;; Cymbal table followed by stryng table
+
+(define (pass-2-cymbals lstate stream)
+  (let ((z (write-cyms stream (lstate-cymbals lstate)))) ; cymbal table
+    (if *debug?* (format t "Stryng table (size = ~s)~%" z))
+    (write-int stream z))       ; size of stryng table
+  (walk (lambda (s)             ; write stryng table
+          (if *debug?* (format t "  ~s~%" (cymbal-thunk.stryng s)))
+          (writes stream (cymbal-thunk.stryng s))
+          (writec stream #\null))
+        (lstate-cymbals lstate)))
+
+;;; Utilities
+
+(define (write-int stream int)
+  (if *debug?* (format t "    Wrote ~s = #x~x~%" int int))
+  (write-byte stream int)
+  (let ((int (ash int -8)))
+    (write-byte stream int)
+    (let ((int (ash int -8)))
+      (write-half stream int))))
+
+(define (write-half stream int)
+  (write-byte stream int)
+  (let ((int (ash int -8)))
+    (write-byte stream int)))
+
+(define (write-byte stream n)
+  (write-char stream (ascii->char (logand n 255))))
+
+(define (write-bytev-image stream bytev)
+  (let ((len (bytev-length bytev)))
+    (write-int stream (logior (ash len 8)
+                              (logior (ash tag2/bytev 2)
+                                      tag1/imm)))
+    (if *debug?* (format t "    Byte vector (~s bytes)~%" len))
+    (do ((i 0 (fx+ i 1)))
+        ((fx>= i len)
+         (do ((i i (fx+ i 1)))
+             ((fx= (logand i 3) 0) 'done)
+           (write-byte stream 0)))
+      (write-byte stream (bref bytev i)))))
+
+(define (align n m)
+  (let ((2^m-1 (- (ash 1 m) 1)))
+    (logand (+ n 2^m-1) (lognot 2^m-1))))
+
+;;; Sample compiled expression.
+
+(import *t-implementation-env* make-bytev bref bytev-length)
+
+;;; (define comexes (list (make-sample)))
+
+(define (make-sample)
+  (let ((comex (make-comex))
+        (code (make-bytev 25))
+        (v (make-vector 1))
+        (w (make-bytev 1)))
+    (do ((i 0 (fx+ i 1)))
+        ((= i (bytev-length code)))
+      (set (bref code i) i))
+    (set (comex-code         comex) code)
+    (set (vref v 0) "_foo")
+    (set (bref w 0) op/foreign)
+    (set (comex-objects      comex) v)
+    (set (comex-opcodes      comex) w)
+    comex))
+
+;;; Target parameters
+
+(define-constant *cell* 4)
+
+(define-constant tag1/fix    0)
+(define-constant tag1/imm    1)
+(define-constant tag1/stored 2)
+(define-constant tag1/pair   3)
+
+(define-constant tag2/bytev  34)
+

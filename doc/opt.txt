@@ -1,0 +1,19 @@
+Wish list of optimizations for ORBIT to perform.
+
+
+1. Introduce extra conditionals and factor out 
+   redundant checks
+
+    (cond ...
+	  ((and (pair? x)
+		(...))
+	   ...)
+	  ((and (pair? x)
+		(...))
+	   ...)
+	  ...)
+
+2. Move conditionals to reduce code size
+
+    (if foo? (bar x) (baz x))  =>  ((if foo? bar baz) x)
+

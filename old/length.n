@@ -1,0 +1,68 @@
+;;; Free variables (390): (FOO EQ? ELSE **NO-MORE-COND-CLAUSES** CDR FX+
+LENGTH)
+;;; Early binding (392): EQ?
+;;; Early binding (393): ELSE
+;;; Early binding (394): CDR
+;;; Early binding (395): FX+
+;;; Defining 'SUPPORT/DEFINE' support for LENGTH
+;;; Free variables (396): (FOO **NO-MORE-COND-CLAUSES**)
+;;; Defined variables (397): (LENGTH)
+;;; integrating: EQ?
+;;; integrating: CDR
+;;; integrating: FX+
+;;; integrating: FIXNUM-ADD
+;;; integrating: ELSE
+;;; substituting: V_45 := (QUOTE #T)
+;;; substituting: V_43 := (QUOTE ())
+;;; substituting: C_39 := P_19
+;;; substituting: C_40 := P_20
+;;; substituting: K_13 := K_6
+  ((P_1 K_0)        (K_0 P_3))
+   ((P_3 K_2)        ((MAKE-DEFINER DEFINE) K_2 LENGTH LENGTH_5))
+    ((LENGTH_5 K_6 L_7)
+                      (Y P_9 P_12))
+     ((P_9 B_8 ())     (B_8 K_6))
+     ((P_12 K_10 DO.407_11)
+                       (K_10 P_14 P_18))
+      ((P_14 ())        (DO.407_11 K_6 '0 L_7))
+      ((P_18 K_15 I_16 L_17)
+                        (CONDITIONAL P_46
+                                     P_47
+                                     (MAKE-COMPARATOR JGEQ TOP?)
+                                     FOO
+                                     L_17))
+       ((P_46)           (K_15 I_16))
+       ((P_47)           ((MAKE-ACCESSOR -1) C_48 L_17))
+        ((C_48 V_49)      ((SIMPLE-ARITHMETIC-OP ADDL2 ADDL3)
+                           C_50
+                           I_16
+                           '1))
+         ((C_50 V_51)      (DO.407_11 K_15 V_51 V_49))
+;;; join-point (398) P_18 env = ()
+;;; Unit = ((#{Object 58 %MAKE-EXTEND} . 4) (#{Object 59 %MAKE-PAIR} . 8)
+(#{Variable 399 FOO_28} . 12) (#{Variable 400 **NO-MORE-COND-CLAUSES**_25}
+. 16) (#{Variable 401 LENGTH_4} . 20) (#{LAMBDA-node 402} . 24))
+
+403 P_3
+t_p_3:      .word 0
+            movl    (sp),t
+            jmp     (t)
+
+402 LENGTH_5
+t_length_5: .word 0
+            movl    a1,a2
+            movl    $0<<2,a1
+            jmp     p_18
+
+398 P_18
+p_18:
+            cmpl    -14(p),a2
+            jgeq    p_47
+p_46:
+            movl    (sp),t
+            jmp     (t)
+p_47:
+            movl    -3(a2),a2
+            addl2   $1<<2,a1
+            jmp     p_18
+

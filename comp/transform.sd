@@ -1,0 +1,4364 @@
+# VAX T compiler assembly file
+# Compiled from #[Filename VULCAN ORBIT TRANSFORM T 0]
+# TC version 1.4 (65)
+
+ .text 
+ .align 3
+q_transform:
+ .long 0x1FA0
+ .long Y24-q_transform
+ .long (T19-R17)*2
+ .long (V21-R17)*2
+ .long (U20-R17)*2
+ .long (W22-R17)*2
+ .long X23-q_transform
+ .long 0
+ .data 
+ .align 3
+ .globl d_transform
+d_transform:
+ .long 0
+R17:
+ .long q_transform
+ .long S18-d_transform
+ .long (Z25+5)-d_transform
+ .long B27
+ .long (1<<0x1B)+3
+ .long (C28+5)-d_transform
+ .text 
+ .data 
+ .long 8
+ .byte 3
+E30:
+ .word 0x9F17
+ .byte 0
+ .long D29
+ .long E30-d_transform
+F31:
+ .text 
+ .data 
+G32:
+ .long H33
+ .text 
+ .word (G32-R17)/4
+ .byte 2,1,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (E30-d_transform)/8
+D29:
+ clrq -(sp)
+ movl 8(sp),4(sp)
+ .data 
+ .byte 3
+K36:
+ .word 0x9F17
+ .byte 0
+ .long J35
+ .text 
+ pushal K36-E30(fp)
+ pushl 8(sp)
+ .data 
+L37:
+ .long M38
+ .text 
+ movl *L37-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (K36-E30)/8
+ .word (K36-d_transform)/8
+J35:
+ moval E30-K36(fp),fp
+ cmpl r5,(r11)
+ jneq I34
+ movl (r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+I34:
+ .data 
+ .long 8
+ .byte 3
+P41:
+ .word 0x9F17
+ .byte 0
+ .long O40
+ .text 
+ pushal P41-E30(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+R43:
+ .word 0x9F17
+ .byte 0
+ .long Q42
+ .text 
+ pushal R43-E30(fp)
+ pushl 0x10(sp)
+ .data 
+S44:
+ .long T45
+ .text 
+ movl *S44-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (R43-E30)/8
+ .word (R43-d_transform)/8
+Q42:
+ moval E30-R43(fp),fp
+ movl r5,(sp)
+ .data 
+U46:
+ .long V47
+ .text 
+ movl *U46-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (P41-E30)/8
+ .word (P41-d_transform)/8
+O40:
+ moval E30-P41(fp),fp
+ cmpl r5,(r11)
+ jneq N39
+ .data 
+ .byte 3
+X49:
+ .word 0x9F17
+ .byte 0
+ .long W48
+ .text 
+ pushal X49-E30(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+Z51:
+ .word 0x9F17
+ .byte 0
+ .long Y50
+ .text 
+ pushal Z51-E30(fp)
+ pushl 0x10(sp)
+ movl *S44-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Z51-E30)/8
+ .word (Z51-d_transform)/8
+Y50:
+ moval E30-Z51(fp),fp
+ movl r5,(sp)
+ .data 
+A52:
+ .long B53
+ .text 
+ movl *A52-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (X49-E30)/8
+ .word (X49-d_transform)/8
+W48:
+ moval E30-X49(fp),fp
+ movl r5,8(sp)
+ cmpl 8(sp),(r11)
+ jneq C54
+ movl (r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+C54:
+ .data 
+ .long 8
+ .byte 3
+F57:
+ .word 0x9F17
+ .byte 0
+ .long E56
+ .text 
+ pushal F57-E30(fp)
+ pushl 0xC(sp)
+ .data 
+G58:
+ .long H59
+ .text 
+ movl *G58-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F57-E30)/8
+ .word (F57-d_transform)/8
+E56:
+ moval E30-F57(fp),fp
+ cmpl r5,(r11)
+ jeql D55
+ .data 
+ .long 8
+ .byte 3
+K62:
+ .word 0x9F17
+ .byte 0
+ .long J61
+ .text 
+ pushal K62-E30(fp)
+ pushl 0xC(sp)
+ .data 
+L63:
+ .long M64
+ .text 
+ movl *L63-E30(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (K62-E30)/8
+ .word (K62-d_transform)/8
+J61:
+ moval E30-K62(fp),fp
+ cmpl r5,(r11)
+ jneq I60
+ movl (r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+I60:
+N65:
+ .data 
+O66:
+ .long P67
+ .text 
+ movl *O66-E30(fp),r9
+ tstl (sp)+
+ moval 8(sp),ap
+ jmp *-116(r11)
+D55:
+ jbr N65
+N39:
+ movl 4(sp),8(sp)
+ .data 
+Q68:
+ .long R69
+ .text 
+ movl *Q68-E30(fp),r9
+ moval 8(sp),sp
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .data 
+ .long 8
+ .byte 3
+T71:
+ .word 0x9F17
+ .byte 0
+ .long S70
+ .long T71-d_transform
+U72:
+ .text 
+ .byte 2,1,2
+ .byte 9
+ .byte 0,0
+ .word 0
+ .word (T71-d_transform)/8
+S70:
+ clrl -(sp)
+ .data 
+ .long 8
+ .byte 3
+X75:
+ .word 0x9F17
+ .byte 0
+ .long W74
+ .text 
+ pushal X75-T71(fp)
+ pushl 0xC(sp)
+ .data 
+Y76:
+ .long Z77
+ .text 
+ movl *Y76-T71(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (X75-T71)/8
+ .word (X75-d_transform)/8
+W74:
+ moval T71-X75(fp),fp
+ cmpl r5,(r11)
+ jneq V73
+ movl (r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+V73:
+ .data 
+ .long 8
+ .byte 3
+C80:
+ .word 0x9F17
+ .byte 0
+ .long B79
+ .text 
+ pushal C80-T71(fp)
+ pushl 8(sp)
+ movl *U46-T71(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (C80-T71)/8
+ .word (C80-d_transform)/8
+B79:
+ moval T71-C80(fp),fp
+ cmpl r5,(r11)
+ jeql A78
+ .data 
+ .byte 3
+F83:
+ .word 0x9F17
+ .byte 0
+ .long E82
+ .text 
+ pushal F83-T71(fp)
+ pushl 0xC(sp)
+ .data 
+G84:
+ .long H85
+ .text 
+ movl *G84-T71(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F83-T71)/8
+ .word (F83-d_transform)/8
+E82:
+ moval T71-F83(fp),fp
+ cmpl 4-5(r5),(r11)
+ jeql D81
+ .data 
+ .long 8
+ .byte 3
+J87:
+ .word 0x9F17
+ .byte 0
+ .long I86
+ .text 
+ pushal J87-T71(fp)
+ pushl 0xC(sp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+L89:
+ .word 0x9F17
+ .byte 0
+ .long K88
+ .text 
+ pushal L89-T71(fp)
+ .data 
+M90:
+ .long N91
+ .text 
+ pushl *M90-T71(fp)
+ .data 
+O92:
+ .long P93
+ .text 
+ movl *O92-T71(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (L89-T71)/8
+ .word (L89-d_transform)/8
+K88:
+ moval T71-L89(fp),fp
+ movl r5,r9
+ tstl (sp)+
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (J87-T71)/8
+ .word (J87-d_transform)/8
+I86:
+ moval T71-J87(fp),fp
+ movl (r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+D81:
+Q94:
+ .data 
+ .byte 3
+S96:
+ .word 0x9F17
+ .byte 0
+ .long R95
+ .text 
+ pushal S96-T71(fp)
+ pushl 0xC(sp)
+ pushl 0xC(sp)
+ pushl -52(r11)
+ .data 
+T97:
+ .long U98
+ .text 
+ movl *T97-T71(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (S96-T71)/8
+ .word (S96-d_transform)/8
+R95:
+ moval T71-S96(fp),fp
+ movl -52(r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+A78:
+ jbr Q94
+ .data 
+ .long 8
+ .byte 3
+W100:
+ .word 0x9F17
+ .byte 0
+ .long V99
+ .long W100-d_transform
+X101:
+ .text 
+ .word (Q68-R17)/4
+ .byte 3,0,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (W100-d_transform)/8
+V99:
+ clrq -(sp)
+ movl 8(sp),(sp)
+ .data 
+ .long 8
+ .byte 3
+Z103:
+ .word 0x9F17
+ .byte 0
+ .long Y102
+ .text 
+ pushal Z103-W100(fp)
+ pushl 4(sp)
+ movl *S44-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Z103-W100)/8
+ .word (Z103-d_transform)/8
+Y102:
+ moval W100-Z103(fp),fp
+ movl r5,4(sp)
+ .data 
+ .byte 3
+C106:
+ .word 0x9F17
+ .byte 0
+ .long B105
+ .text 
+ pushal C106-W100(fp)
+ pushl 8(sp)
+ .data 
+D107:
+ .long E108
+ .text 
+ movl *D107-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (C106-W100)/8
+ .word (C106-d_transform)/8
+B105:
+ moval W100-C106(fp),fp
+ cmpl r5,(r11)
+ jneq A104
+ .data 
+ .long 8
+ .byte 3
+H111:
+ .word 0x9F17
+ .byte 0
+ .long G110
+ .text 
+ pushal H111-W100(fp)
+ pushl 8(sp)
+ .data 
+I112:
+ .long J113
+ .text 
+ movl *I112-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (H111-W100)/8
+ .word (H111-d_transform)/8
+G110:
+ moval W100-H111(fp),fp
+ cmpl r5,(r11)
+ jneq F109
+ .data 
+ .long 8
+ .byte 3
+L115:
+ .word 0x9F17
+ .byte 0
+ .long K114
+ .text 
+ pushal L115-W100(fp)
+ pushl 4(sp)
+ .data 
+ .byte 3
+N117:
+ .word 0x9F17
+ .byte 0
+ .long M116
+ .text 
+ pushal N117-W100(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+P119:
+ .word 0x9F17
+ .byte 0
+ .long O118
+ .text 
+ pushal P119-W100(fp)
+ pushl 0x18(sp)
+ .data 
+Q120:
+ .long R121
+ .text 
+ movl *Q120-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (P119-W100)/8
+ .word (P119-d_transform)/8
+O118:
+ moval W100-P119(fp),fp
+ movl r5,(sp)
+ .data 
+S122:
+ .long T123
+ .text 
+ movl *S122-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (N117-W100)/8
+ .word (N117-d_transform)/8
+M116:
+ moval W100-N117(fp),fp
+ pushl r5
+ .data 
+U124:
+ .long V125
+ .text 
+ movl *U124-W100(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (L115-W100)/8
+ .word (L115-d_transform)/8
+K114:
+ moval W100-L115(fp),fp
+ movl -52(r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+F109:
+W126:
+ .data 
+ .long 8
+ .byte 3
+Z129:
+ .word 0x9F17
+ .byte 0
+ .long Y128
+ .text 
+ pushal Z129-W100(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+B131:
+ .word 0x9F17
+ .byte 0
+ .long A130
+ .text 
+ pushal B131-W100(fp)
+ pushl 0x10(sp)
+ movl *Q120-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (B131-W100)/8
+ .word (B131-d_transform)/8
+A130:
+ moval W100-B131(fp),fp
+ movl r5,(sp)
+ .data 
+C132:
+ .long D133
+ .text 
+ movl *C132-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Z129-W100)/8
+ .word (Z129-d_transform)/8
+Y128:
+ moval W100-Z129(fp),fp
+ cmpl $0x10,r5
+ jneq X127
+ .data 
+ .long 8
+ .byte 3
+G136:
+ .word 0x9F17
+ .byte 0
+ .long F135
+ .text 
+ pushal G136-W100(fp)
+ pushl 8(sp)
+ movl *I112-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (G136-W100)/8
+ .word (G136-d_transform)/8
+F135:
+ moval W100-G136(fp),fp
+ cmpl r5,(r11)
+ jneq E134
+ .data 
+ .byte 3
+J139:
+ .word 0x9F17
+ .byte 0
+ .long I138
+ .text 
+ pushal J139-W100(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+L141:
+ .word 0x9F17
+ .byte 0
+ .long K140
+ .text 
+ pushal L141-W100(fp)
+ pushl 0x10(sp)
+ movl *D107-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (L141-W100)/8
+ .word (L141-d_transform)/8
+K140:
+ moval W100-L141(fp),fp
+ movl r5,(sp)
+ .data 
+M142:
+ .long N143
+ .text 
+ movl *M142-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (J139-W100)/8
+ .word (J139-d_transform)/8
+I138:
+ moval W100-J139(fp),fp
+ cmpl $8,r5
+ jneq H137
+ .data 
+ .long 8
+ .byte 3
+Q146:
+ .word 0x9F17
+ .byte 0
+ .long P145
+ .text 
+ pushal Q146-W100(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+S148:
+ .word 0x9F17
+ .byte 0
+ .long R147
+ .text 
+ pushal S148-W100(fp)
+ pushl 0xC(sp)
+ .data 
+ .byte 3
+U150:
+ .word 0x9F17
+ .byte 0
+ .long T149
+ .text 
+ pushal U150-W100(fp)
+ pushl $8
+ .data 
+V151:
+ .long W152
+ .text 
+ movl *V151-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (U150-W100)/8
+ .word (U150-d_transform)/8
+T149:
+ moval W100-U150(fp),fp
+ movl r5,r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (S148-W100)/8
+ .word (S148-d_transform)/8
+R147:
+ moval W100-S148(fp),fp
+ movl r5,(sp)
+ movl *U46-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Q146-W100)/8
+ .word (Q146-d_transform)/8
+P145:
+ moval W100-Q146(fp),fp
+ cmpl r5,(r11)
+ jeql O144
+ .data 
+ .long 8
+ .byte 3
+Z155:
+ .word 0x9F17
+ .byte 0
+ .long Y154
+ .text 
+ pushal Z155-W100(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+B157:
+ .word 0x9F17
+ .byte 0
+ .long A156
+ .text 
+ pushal B157-W100(fp)
+ pushl 0x10(sp)
+ movl *D107-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (B157-W100)/8
+ .word (B157-d_transform)/8
+A156:
+ moval W100-B157(fp),fp
+ tstl (sp)+
+ pushl 0-5(r5)
+ movl *G84-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Z155-W100)/8
+ .word (Z155-d_transform)/8
+Y154:
+ moval W100-Z155(fp),fp
+ cmpl 4-5(r5),(r11)
+ jneq X153
+C158:
+ .data 
+ .byte 3
+E160:
+ .word 0x9F17
+ .byte 0
+ .long D159
+ .text 
+ pushal E160-W100(fp)
+ .data 
+F161:
+ .long G162
+ .text 
+ pushl *F161-W100(fp)
+ .data 
+ .long 8
+ .byte 3
+I164:
+ .word 0x9F17
+ .byte 0
+ .long H163
+ .text 
+ pushal I164-W100(fp)
+ pushal U72-W100(fp)
+ .data 
+ .byte 3
+K166:
+ .word 0x9F17
+ .byte 0
+ .long J165
+ .text 
+ pushal K166-W100(fp)
+ pushl 0x18(sp)
+ movl *D107-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (K166-W100)/8
+ .word (K166-d_transform)/8
+J165:
+ moval W100-K166(fp),fp
+ pushl r5
+ clrl -(sp)
+ .data 
+ .byte 3
+M168:
+ .word 0x9F17
+ .byte 0
+ .long L167
+ .text 
+ pushal M168-W100(fp)
+ pushl 0x1C(sp)
+ .data 
+N169:
+ .long O170
+ .text 
+ movl *N169-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 5,0
+ .word (M168-W100)/8
+ .word (M168-d_transform)/8
+L167:
+ moval W100-M168(fp),fp
+ movl r5,(sp)
+ .data 
+P171:
+ .long Q172
+ .text 
+ movl *P171-W100(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (I164-W100)/8
+ .word (I164-d_transform)/8
+H163:
+ moval W100-I164(fp),fp
+ pushl r5
+ .data 
+R173:
+ .long S174
+ .text 
+ movl *R173-W100(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (E160-W100)/8
+ .word (E160-d_transform)/8
+D159:
+ moval W100-E160(fp),fp
+ movl r5,8(sp)
+ .data 
+ .long 8
+ .byte 3
+U176:
+ .word 0x9F17
+ .byte 0
+ .long T175
+ .text 
+ pushal U176-W100(fp)
+ pushl 4(sp)
+ .data 
+ .byte 3
+W178:
+ .word 0x9F17
+ .byte 0
+ .long V177
+ .text 
+ pushal W178-W100(fp)
+ pushl 0x10(sp)
+ movl *D107-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (W178-W100)/8
+ .word (W178-d_transform)/8
+V177:
+ moval W100-W178(fp),fp
+ pushl r5
+ .data 
+X179:
+ .long Y180
+ .text 
+ movl *X179-W100(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (U176-W100)/8
+ .word (U176-d_transform)/8
+T175:
+ moval W100-U176(fp),fp
+ movl r5,(sp)
+ .data 
+ .long 8
+ .byte 3
+A182:
+ .word 0x9F17
+ .byte 0
+ .long Z181
+ .text 
+ pushal A182-W100(fp)
+ pushl 8(sp)
+ .data 
+B183:
+ .long C184
+ .text 
+ movl *B183-W100(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (A182-W100)/8
+ .word (A182-d_transform)/8
+Z181:
+ moval W100-A182(fp),fp
+ .data 
+D185:
+ .long E186
+ .text 
+ movl *D185-W100(fp),r9
+ movl (sp),4(sp)
+ movl r5,(sp)
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+X153:
+ movl (sp),8(sp)
+ .data 
+F187:
+ .long G188
+ .text 
+ movl *F187-W100(fp),r9
+ moval 8(sp),sp
+ moval 4(sp),ap
+ jmp *-116(r11)
+O144:
+ jbr C158
+H137:
+ jbr C158
+E134:
+ jbr C158
+X127:
+ jbr C158
+A104:
+ jbr W126
+ .data 
+ .long 8
+ .byte 3
+I190:
+ .word 0x9F17
+ .byte 0
+ .long H189
+ .long I190-d_transform
+J191:
+ .text 
+ .word (F187-R17)/4
+ .byte 9,0,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (I190-d_transform)/8
+H189:
+ clrq -(sp)
+ clrq -(sp)
+ clrq -(sp)
+ clrq -(sp)
+ movl 0x20(sp),0x1C(sp)
+ .data 
+ .long 8
+ .byte 3
+L193:
+ .word 0x9F17
+ .byte 0
+ .long K192
+ .text 
+ pushal L193-I190(fp)
+ pushl 0x20(sp)
+ movl *S44-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (L193-I190)/8
+ .word (L193-d_transform)/8
+K192:
+ moval I190-L193(fp),fp
+ movl r5,0x14(sp)
+ .data 
+ .byte 3
+N195:
+ .word 0x9F17
+ .byte 0
+ .long M194
+ .text 
+ pushal N195-I190(fp)
+ pushl 0x20(sp)
+ .data 
+ .byte 3
+P197:
+ .word 0x9F17
+ .byte 0
+ .long O196
+ .text 
+ pushal P197-I190(fp)
+ pushl $8
+ movl *V151-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (P197-I190)/8
+ .word (P197-d_transform)/8
+O196:
+ moval I190-P197(fp),fp
+ movl r5,r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N195-I190)/8
+ .word (N195-d_transform)/8
+M194:
+ moval I190-N195(fp),fp
+ movl r5,0x20(sp)
+ .data 
+ .byte 3
+R199:
+ .word 0x9F17
+ .byte 0
+ .long Q198
+ .text 
+ pushal R199-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+T201:
+ .word 0x9F17
+ .byte 0
+ .long S200
+ .text 
+ pushal T201-I190(fp)
+ pushl 0x2C(sp)
+ movl *Q120-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (T201-I190)/8
+ .word (T201-d_transform)/8
+S200:
+ moval I190-T201(fp),fp
+ movl r5,(sp)
+ .data 
+U202:
+ .long V203
+ .text 
+ movl *U202-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (R199-I190)/8
+ .word (R199-d_transform)/8
+Q198:
+ moval I190-R199(fp),fp
+ movl r5,r6
+ movl r6,r5
+ movl 0-5(r5),0x10(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),4(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),0xC(sp)
+ movl r6,r5
+ movl 4-5(r5),r5
+ movl 4-5(r5),r5
+ movl 0-5(r5),0x18(sp)
+ .data 
+ .long 8
+ .byte 3
+Y206:
+ .word 0x9F17
+ .byte 0
+ .long X205
+ .text 
+ pushal Y206-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+A208:
+ .word 0x9F17
+ .byte 0
+ .long Z207
+ .text 
+ pushal A208-I190(fp)
+ pushl 0x2C(sp)
+ movl *D107-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (A208-I190)/8
+ .word (A208-d_transform)/8
+Z207:
+ moval I190-A208(fp),fp
+ movl r5,(sp)
+ movl *M142-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Y206-I190)/8
+ .word (Y206-d_transform)/8
+X205:
+ moval I190-Y206(fp),fp
+ cmpl $8,r5
+ jneq W204
+ .data 
+ .byte 3
+D211:
+ .word 0x9F17
+ .byte 0
+ .long C210
+ .text 
+ pushal D211-I190(fp)
+ pushl 0x24(sp)
+ movl *I112-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D211-I190)/8
+ .word (D211-d_transform)/8
+C210:
+ moval I190-D211(fp),fp
+ cmpl r5,(r11)
+ jneq B209
+ .data 
+ .byte 3
+G214:
+ .word 0x9F17
+ .byte 0
+ .long F213
+ .text 
+ pushal G214-I190(fp)
+ pushl 0x14(sp)
+ .data 
+H215:
+ .long I216
+ .text 
+ pushl *H215-I190(fp)
+ .data 
+J217:
+ .long K218
+ .text 
+ movl *J217-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (G214-I190)/8
+ .word (G214-d_transform)/8
+F213:
+ moval I190-G214(fp),fp
+ cmpl r5,(r11)
+ jeql E212
+ .data 
+ .byte 3
+N221:
+ .word 0x9F17
+ .byte 0
+ .long M220
+ .text 
+ pushal N221-I190(fp)
+ pushl 0x10(sp)
+ .data 
+O222:
+ .long P223
+ .text 
+ pushl *O222-I190(fp)
+ movl *J217-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N221-I190)/8
+ .word (N221-d_transform)/8
+M220:
+ moval I190-N221(fp),fp
+ cmpl r5,(r11)
+ jeql L219
+ .data 
+ .long 8
+ .byte 3
+S226:
+ .word 0x9F17
+ .byte 0
+ .long R225
+ .text 
+ pushal S226-I190(fp)
+ pushl 0x1C(sp)
+ .data 
+T227:
+ .long U228
+ .text 
+ movl *T227-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (S226-I190)/8
+ .word (S226-d_transform)/8
+R225:
+ moval I190-S226(fp),fp
+ cmpl r5,(r11)
+ jeql Q224
+ .data 
+ .long 8
+ .byte 3
+X231:
+ .word 0x9F17
+ .byte 0
+ .long W230
+ .text 
+ pushal X231-I190(fp)
+ pushl 0x1C(sp)
+ .data 
+Y232:
+ .long Z233
+ .text 
+ movl *Y232-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (X231-I190)/8
+ .word (X231-d_transform)/8
+W230:
+ moval I190-X231(fp),fp
+ movl r5,0x18(sp)
+ .data 
+ .long 8
+ .byte 3
+B235:
+ .word 0x9F17
+ .byte 0
+ .long A234
+ .text 
+ pushal B235-I190(fp)
+ pushl 0x24(sp)
+ .data 
+C236:
+ .long D237
+ .text 
+ movl *C236-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (B235-I190)/8
+ .word (B235-d_transform)/8
+A234:
+ moval I190-B235(fp),fp
+ cmpl 0x18(sp),r5
+ jneq V229
+ .data 
+ .long 8
+ .byte 3
+G240:
+ .word 0x9F17
+ .byte 0
+ .long F239
+ .text 
+ pushal G240-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+I242:
+ .word 0x9F17
+ .byte 0
+ .long H241
+ .text 
+ pushal I242-I190(fp)
+ pushl 0x2C(sp)
+ movl *C236-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (I242-I190)/8
+ .word (I242-d_transform)/8
+H241:
+ moval I190-I242(fp),fp
+ movl r5,(sp)
+ movl *G84-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (G240-I190)/8
+ .word (G240-d_transform)/8
+F239:
+ moval I190-G240(fp),fp
+ cmpl 4-5(r5),(r11)
+ jneq E238
+ .data 
+ .byte 3
+K244:
+ .word 0x9F17
+ .byte 0
+ .long J243
+ .text 
+ pushal K244-I190(fp)
+ .data 
+L245:
+ .long N247
+ .text 
+ pushl L245-I190(fp)
+ .data 
+O248:
+ .long P249
+ .text 
+ movl *O248-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (K244-I190)/8
+ .word (K244-d_transform)/8
+J243:
+ moval I190-K244(fp),fp
+ movl r5,8(sp)
+ .data 
+ .byte 3
+R251:
+ .word 0x9F17
+ .byte 0
+ .long Q250
+ .text 
+ pushal R251-I190(fp)
+ .data 
+S252:
+ .long N247
+ .text 
+ pushl S252-I190(fp)
+ movl *O248-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (R251-I190)/8
+ .word (R251-d_transform)/8
+Q250:
+ moval I190-R251(fp),fp
+ movl r5,0xC(sp)
+ .data 
+ .long 8
+ .byte 3
+U254:
+ .word 0x9F17
+ .byte 0
+ .long T253
+ .text 
+ pushal U254-I190(fp)
+ .data 
+V255:
+ .long X257
+ .text 
+ pushl V255-I190(fp)
+ .data 
+ .long 8
+ .byte 3
+Z259:
+ .word 0x9F17
+ .byte 0
+ .long Y258
+ .text 
+ pushal Z259-I190(fp)
+ pushl (r11)
+ pushl 0x18(sp)
+ pushl 0x20(sp)
+ .data 
+A260:
+ .long B261
+ .text 
+ movl *A260-I190(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Z259-I190)/8
+ .word (Z259-d_transform)/8
+Y258:
+ moval I190-Z259(fp),fp
+ pushl r5
+ .data 
+C262:
+ .long D263
+ .text 
+ movl *C262-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (U254-I190)/8
+ .word (U254-d_transform)/8
+T253:
+ moval I190-U254(fp),fp
+ movl r5,0x10(sp)
+ .data 
+ .byte 3
+F265:
+ .word 0x9F17
+ .byte 0
+ .long E264
+ .text 
+ pushal F265-I190(fp)
+ pushl $0x18
+ pushl $0x10
+ .data 
+G266:
+ .long H267
+ .text 
+ movl *G266-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F265-I190)/8
+ .word (F265-d_transform)/8
+E264:
+ moval I190-F265(fp),fp
+ movl r5,0x18(sp)
+ .data 
+ .long 8
+ .byte 3
+J269:
+ .word 0x9F17
+ .byte 0
+ .long I268
+ .text 
+ pushal J269-I190(fp)
+ pushl *Q120-I190(fp)
+ pushl 0x18(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+L271:
+ .word 0x9F17
+ .byte 0
+ .long K270
+ .text 
+ pushal L271-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+N273:
+ .word 0x9F17
+ .byte 0
+ .long M272
+ .text 
+ pushal N273-I190(fp)
+ pushl 0x30(sp)
+ movl *Q120-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 5,0
+ .word (N273-I190)/8
+ .word (N273-d_transform)/8
+M272:
+ moval I190-N273(fp),fp
+ movl r5,(sp)
+ movl *S122-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (L271-I190)/8
+ .word (L271-d_transform)/8
+K270:
+ moval I190-L271(fp),fp
+ movl r5,(sp)
+ .data 
+O274:
+ .long P275
+ .text 
+ movl *O274-I190(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (J269-I190)/8
+ .word (J269-d_transform)/8
+I268:
+ moval I190-J269(fp),fp
+ .data 
+ .long 8
+ .byte 3
+R277:
+ .word 0x9F17
+ .byte 0
+ .long Q276
+ .text 
+ pushal R277-I190(fp)
+ pushl 8(sp)
+ movl *S122-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (R277-I190)/8
+ .word (R277-d_transform)/8
+Q276:
+ moval I190-R277(fp),fp
+ .data 
+ .byte 3
+T279:
+ .word 0x9F17
+ .byte 0
+ .long S278
+ .text 
+ pushal T279-I190(fp)
+ pushl 4(sp)
+ movl *S122-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (T279-I190)/8
+ .word (T279-d_transform)/8
+S278:
+ moval I190-T279(fp),fp
+ .data 
+ .byte 3
+V281:
+ .word 0x9F17
+ .byte 0
+ .long U280
+ .text 
+ pushal V281-I190(fp)
+ pushl *S44-I190(fp)
+ pushl 0x20(sp)
+ pushl 0x1C(sp)
+ movl *O274-I190(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (V281-I190)/8
+ .word (V281-d_transform)/8
+U280:
+ moval I190-V281(fp),fp
+ .data 
+ .byte 3
+X283:
+ .word 0x9F17
+ .byte 0
+ .long W282
+ .text 
+ pushal X283-I190(fp)
+ pushl 0x1C(sp)
+ .data 
+ .byte 3
+Z285:
+ .word 0x9F17
+ .byte 0
+ .long Y284
+ .text 
+ pushal Z285-I190(fp)
+ pushl 0x10(sp)
+ pushl 0x10(sp)
+ movl *A260-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Z285-I190)/8
+ .word (Z285-d_transform)/8
+Y284:
+ moval I190-Z285(fp),fp
+ pushl r5
+ .data 
+A286:
+ .long B287
+ .text 
+ movl *A286-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (X283-I190)/8
+ .word (X283-d_transform)/8
+W282:
+ moval I190-X283(fp),fp
+ .data 
+ .long 8
+ .byte 3
+D289:
+ .word 0x9F17
+ .byte 0
+ .long C288
+ .text 
+ pushal D289-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+F291:
+ .word 0x9F17
+ .byte 0
+ .long E290
+ .text 
+ pushal F291-I190(fp)
+ pushl $8
+ movl *V151-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (F291-I190)/8
+ .word (F291-d_transform)/8
+E290:
+ moval I190-F291(fp),fp
+ movl r5,(sp)
+ .data 
+ .byte 3
+H293:
+ .word 0x9F17
+ .byte 0
+ .long G292
+ .text 
+ pushal H293-I190(fp)
+ pushl 0x2C(sp)
+ movl *Q120-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (H293-I190)/8
+ .word (H293-d_transform)/8
+G292:
+ moval I190-H293(fp),fp
+ pushl r5
+ clrl -(sp)
+ .data 
+ .byte 3
+J295:
+ .word 0x9F17
+ .byte 0
+ .long I294
+ .text 
+ pushal J295-I190(fp)
+ pushl 0x1C(sp)
+ .data 
+K296:
+ .long L297
+ .text 
+ movl *K296-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (J295-I190)/8
+ .word (J295-d_transform)/8
+I294:
+ moval I190-J295(fp),fp
+ movl r5,(sp)
+ movl *O274-I190(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D289-I190)/8
+ .word (D289-d_transform)/8
+C288:
+ moval I190-D289(fp),fp
+ .data 
+ .long 8
+ .byte 3
+N299:
+ .word 0x9F17
+ .byte 0
+ .long M298
+ .text 
+ pushal N299-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+P301:
+ .word 0x9F17
+ .byte 0
+ .long O300
+ .text 
+ pushal P301-I190(fp)
+ pushl $0x10
+ movl *V151-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (P301-I190)/8
+ .word (P301-d_transform)/8
+O300:
+ moval I190-P301(fp),fp
+ movl r5,(sp)
+ .data 
+ .byte 3
+R303:
+ .word 0x9F17
+ .byte 0
+ .long Q302
+ .text 
+ pushal R303-I190(fp)
+ pushl 0x2C(sp)
+ movl *Q120-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (R303-I190)/8
+ .word (R303-d_transform)/8
+Q302:
+ moval I190-R303(fp),fp
+ pushl r5
+ clrl -(sp)
+ .data 
+ .byte 3
+T305:
+ .word 0x9F17
+ .byte 0
+ .long S304
+ .text 
+ pushal T305-I190(fp)
+ pushl 0x20(sp)
+ movl *K296-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (T305-I190)/8
+ .word (T305-d_transform)/8
+S304:
+ moval I190-T305(fp),fp
+ movl r5,(sp)
+ movl *O274-I190(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N299-I190)/8
+ .word (N299-d_transform)/8
+M298:
+ moval I190-N299(fp),fp
+ .data 
+ .byte 3
+V307:
+ .word 0x9F17
+ .byte 0
+ .long U306
+ .text 
+ pushal V307-I190(fp)
+ .data 
+ .byte 3
+X309:
+ .word 0x9F17
+ .byte 0
+ .long W308
+ .text 
+ movaq (r10)+,r5
+ moval X309-I190(fp),-5(r5)
+ decl r5
+ movl 0x24(sp),(r5)
+ pushl r5
+ .data 
+ .byte 3
+Z311:
+ .word 0x9F17
+ .byte 0
+ .long Y310
+ .text 
+ pushal Z311-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+B313:
+ .word 0x9F17
+ .byte 0
+ .long A312
+ .text 
+ pushal B313-I190(fp)
+ pushl 0x28(sp)
+ movl *C236-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (B313-I190)/8
+ .word (B313-d_transform)/8
+A312:
+ moval I190-B313(fp),fp
+ movl r5,(sp)
+ movl *G84-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Z311-I190)/8
+ .word (Z311-d_transform)/8
+Y310:
+ moval I190-Z311(fp),fp
+ pushl r5
+ .data 
+C314:
+ .long D315
+ .text 
+ movl *C314-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (V307-I190)/8
+ .word (V307-d_transform)/8
+U306:
+ moval I190-V307(fp),fp
+ .data 
+ .long 8
+ .byte 3
+F317:
+ .word 0x9F17
+ .byte 0
+ .long E316
+ .text 
+ pushal F317-I190(fp)
+ pushl 0x20(sp)
+ pushl 0x20(sp)
+ movl *U124-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F317-I190)/8
+ .word (F317-d_transform)/8
+E316:
+ moval I190-F317(fp),fp
+ .data 
+ .byte 3
+H319:
+ .word 0x9F17
+ .byte 0
+ .long G318
+ .text 
+ pushal H319-I190(fp)
+ .data 
+I320:
+ .long J321
+ .text 
+ pushl *I320-I190(fp)
+ .data 
+ .long 8
+ .byte 3
+L323:
+ .word 0x9F17
+ .byte 0
+ .long K322
+ .text 
+ pushal L323-I190(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+N325:
+ .word 0x9F17
+ .byte 0
+ .long M324
+ .text 
+ pushal N325-I190(fp)
+ pushl 0x34(sp)
+ movl *Q120-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (N325-I190)/8
+ .word (N325-d_transform)/8
+M324:
+ moval I190-N325(fp),fp
+ movl r5,(sp)
+ .data 
+O326:
+ .long P327
+ .text 
+ movl *O326-I190(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (L323-I190)/8
+ .word (L323-d_transform)/8
+K322:
+ moval I190-L323(fp),fp
+ pushl r5
+ movl *C314-I190(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (H319-I190)/8
+ .word (H319-d_transform)/8
+G318:
+ moval I190-H319(fp),fp
+ movl -52(r11),r5
+ moval 0x24(sp),sp
+ jmp *-112(r11)
+E238:
+Q328:
+ movl (r11),r5
+ moval 0x24(sp),sp
+ jmp *-112(r11)
+V229:
+ jbr Q328
+Q224:
+ jbr Q328
+L219:
+ jbr Q328
+E212:
+ jbr Q328
+B209:
+ jbr Q328
+W204:
+ jbr Q328
+ .byte 2,1,1
+ .byte 9
+ .byte 1,0
+ .word (X309-I190)/8
+ .word (X309-d_transform)/8
+W308:
+ clrq -(sp)
+ .data 
+ .long 8
+ .byte 3
+S330:
+ .word 0x9F17
+ .byte 0
+ .long R329
+ .text 
+ pushal S330-X309(fp)
+ pushl (r9)
+ pushl (r11)
+ pushl (r11)
+ .data 
+T331:
+ .long U332
+ .text 
+ movl *T331-X309(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (S330-X309)/8
+ .word (S330-d_transform)/8
+R329:
+ moval X309-S330(fp),fp
+ movl *U124-X309(fp),r9
+ movl r5,4(sp)
+ tstl (sp)+
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .data 
+ .long 8
+ .byte 3
+W334:
+ .word 0x9F17
+ .byte 0
+ .long V333
+ .long W334-d_transform
+X335:
+ .text 
+ .data 
+Y336:
+ .long Z337
+ .text 
+ .word (Y336-R17)/4
+ .byte 2,1,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (W334-d_transform)/8
+V333:
+ clrq -(sp)
+ .data 
+ .byte 3
+B339:
+ .word 0x9F17
+ .byte 0
+ .long A338
+ .text 
+ pushal B339-W334(fp)
+ pushl 0xC(sp)
+ movl *N169-W334(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (B339-W334)/8
+ .word (B339-d_transform)/8
+A338:
+ moval W334-B339(fp),fp
+ movl 0-5(r5),4(sp)
+ .data 
+ .byte 3
+D341:
+ .word 0x9F17
+ .byte 0
+ .long C340
+ .text 
+ pushal D341-W334(fp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+F343:
+ .word 0x9F17
+ .byte 0
+ .long E342
+ .text 
+ pushal F343-W334(fp)
+ pushl *C132-W334(fp)
+ movl *O92-W334(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (F343-W334)/8
+ .word (F343-d_transform)/8
+E342:
+ moval W334-F343(fp),fp
+ movl r5,r9
+ tstl (sp)+
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D341-W334)/8
+ .word (D341-d_transform)/8
+C340:
+ moval W334-D341(fp),fp
+ .data 
+ .byte 3
+H345:
+ .word 0x9F17
+ .byte 0
+ .long G344
+ .text 
+ pushal H345-W334(fp)
+ pushl 0xC(sp)
+ .data 
+ .byte 3
+J347:
+ .word 0x9F17
+ .byte 0
+ .long I346
+ .text 
+ pushal J347-W334(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+L349:
+ .word 0x9F17
+ .byte 0
+ .long K348
+ .text 
+ pushal L349-W334(fp)
+ pushl 0x1C(sp)
+ movl *N169-W334(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (L349-W334)/8
+ .word (L349-d_transform)/8
+K348:
+ moval W334-L349(fp),fp
+ movl r5,(sp)
+ .data 
+M350:
+ .long N351
+ .text 
+ movl *M350-W334(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (J347-W334)/8
+ .word (J347-d_transform)/8
+I346:
+ moval W334-J347(fp),fp
+ pushl 4-5(r5)
+ .data 
+O352:
+ .long P353
+ .text 
+ movl *O352-W334(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (H345-W334)/8
+ .word (H345-d_transform)/8
+G344:
+ moval W334-H345(fp),fp
+ .data 
+ .byte 3
+R355:
+ .word 0x9F17
+ .byte 0
+ .long Q354
+ .text 
+ pushal R355-W334(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+T357:
+ .word 0x9F17
+ .byte 0
+ .long S356
+ .text 
+ pushal T357-W334(fp)
+ pushl 0x14(sp)
+ movl *S44-W334(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (T357-W334)/8
+ .word (T357-d_transform)/8
+S356:
+ moval W334-T357(fp),fp
+ movl r5,(sp)
+ pushl 0xC(sp)
+ movl *U124-W334(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (R355-W334)/8
+ .word (R355-d_transform)/8
+Q354:
+ moval W334-R355(fp),fp
+ movl -52(r11),r5
+ moval 0xC(sp),sp
+ jmp *-112(r11)
+ .data 
+ .byte 3
+V359:
+ .word 0x9F17
+ .byte 0
+ .long U358
+ .long V359-d_transform
+W360:
+ .text 
+ .data 
+X361:
+ .long Y362
+ .text 
+ .word (X361-R17)/4
+ .byte 5,0,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (V359-d_transform)/8
+U358:
+ clrq -(sp)
+ clrq -(sp)
+ movl 0x10(sp),8(sp)
+ .data 
+ .byte 3
+A364:
+ .word 0x9F17
+ .byte 0
+ .long Z363
+ .text 
+ pushal A364-V359(fp)
+ pushl 0xC(sp)
+ movl *N169-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (A364-V359)/8
+ .word (A364-d_transform)/8
+Z363:
+ moval V359-A364(fp),fp
+ movl r5,r6
+ movl r6,r5
+ movl 0-5(r5),4(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),0x10(sp)
+ movl r6,r5
+ movl 4-5(r5),r5
+ movl 0-5(r5),0xC(sp)
+ .data 
+ .byte 3
+D367:
+ .word 0x9F17
+ .byte 0
+ .long C366
+ .text 
+ pushal D367-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+F369:
+ .word 0x9F17
+ .byte 0
+ .long E368
+ .text 
+ pushal F369-V359(fp)
+ pushl 0x14(sp)
+ movl *N169-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (F369-V359)/8
+ .word (F369-d_transform)/8
+E368:
+ moval V359-F369(fp),fp
+ movl r5,(sp)
+ movl *M142-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D367-V359)/8
+ .word (D367-d_transform)/8
+C366:
+ moval V359-D367(fp),fp
+ cmpl $0x18,r5
+ jneq B365
+ .data 
+ .byte 3
+I372:
+ .word 0x9F17
+ .byte 0
+ .long H371
+ .text 
+ pushal I372-V359(fp)
+ pushl 0x14(sp)
+ movl *U46-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (I372-V359)/8
+ .word (I372-d_transform)/8
+H371:
+ moval V359-I372(fp),fp
+ cmpl r5,(r11)
+ jeql G370
+ .data 
+ .byte 3
+L375:
+ .word 0x9F17
+ .byte 0
+ .long K374
+ .text 
+ pushal L375-V359(fp)
+ pushl 0x10(sp)
+ movl *U46-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (L375-V359)/8
+ .word (L375-d_transform)/8
+K374:
+ moval V359-L375(fp),fp
+ cmpl r5,(r11)
+ jeql J373
+ .data 
+ .byte 3
+N377:
+ .word 0x9F17
+ .byte 0
+ .long M376
+ .text 
+ pushal N377-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+P379:
+ .word 0x9F17
+ .byte 0
+ .long O378
+ .text 
+ pushal P379-V359(fp)
+ pushl 0x1C(sp)
+ movl *C236-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (P379-V359)/8
+ .word (P379-d_transform)/8
+O378:
+ moval V359-P379(fp),fp
+ movl r5,(sp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+R381:
+ .word 0x9F17
+ .byte 0
+ .long Q380
+ .text 
+ pushal R381-V359(fp)
+ pushl 0x24(sp)
+ movl *Q120-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (R381-V359)/8
+ .word (R381-d_transform)/8
+Q380:
+ moval V359-R381(fp),fp
+ movl r5,(sp)
+ pushl -52(r11)
+ .data 
+S382:
+ .long T383
+ .text 
+ movl *S382-V359(fp),r9
+ moval 0x10(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N377-V359)/8
+ .word (N377-d_transform)/8
+M376:
+ moval V359-N377(fp),fp
+ .data 
+ .long 8
+ .byte 3
+V385:
+ .word 0x9F17
+ .byte 0
+ .long U384
+ .text 
+ pushal V385-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+X387:
+ .word 0x9F17
+ .byte 0
+ .long W386
+ .text 
+ pushal X387-V359(fp)
+ pushl 0x1C(sp)
+ movl *C236-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (X387-V359)/8
+ .word (X387-d_transform)/8
+W386:
+ moval V359-X387(fp),fp
+ movl r5,(sp)
+ .data 
+ .byte 3
+Z389:
+ .word 0x9F17
+ .byte 0
+ .long Y388
+ .text 
+ pushal Z389-V359(fp)
+ pushl 0x1C(sp)
+ .data 
+A390:
+ .long B391
+ .text 
+ movl *A390-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Z389-V359)/8
+ .word (Z389-d_transform)/8
+Y388:
+ moval V359-Z389(fp),fp
+ pushl r5
+ .data 
+C392:
+ .long D393
+ .text 
+ movl *C392-V359(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (V385-V359)/8
+ .word (V385-d_transform)/8
+U384:
+ moval V359-V385(fp),fp
+ movl r5,4(sp)
+ .data 
+ .byte 3
+F395:
+ .word 0x9F17
+ .byte 0
+ .long E394
+ .text 
+ pushal F395-V359(fp)
+ pushl 0x14(sp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+H397:
+ .word 0x9F17
+ .byte 0
+ .long G396
+ .text 
+ pushal H397-V359(fp)
+ pushl *A390-V359(fp)
+ movl *O92-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (H397-V359)/8
+ .word (H397-d_transform)/8
+G396:
+ moval V359-H397(fp),fp
+ movl r5,r9
+ tstl (sp)+
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F395-V359)/8
+ .word (F395-d_transform)/8
+E394:
+ moval V359-F395(fp),fp
+ .data 
+ .byte 3
+K400:
+ .word 0x9F17
+ .byte 0
+ .long J399
+ .text 
+ pushal K400-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+M402:
+ .word 0x9F17
+ .byte 0
+ .long L401
+ .text 
+ pushal M402-V359(fp)
+ pushl 0x18(sp)
+ movl *C236-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (M402-V359)/8
+ .word (M402-d_transform)/8
+L401:
+ moval V359-M402(fp),fp
+ movl r5,(sp)
+ movl *G84-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (K400-V359)/8
+ .word (K400-d_transform)/8
+J399:
+ moval V359-K400(fp),fp
+ cmpl 4-5(r5),(r11)
+ jneq I398
+ .data 
+ .byte 3
+O404:
+ .word 0x9F17
+ .byte 0
+ .long N403
+ .text 
+ pushal O404-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+Q406:
+ .word 0x9F17
+ .byte 0
+ .long P405
+ .text 
+ pushal Q406-V359(fp)
+ pushl 0x18(sp)
+ movl *C236-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (Q406-V359)/8
+ .word (Q406-d_transform)/8
+P405:
+ moval V359-Q406(fp),fp
+ movl r5,(sp)
+ pushl 0x18(sp)
+ pushl -52(r11)
+ movl *T97-V359(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (O404-V359)/8
+ .word (O404-d_transform)/8
+N403:
+ moval V359-O404(fp),fp
+ .data 
+ .byte 3
+S408:
+ .word 0x9F17
+ .byte 0
+ .long R407
+ .text 
+ pushal S408-V359(fp)
+ pushl 0xC(sp)
+ .data 
+ .byte 3
+U410:
+ .word 0x9F17
+ .byte 0
+ .long T409
+ .text 
+ pushal U410-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+W412:
+ .word 0x9F17
+ .byte 0
+ .long V411
+ .text 
+ pushal W412-V359(fp)
+ pushl 0x20(sp)
+ movl *Q120-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (W412-V359)/8
+ .word (W412-d_transform)/8
+V411:
+ moval V359-W412(fp),fp
+ movl r5,(sp)
+ movl *S122-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (U410-V359)/8
+ .word (U410-d_transform)/8
+T409:
+ moval V359-U410(fp),fp
+ pushl r5
+ movl *U124-V359(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (S408-V359)/8
+ .word (S408-d_transform)/8
+R407:
+ moval V359-S408(fp),fp
+ .data 
+ .byte 3
+Y414:
+ .word 0x9F17
+ .byte 0
+ .long X413
+ .text 
+ pushal Y414-V359(fp)
+ pushl 0x10(sp)
+ movl *I320-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Y414-V359)/8
+ .word (Y414-d_transform)/8
+X413:
+ moval V359-Y414(fp),fp
+ jbr Z415
+I398:
+ .data 
+ .byte 3
+B417:
+ .word 0x9F17
+ .byte 0
+ .long A416
+ .text 
+ pushal B417-V359(fp)
+ pushl $0x10
+ pushl $8
+ movl *G266-V359(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (B417-V359)/8
+ .word (B417-d_transform)/8
+A416:
+ moval V359-B417(fp),fp
+ movl r5,4(sp)
+ .data 
+ .byte 3
+D419:
+ .word 0x9F17
+ .byte 0
+ .long C418
+ .text 
+ pushal D419-V359(fp)
+ pushl *S44-V359(fp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+F421:
+ .word 0x9F17
+ .byte 0
+ .long E420
+ .text 
+ pushal F421-V359(fp)
+ pushl 0x20(sp)
+ movl *S122-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (F421-V359)/8
+ .word (F421-d_transform)/8
+E420:
+ moval V359-F421(fp),fp
+ movl r5,(sp)
+ movl *O274-V359(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D419-V359)/8
+ .word (D419-d_transform)/8
+C418:
+ moval V359-D419(fp),fp
+ .data 
+ .byte 3
+H423:
+ .word 0x9F17
+ .byte 0
+ .long G422
+ .text 
+ pushal H423-V359(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+J425:
+ .word 0x9F17
+ .byte 0
+ .long I424
+ .text 
+ pushal J425-V359(fp)
+ pushl $8
+ movl *V151-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (J425-V359)/8
+ .word (J425-d_transform)/8
+I424:
+ moval V359-J425(fp),fp
+ movl r5,(sp)
+ pushl 0xC(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+L427:
+ .word 0x9F17
+ .byte 0
+ .long K426
+ .text 
+ pushal L427-V359(fp)
+ pushl 0x24(sp)
+ movl *S122-V359(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (L427-V359)/8
+ .word (L427-d_transform)/8
+K426:
+ moval V359-L427(fp),fp
+ movl r5,(sp)
+ movl *O274-V359(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (H423-V359)/8
+ .word (H423-d_transform)/8
+G422:
+ moval V359-H423(fp),fp
+ .data 
+ .byte 3
+N429:
+ .word 0x9F17
+ .byte 0
+ .long M428
+ .text 
+ pushal N429-V359(fp)
+ pushl 0xC(sp)
+ pushl 0xC(sp)
+ movl *U124-V359(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N429-V359)/8
+ .word (N429-d_transform)/8
+M428:
+ moval V359-N429(fp),fp
+Z415:
+ movl -52(r11),r5
+ moval 0x14(sp),sp
+ jmp *-112(r11)
+J373:
+O430:
+ movl (r11),r5
+ moval 0x14(sp),sp
+ jmp *-112(r11)
+G370:
+ jbr O430
+B365:
+ jbr O430
+ .data 
+ .byte 3
+Q432:
+ .word 0x9F17
+ .byte 0
+ .long P431
+ .long Q432-d_transform
+R433:
+ .text 
+ .data 
+S434:
+ .long T435
+ .text 
+ .word (S434-R17)/4
+ .byte 6,1,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (Q432-d_transform)/8
+P431:
+ clrq -(sp)
+ clrq -(sp)
+ clrq -(sp)
+ movl 0x18(sp),0x14(sp)
+ .data 
+ .byte 3
+V437:
+ .word 0x9F17
+ .byte 0
+ .long U436
+ .text 
+ pushal V437-Q432(fp)
+ pushl 0x18(sp)
+ movl *U202-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (V437-Q432)/8
+ .word (V437-d_transform)/8
+U436:
+ moval Q432-V437(fp),fp
+ movl r5,r6
+ movl r6,r5
+ movl 0-5(r5),0x18(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),4(sp)
+ movl r6,r5
+ movl 4-5(r5),r5
+ movl 0-5(r5),8(sp)
+ .data 
+ .byte 3
+X439:
+ .word 0x9F17
+ .byte 0
+ .long W438
+ .text 
+ pushal X439-Q432(fp)
+ pushl $0x20
+ pushl $8
+ movl *G266-Q432(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (X439-Q432)/8
+ .word (X439-d_transform)/8
+W438:
+ moval Q432-X439(fp),fp
+ movl r5,0x10(sp)
+ .data 
+ .byte 3
+A442:
+ .word 0x9F17
+ .byte 0
+ .long Z441
+ .text 
+ pushal A442-Q432(fp)
+ pushl 0x1C(sp)
+ .data 
+B443:
+ .long C444
+ .text 
+ movl *B443-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (A442-Q432)/8
+ .word (A442-d_transform)/8
+Z441:
+ moval Q432-A442(fp),fp
+ cmpl r5,(r11)
+ jeql Y440
+ movl 0x18(sp),0xC(sp)
+ jbr D445
+Y440:
+ .data 
+ .long 8
+ .byte 3
+F447:
+ .word 0x9F17
+ .byte 0
+ .long E446
+ .text 
+ pushal F447-Q432(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+H449:
+ .word 0x9F17
+ .byte 0
+ .long G448
+ .text 
+ pushal H449-Q432(fp)
+ pushl 0x24(sp)
+ movl *A52-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (H449-Q432)/8
+ .word (H449-d_transform)/8
+G448:
+ moval Q432-H449(fp),fp
+ movl r5,(sp)
+ .data 
+I450:
+ .long J451
+ .text 
+ movl *I450-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (F447-Q432)/8
+ .word (F447-d_transform)/8
+E446:
+ moval Q432-F447(fp),fp
+ movl r5,0xC(sp)
+D445:
+ .data 
+ .long 8
+ .byte 3
+L453:
+ .word 0x9F17
+ .byte 0
+ .long K452
+ .text 
+ pushal L453-Q432(fp)
+ pushl *S122-Q432(fp)
+ .data 
+ .byte 3
+N455:
+ .word 0x9F17
+ .byte 0
+ .long M454
+ .text 
+ pushal N455-Q432(fp)
+ pushl 0x20(sp)
+ movl *U202-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (N455-Q432)/8
+ .word (N455-d_transform)/8
+M454:
+ moval Q432-N455(fp),fp
+ pushl r5
+ movl *C314-Q432(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (L453-Q432)/8
+ .word (L453-d_transform)/8
+K452:
+ moval Q432-L453(fp),fp
+ .data 
+ .byte 3
+Q458:
+ .word 0x9F17
+ .byte 0
+ .long P457
+ .text 
+ pushal Q458-Q432(fp)
+ pushl 0x1C(sp)
+ movl *T227-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Q458-Q432)/8
+ .word (Q458-d_transform)/8
+P457:
+ moval Q432-Q458(fp),fp
+ cmpl r5,(r11)
+ jneq O456
+ jbr R459
+O456:
+ .data 
+ .byte 3
+T461:
+ .word 0x9F17
+ .byte 0
+ .long S460
+ .text 
+ pushal T461-Q432(fp)
+ pushl 0x1C(sp)
+ movl *I320-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (T461-Q432)/8
+ .word (T461-d_transform)/8
+S460:
+ moval Q432-T461(fp),fp
+R459:
+ .data 
+ .byte 3
+V463:
+ .word 0x9F17
+ .byte 0
+ .long U462
+ .text 
+ pushal V463-Q432(fp)
+ pushl *S44-Q432(fp)
+ pushl 0x18(sp)
+ clrl -(sp)
+ .data 
+ .byte 3
+X465:
+ .word 0x9F17
+ .byte 0
+ .long W464
+ .text 
+ pushal X465-Q432(fp)
+ pushl *O222-Q432(fp)
+ movl *I450-Q432(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (X465-Q432)/8
+ .word (X465-d_transform)/8
+W464:
+ moval Q432-X465(fp),fp
+ movl r5,(sp)
+ movl *O274-Q432(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (V463-Q432)/8
+ .word (V463-d_transform)/8
+U462:
+ moval Q432-V463(fp),fp
+ .data 
+ .byte 3
+Z467:
+ .word 0x9F17
+ .byte 0
+ .long Y466
+ .text 
+ pushal Z467-Q432(fp)
+ pushl 0x14(sp)
+ .data 
+ .byte 3
+B469:
+ .word 0x9F17
+ .byte 0
+ .long A468
+ .text 
+ pushal B469-Q432(fp)
+ pushl 0x10(sp)
+ pushl 0x1C(sp)
+ pushl 0x1C(sp)
+ movl *A260-Q432(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (B469-Q432)/8
+ .word (B469-d_transform)/8
+A468:
+ moval Q432-B469(fp),fp
+ pushl r5
+ movl *A286-Q432(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Z467-Q432)/8
+ .word (Z467-d_transform)/8
+Y466:
+ moval Q432-Z467(fp),fp
+ .data 
+ .byte 3
+D471:
+ .word 0x9F17
+ .byte 0
+ .long C470
+ .text 
+ pushal D471-Q432(fp)
+ pushl 0x18(sp)
+ pushl 0x18(sp)
+ movl *U124-Q432(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (D471-Q432)/8
+ .word (D471-d_transform)/8
+C470:
+ moval Q432-D471(fp),fp
+ movl -52(r11),r5
+ moval 0x1C(sp),sp
+ jmp *-112(r11)
+ .data 
+ .byte 3
+F473:
+ .word 0x9F17
+ .byte 0
+ .long E472
+ .long F473-d_transform
+G474:
+ .text 
+ .data 
+H475:
+ .long I476
+ .text 
+ .word (H475-R17)/4
+ .byte 6,1,1
+ .byte 0x19
+ .byte 0,0
+ .word 0
+ .word (F473-d_transform)/8
+E472:
+ clrq -(sp)
+ clrq -(sp)
+ clrq -(sp)
+ movl 0x18(sp),0x14(sp)
+ .data 
+ .byte 3
+K478:
+ .word 0x9F17
+ .byte 0
+ .long J477
+ .text 
+ pushal K478-F473(fp)
+ pushl 0x18(sp)
+ movl *U202-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (K478-F473)/8
+ .word (K478-d_transform)/8
+J477:
+ moval F473-K478(fp),fp
+ movl r5,r6
+ movl r6,r5
+ movl 0-5(r5),0x18(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),8(sp)
+ movl r6,r5
+ movl 4-5(r5),r6
+ movl r6,r5
+ movl 0-5(r5),4(sp)
+ movl r6,r5
+ movl 4-5(r5),r5
+ movl 0-5(r5),0xC(sp)
+ .data 
+ .byte 3
+N481:
+ .word 0x9F17
+ .byte 0
+ .long M480
+ .text 
+ pushal N481-F473(fp)
+ pushl 0x1C(sp)
+ movl *B443-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (N481-F473)/8
+ .word (N481-d_transform)/8
+M480:
+ moval F473-N481(fp),fp
+ cmpl r5,(r11)
+ jeql L479
+ movl 0x18(sp),0x10(sp)
+ jbr O482
+L479:
+ .data 
+ .byte 3
+Q484:
+ .word 0x9F17
+ .byte 0
+ .long P483
+ .text 
+ pushal Q484-F473(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+S486:
+ .word 0x9F17
+ .byte 0
+ .long R485
+ .text 
+ pushal S486-F473(fp)
+ pushl 0x24(sp)
+ movl *A52-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (S486-F473)/8
+ .word (S486-d_transform)/8
+R485:
+ moval F473-S486(fp),fp
+ movl r5,(sp)
+ movl *I450-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Q484-F473)/8
+ .word (Q484-d_transform)/8
+P483:
+ moval F473-Q484(fp),fp
+ movl r5,0x10(sp)
+O482:
+ .data 
+ .byte 3
+U488:
+ .word 0x9F17
+ .byte 0
+ .long T487
+ .text 
+ pushal U488-F473(fp)
+ pushl *S122-F473(fp)
+ .data 
+ .byte 3
+W490:
+ .word 0x9F17
+ .byte 0
+ .long V489
+ .text 
+ pushal W490-F473(fp)
+ pushl 0x20(sp)
+ movl *U202-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (W490-F473)/8
+ .word (W490-d_transform)/8
+V489:
+ moval F473-W490(fp),fp
+ pushl r5
+ movl *C314-F473(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (U488-F473)/8
+ .word (U488-d_transform)/8
+T487:
+ moval F473-U488(fp),fp
+ .data 
+ .byte 3
+Z493:
+ .word 0x9F17
+ .byte 0
+ .long Y492
+ .text 
+ pushal Z493-F473(fp)
+ pushl 0x1C(sp)
+ movl *T227-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (Z493-F473)/8
+ .word (Z493-d_transform)/8
+Y492:
+ moval F473-Z493(fp),fp
+ cmpl r5,(r11)
+ jneq X491
+ jbr A494
+X491:
+ .data 
+ .byte 3
+C496:
+ .word 0x9F17
+ .byte 0
+ .long B495
+ .text 
+ pushal C496-F473(fp)
+ pushl 0x1C(sp)
+ movl *I320-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (C496-F473)/8
+ .word (C496-d_transform)/8
+B495:
+ moval F473-C496(fp),fp
+A494:
+ .data 
+ .byte 3
+E498:
+ .word 0x9F17
+ .byte 0
+ .long D497
+ .text 
+ pushal E498-F473(fp)
+ pushl 0x18(sp)
+ .data 
+ .byte 3
+G500:
+ .word 0x9F17
+ .byte 0
+ .long F499
+ .text 
+ pushal G500-F473(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+I502:
+ .word 0x9F17
+ .byte 0
+ .long H501
+ .text 
+ pushal I502-F473(fp)
+ .data 
+J503:
+ .long L505
+ .text 
+ pushl J503-F473(fp)
+ pushl $8
+ clrl -(sp)
+ .data 
+ .long 8
+ .byte 3
+N507:
+ .word 0x9F17
+ .byte 0
+ .long M506
+ .text 
+ pushal N507-F473(fp)
+ .data 
+O508:
+ .long Q510
+ .text 
+ pushl O508-F473(fp)
+ .data 
+R511:
+ .long (S512+5)-d_transform
+ .text 
+ pushl R511-F473(fp)
+ clrl -(sp)
+ .data 
+ .byte 3
+U514:
+ .word 0x9F17
+ .byte 0
+ .long T513
+ .text 
+ pushal U514-F473(fp)
+ .data 
+V515:
+ .long L505
+ .text 
+ pushl V515-F473(fp)
+ pushl $0x10
+ pushl *H215-F473(fp)
+ .data 
+W516:
+ .long (X517+5)-d_transform
+ .text 
+ pushl W516-F473(fp)
+ .data 
+Y518:
+ .long (Z519+5)-d_transform
+ .text 
+ pushl Y518-F473(fp)
+ pushl 0x58(sp)
+ pushl 0x50(sp)
+ pushl 0x5C(sp)
+ movl *A260-F473(fp),r9
+ moval 0x20(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 0xB,0
+ .word (U514-F473)/8
+ .word (U514-d_transform)/8
+T513:
+ moval F473-U514(fp),fp
+ movl r5,(sp)
+ movl *A260-F473(fp),r9
+ moval 0xC(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 7,0
+ .word (N507-F473)/8
+ .word (N507-d_transform)/8
+M506:
+ moval F473-N507(fp),fp
+ movl r5,(sp)
+ pushl 0x28(sp)
+ movl *A260-F473(fp),r9
+ moval 0x10(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 3,0
+ .word (I502-F473)/8
+ .word (I502-d_transform)/8
+H501:
+ moval F473-I502(fp),fp
+ movl r5,(sp)
+ .data 
+A520:
+ .long B521
+ .text 
+ movl *A520-F473(fp),r9
+ moval 4(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte 1,0
+ .word (G500-F473)/8
+ .word (G500-d_transform)/8
+F499:
+ moval F473-G500(fp),fp
+ pushl r5
+ movl *U124-F473(fp),r9
+ moval 8(sp),ap
+ jmp *-116(r11)
+ .byte 0xC
+ .byte -1,0
+ .word (E498-F473)/8
+ .word (E498-d_transform)/8
+D497:
+ moval F473-E498(fp),fp
+ movl -52(r11),r5
+ moval 0x1C(sp),sp
+ jmp *-112(r11)
+ .data 
+ .byte 3
+D523:
+ .word 0x9F17
+ .byte 0
+ .long C522
+ .long D523-d_transform
+S18:
+ .text 
+ .byte 0,0,0
+ .byte 9
+ .byte 0,0
+ .word 0
+ .word (D523-d_transform)/8
+C522:
+ moval F31-D523(fp),*G32-D523(fp)
+ moval X101-D523(fp),*Q68-D523(fp)
+ moval J191-D523(fp),*F187-D523(fp)
+ moval X335-D523(fp),*Y336-D523(fp)
+ moval W360-D523(fp),*X361-D523(fp)
+ moval R433-D523(fp),*S434-D523(fp)
+ moval G474-D523(fp),r5
+ movl r5,*H475-D523(fp)
+ jmp *-112(r11)
+ .align 3
+X23:
+ .data 
+T19:
+ .long 8
+Z25:
+ .long F525
+ .long (G526+5)-d_transform
+G526:
+ .long I528
+ .long (J529+5)-d_transform
+J529:
+ .long L531
+ .long (M532+5)-d_transform
+M532:
+ .long B27
+ .long (N533+5)-d_transform
+N533:
+ .long P535
+ .long (Q536+5)-d_transform
+Q536:
+ .long 0
+ .long (1<<0x1B)+3
+C28:
+ .long (R537+5)-d_transform
+ .long (1<<0x1B)+3
+R537:
+ .long T539
+ .long (U540+5)-d_transform
+U540:
+ .long W542
+ .long (1<<0x1B)+3
+S512:
+ .long N247
+ .long (1<<0x1B)+3
+X517:
+ .long Q510
+ .long (X543+5)-d_transform
+X543:
+ .long (1<<0x1B)+3
+ .long (Y544+5)-d_transform
+Y544:
+ .long (Z545+5)-d_transform
+ .long (1<<0x1B)+3
+Z545:
+ .long L505
+ .long (A546+5)-d_transform
+A546:
+ .long 0
+ .long (B547+5)-d_transform
+B547:
+ .long N247
+ .long (C548+5)-d_transform
+C548:
+ .long (D549+5)-d_transform
+ .long (1<<0x1B)+3
+D549:
+ .long F551
+ .long (G552+5)-d_transform
+G552:
+ .long (5<<0x1B)+3
+ .long (1<<0x1B)+3
+Z519:
+ .long Q510
+ .long (H553+5)-d_transform
+H553:
+ .long (1<<0x1B)+3
+ .long (I554+5)-d_transform
+I554:
+ .long (J555+5)-d_transform
+ .long (1<<0x1B)+3
+J555:
+ .long L505
+ .long (K556+5)-d_transform
+K556:
+ .long 0
+ .long (L557+5)-d_transform
+L557:
+ .long N247
+ .long (M558+5)-d_transform
+M558:
+ .long (N559+5)-d_transform
+ .long (1<<0x1B)+3
+N559:
+ .long F551
+ .long (O560+5)-d_transform
+O560:
+ .long (1<<0x1B)+3
+ .long (1<<0x1B)+3
+ .text 
+ .align 1
+ .word 0xA
+W620:
+ .asciz "TRANSFORM"
+ .align 1
+ .word 2
+X621:
+ .asciz "C"
+ .space 4
+ .align 1
+ .word 2
+Y622:
+ .asciz "P"
+ .space 4
+ .align 1
+ .word 6
+Z623:
+ .asciz "EXITS"
+ .align 1
+ .word 8
+A624:
+ .asciz "CLAMBDA"
+ .align 1
+ .word 0xD
+B625:
+ .asciz "**FILENAME**"
+ .align 1
+ .word 7
+C626:
+ .asciz "VULCAN"
+ .align 1
+ .word 6
+D627:
+ .asciz "ORBIT"
+ .align 1
+ .word 2
+E628:
+ .asciz "T"
+ .space 4
+ .align 1
+ .word 0xD
+F629:
+ .asciz "SYNTAX-TABLE"
+ .align 1
+ .word 0x15
+G630:
+ .asciz "*ORBIT-SYNTAX-TABLE*"
+ .align 1
+ .word 6
+H631:
+ .asciz "QUOTE"
+ .align 1
+ .word 0xB
+I632:
+ .asciz "CALL-NODE?"
+ .align 1
+ .word 0xA
+J633:
+ .asciz "CALL-PROC"
+ .align 1
+ .word 0xD
+K634:
+ .asciz "LAMBDA-NODE?"
+ .align 1
+ .word 0x13
+L635:
+ .asciz "KNOWN-PRIMOP-VALUE"
+ .align 1
+ .word 0xF
+M636:
+ .asciz "PRIMOP.FORMALS"
+ .align 1
+ .word 0x14
+N637:
+ .asciz "PRIMOP.CONSTRUCTED?"
+ .align 1
+ .word 0x11
+O638:
+ .asciz "PRIMOP.TRANSFORM"
+ .align 1
+ .word 0xE
+P639:
+ .asciz "TRANSFORM-LET"
+ .align 1
+ .word 6
+Q640:
+ .asciz "USED?"
+ .align 1
+ .word 0xE
+R641:
+ .asciz "VARIABLE-REFS"
+ .align 1
+ .word 0xE
+S642:
+ .asciz "VARIABLE-TYPE"
+ .align 1
+ .word 7
+T643:
+ .asciz "SETTER"
+ .align 1
+ .word 0xB
+U644:
+ .asciz "SUBSTITUTE"
+ .align 1
+ .word 0x11
+V645:
+ .asciz "LAMBDA-VARIABLES"
+ .align 1
+ .word 0x10
+W646:
+ .asciz "LAMBDA-REST-VAR"
+ .align 1
+ .word 0xC
+X647:
+ .asciz "LAMBDA-BODY"
+ .align 1
+ .word 7
+Y648:
+ .asciz "DETACH"
+ .align 1
+ .word 8
+Z649:
+ .asciz "REPLACE"
+ .align 1
+ .word 0xB
+A650:
+ .asciz "CALL-EXITS"
+ .align 1
+ .word 7
+B651:
+ .asciz "LENGTH"
+ .align 1
+ .word 9
+C652:
+ .asciz "CALL-ARG"
+ .align 1
+ .word 6
+D653:
+ .asciz "TRUE?"
+ .align 1
+ .word 0xA
+E654:
+ .asciz "CALL-ARGS"
+ .align 1
+ .word 4
+F655:
+ .asciz "MAP"
+ .space 2
+ .align 1
+ .word 5
+G656:
+ .asciz "ANY?"
+ .align 1
+ .word 0x17
+H657:
+ .asciz "ERASE-UNUSED-ARGUMENTS"
+ .align 1
+ .word 0x1E
+I658:
+ .asciz "REMOVE-UNREFERENCED-VARIABLES"
+ .align 1
+ .word 4
+J659:
+ .asciz "*OR"
+ .space 2
+ .align 1
+ .word 0xF
+K660:
+ .asciz "TRANSFORM-JOIN"
+ .align 1
+ .word 0xF
+L661:
+ .asciz "CALL-PROC+ARGS"
+ .align 1
+ .word 0x13
+M662:
+ .asciz "PRIMOP/CONDITIONAL"
+ .align 1
+ .word 0xC
+N663:
+ .asciz "PRIMOP-REF?"
+ .align 1
+ .word 0xC
+O664:
+ .asciz "PRIMOP/TEST"
+ .align 1
+ .word 0x10
+P665:
+ .asciz "REFERENCE-NODE?"
+ .align 1
+ .word 0x13
+Q666:
+ .asciz "REFERENCE-VARIABLE"
+ .align 1
+ .word 0x10
+R667:
+ .asciz "LAMBDA-CONT-VAR"
+ .align 1
+ .word 0x10
+S668:
+ .asciz "CREATE-VARIABLE"
+ .align 1
+ .word 5
+T669:
+ .asciz "LIST"
+ .align 1
+ .word 0x13
+U670:
+ .asciz "CREATE-LAMBDA-NODE"
+ .align 1
+ .word 0x11
+V671:
+ .asciz "CREATE-CALL-NODE"
+ .align 1
+ .word 7
+W672:
+ .asciz "RELATE"
+ .align 1
+ .word 0x11
+X673:
+ .asciz "RELATE-CALL-ARGS"
+ .align 1
+ .word 0x16
+Y674:
+ .asciz "CREATE-REFERENCE-NODE"
+ .align 1
+ .word 5
+Z675:
+ .asciz "WALK"
+ .align 1
+ .word 6
+A676:
+ .asciz "ERASE"
+ .align 1
+ .word 0xE
+B677:
+ .asciz "NODE-CHILDREN"
+ .align 1
+ .word 0xF
+C678:
+ .asciz "COPY-NODE-TREE"
+ .align 1
+ .word 0x11
+D679:
+ .asciz "TRANSFORM-VALUES"
+ .align 1
+ .word 0xA
+E680:
+ .asciz "COPY-LIST"
+ .align 1
+ .word 0x12
+F681:
+ .asciz "REPLACE-CALL-ARGS"
+ .align 1
+ .word 0x19
+G682:
+ .asciz "TRANSFORM-RECEIVE-VALUES"
+ .align 1
+ .word 0xC
+H683:
+ .asciz "REPLACE-VAR"
+ .align 1
+ .word 0x15
+I684:
+ .asciz "LAMBDA-ALL-VARIABLES"
+ .align 1
+ .word 6
+J685:
+ .asciz "DELQ!"
+ .align 1
+ .word 0x14
+K686:
+ .asciz "TRANSFORM-PREDICATE"
+ .align 1
+ .word 0xD
+L687:
+ .asciz "PRIMOP-NODE?"
+ .align 1
+ .word 0x13
+M688:
+ .asciz "CREATE-PRIMOP-NODE"
+ .align 1
+ .word 0x19
+N689:
+ .asciz "TRANSFORM-TO-CONDITIONAL"
+ .align 1
+ .word 0x11
+O690:
+ .asciz "S-EXP->NODE-TREE"
+ .align 3
+Y24:
+ .data 
+V21:
+ .word 9
+P691:
+ .long W620
+ .word 0
+ .word 1
+Q692:
+ .long X621
+ .word 0
+ .word 1
+R693:
+ .long Y622
+ .word 0
+ .word 5
+S694:
+ .long Z623
+ .word 0
+ .word 7
+T695:
+ .long A624
+ .word 0
+ .word 0xC
+U696:
+ .long B625
+ .word 0
+ .word 6
+V697:
+ .long C626
+ .word 0
+ .word 5
+W698:
+ .long D627
+ .word 0
+ .word 1
+X699:
+ .long E628
+ .word 0
+ .word 0xC
+Y700:
+ .long F629
+ .word 0
+ .word 0x14
+Z701:
+ .long G630
+ .word 0
+ .word 5
+A702:
+ .long H631
+ .word 0
+ .word 0xA
+B703:
+ .long I632
+ .word 0
+ .word 9
+C704:
+ .long J633
+ .word 0
+ .word 0xC
+D705:
+ .long K634
+ .word 0
+ .word 0x12
+E706:
+ .long L635
+ .word 0
+ .word 0xE
+F707:
+ .long M636
+ .word 0
+ .word 0x13
+G708:
+ .long N637
+ .word 0
+ .word 0x10
+H709:
+ .long O638
+ .word 0
+ .word 0xD
+I710:
+ .long P639
+ .word 0
+ .word 5
+J711:
+ .long Q640
+ .word 0
+ .word 0xD
+K712:
+ .long R641
+ .word 0
+ .word 0xD
+L713:
+ .long S642
+ .word 0
+ .word 6
+M714:
+ .long T643
+ .word 0
+ .word 0xA
+N715:
+ .long U644
+ .word 0
+ .word 0x10
+O716:
+ .long V645
+ .word 0
+ .word 0xF
+P717:
+ .long W646
+ .word 0
+ .word 0xB
+Q718:
+ .long X647
+ .word 0
+ .word 6
+R719:
+ .long Y648
+ .word 0
+ .word 7
+S720:
+ .long Z649
+ .word 0
+ .word 0xA
+T721:
+ .long A650
+ .word 0
+ .word 6
+U722:
+ .long B651
+ .word 0
+ .word 8
+V723:
+ .long C652
+ .word 0
+ .word 5
+W724:
+ .long D653
+ .word 0
+ .word 9
+X725:
+ .long E654
+ .word 0
+ .word 3
+Y726:
+ .long F655
+ .word 0
+ .word 4
+Z727:
+ .long G656
+ .word 0
+ .word 0x16
+A728:
+ .long H657
+ .word 0
+ .word 0x1D
+B729:
+ .long I658
+ .word 0
+ .word 3
+C730:
+ .long J659
+ .word 0
+ .word 0xE
+D731:
+ .long K660
+ .word 0
+ .word 0xE
+E732:
+ .long L661
+ .word 0
+ .word 0x12
+F733:
+ .long M662
+ .word 0
+ .word 0xB
+G734:
+ .long N663
+ .word 0
+ .word 0xB
+H735:
+ .long O664
+ .word 0
+ .word 0xF
+I736:
+ .long P665
+ .word 0
+ .word 0x12
+J737:
+ .long Q666
+ .word 0
+ .word 0xF
+K738:
+ .long R667
+ .word 0
+ .word 0xF
+L739:
+ .long S668
+ .word 0
+ .word 4
+M740:
+ .long T669
+ .word 0
+ .word 0x12
+N741:
+ .long U670
+ .word 0
+ .word 0x10
+O742:
+ .long V671
+ .word 0
+ .word 6
+P743:
+ .long W672
+ .word 0
+ .word 0x10
+Q744:
+ .long X673
+ .word 0
+ .word 0x15
+R745:
+ .long Y674
+ .word 0
+ .word 4
+S746:
+ .long Z675
+ .word 0
+ .word 5
+T747:
+ .long A676
+ .word 0
+ .word 0xD
+U748:
+ .long B677
+ .word 0
+ .word 0xE
+V749:
+ .long C678
+ .word 0
+ .word 0x10
+W750:
+ .long D679
+ .word 0
+ .word 9
+X751:
+ .long E680
+ .word 0
+ .word 0x11
+Y752:
+ .long F681
+ .word 0
+ .word 0x18
+Z753:
+ .long G682
+ .word 0
+ .word 0xB
+A754:
+ .long H683
+ .word 0
+ .word 0x14
+B755:
+ .long I684
+ .word 0
+ .word 5
+C756:
+ .long J685
+ .word 0
+ .word 0x13
+D757:
+ .long K686
+ .word 0
+ .word 0xC
+E758:
+ .long L687
+ .word 0
+ .word 0x12
+F759:
+ .long M688
+ .word 0
+ .word 0x18
+G760:
+ .long N689
+ .word 0
+ .word 0x10
+H761:
+ .long O690
+ .word 0
+U20:
+A26:
+ .long (3-2)+(P691-d_transform)+(8<<0x1B)
+ .set B27,3+((A26-R17)*2)+(4<<0x1B)
+M246:
+ .long (3-2)+(Q692-d_transform)+(8<<0x1B)
+ .set N247,3+((M246-R17)*2)+(4<<0x1B)
+W256:
+ .long (3-2)+(R693-d_transform)+(8<<0x1B)
+ .set X257,3+((W256-R17)*2)+(4<<0x1B)
+K504:
+ .long (3-2)+(S694-d_transform)+(8<<0x1B)
+ .set L505,3+((K504-R17)*2)+(4<<0x1B)
+P509:
+ .long (3-2)+(T695-d_transform)+(8<<0x1B)
+ .set Q510,3+((P509-R17)*2)+(4<<0x1B)
+E524:
+ .long (3-2)+(U696-d_transform)+(8<<0x1B)
+ .set F525,3+((E524-R17)*2)+(4<<0x1B)
+H527:
+ .long (3-2)+(V697-d_transform)+(8<<0x1B)
+ .set I528,3+((H527-R17)*2)+(4<<0x1B)
+K530:
+ .long (3-2)+(W698-d_transform)+(8<<0x1B)
+ .set L531,3+((K530-R17)*2)+(4<<0x1B)
+O534:
+ .long (3-2)+(X699-d_transform)+(8<<0x1B)
+ .set P535,3+((O534-R17)*2)+(4<<0x1B)
+S538:
+ .long (3-2)+(Y700-d_transform)+(8<<0x1B)
+ .set T539,3+((S538-R17)*2)+(4<<0x1B)
+V541:
+ .long (3-2)+(Z701-d_transform)+(8<<0x1B)
+ .set W542,3+((V541-R17)*2)+(4<<0x1B)
+E550:
+ .long (3-2)+(A702-d_transform)+(8<<0x1B)
+ .set F551,3+((E550-R17)*2)+(4<<0x1B)
+P561:
+ .long (3-2)+(B703-d_transform)+(8<<0x1B)
+Q562:
+ .long (3-2)+(C704-d_transform)+(8<<0x1B)
+R563:
+ .long (3-2)+(D705-d_transform)+(8<<0x1B)
+S564:
+ .long (3-2)+(E706-d_transform)+(8<<0x1B)
+T565:
+ .long (3-2)+(F707-d_transform)+(8<<0x1B)
+U566:
+ .long (3-2)+(G708-d_transform)+(8<<0x1B)
+V567:
+ .long (3-2)+(H709-d_transform)+(8<<0x1B)
+W568:
+ .long (3-2)+(I710-d_transform)+(8<<0x1B)
+X569:
+ .long (3-2)+(J711-d_transform)+(8<<0x1B)
+Y570:
+ .long (3-2)+(K712-d_transform)+(8<<0x1B)
+Z571:
+ .long (3-2)+(L713-d_transform)+(8<<0x1B)
+A572:
+ .long (3-2)+(M714-d_transform)+(8<<0x1B)
+B573:
+ .long (3-2)+(N715-d_transform)+(8<<0x1B)
+C574:
+ .long (3-2)+(O716-d_transform)+(8<<0x1B)
+D575:
+ .long (3-2)+(P717-d_transform)+(8<<0x1B)
+E576:
+ .long (3-2)+(Q718-d_transform)+(8<<0x1B)
+F577:
+ .long (3-2)+(R719-d_transform)+(8<<0x1B)
+G578:
+ .long (3-2)+(S720-d_transform)+(8<<0x1B)
+H579:
+ .long (3-2)+(T721-d_transform)+(8<<0x1B)
+I580:
+ .long (3-2)+(U722-d_transform)+(8<<0x1B)
+J581:
+ .long (3-2)+(V723-d_transform)+(8<<0x1B)
+K582:
+ .long (3-2)+(W724-d_transform)+(8<<0x1B)
+L583:
+ .long (3-2)+(X725-d_transform)+(8<<0x1B)
+M584:
+ .long (3-2)+(Y726-d_transform)+(8<<0x1B)
+N585:
+ .long (3-2)+(Z727-d_transform)+(8<<0x1B)
+O586:
+ .long (3-2)+(A728-d_transform)+(8<<0x1B)
+P587:
+ .long (3-2)+(B729-d_transform)+(8<<0x1B)
+Q588:
+ .long (3-2)+(C730-d_transform)+(8<<0x1B)
+R589:
+ .long (3-2)+(D731-d_transform)+(8<<0x1B)
+S590:
+ .long (3-2)+(E732-d_transform)+(8<<0x1B)
+T591:
+ .long (3-2)+(F733-d_transform)+(8<<0x1B)
+U592:
+ .long (3-2)+(G734-d_transform)+(8<<0x1B)
+V593:
+ .long (3-2)+(H735-d_transform)+(8<<0x1B)
+W594:
+ .long (3-2)+(I736-d_transform)+(8<<0x1B)
+X595:
+ .long (3-2)+(J737-d_transform)+(8<<0x1B)
+Y596:
+ .long (3-2)+(K738-d_transform)+(8<<0x1B)
+Z597:
+ .long (3-2)+(L739-d_transform)+(8<<0x1B)
+A598:
+ .long (3-2)+(M740-d_transform)+(8<<0x1B)
+B599:
+ .long (3-2)+(N741-d_transform)+(8<<0x1B)
+C600:
+ .long (3-2)+(O742-d_transform)+(8<<0x1B)
+D601:
+ .long (3-2)+(P743-d_transform)+(8<<0x1B)
+E602:
+ .long (3-2)+(Q744-d_transform)+(8<<0x1B)
+F603:
+ .long (3-2)+(R745-d_transform)+(8<<0x1B)
+G604:
+ .long (3-2)+(S746-d_transform)+(8<<0x1B)
+H605:
+ .long (3-2)+(T747-d_transform)+(8<<0x1B)
+I606:
+ .long (3-2)+(U748-d_transform)+(8<<0x1B)
+J607:
+ .long (3-2)+(V749-d_transform)+(8<<0x1B)
+K608:
+ .long (3-2)+(W750-d_transform)+(8<<0x1B)
+L609:
+ .long (3-2)+(X751-d_transform)+(8<<0x1B)
+M610:
+ .long (3-2)+(Y752-d_transform)+(8<<0x1B)
+N611:
+ .long (3-2)+(Z753-d_transform)+(8<<0x1B)
+O612:
+ .long (3-2)+(A754-d_transform)+(8<<0x1B)
+P613:
+ .long (3-2)+(B755-d_transform)+(8<<0x1B)
+Q614:
+ .long (3-2)+(C756-d_transform)+(8<<0x1B)
+R615:
+ .long (3-2)+(D757-d_transform)+(8<<0x1B)
+S616:
+ .long (3-2)+(E758-d_transform)+(8<<0x1B)
+T617:
+ .long (3-2)+(F759-d_transform)+(8<<0x1B)
+U618:
+ .long (3-2)+(G760-d_transform)+(8<<0x1B)
+V619:
+ .long (3-2)+(H761-d_transform)+(8<<0x1B)
+ .set H33,3+((A26-R17)*2)+(0x10<<0x1B)
+ .set M38,3+((P561-R17)*2)+(0xC<<0x1B)
+ .set T45,3+((Q562-R17)*2)+(0xC<<0x1B)
+ .set V47,3+((R563-R17)*2)+(0xC<<0x1B)
+ .set B53,3+((S564-R17)*2)+(0xC<<0x1B)
+ .set H59,3+((T565-R17)*2)+(0xC<<0x1B)
+ .set M64,3+((U566-R17)*2)+(0xC<<0x1B)
+ .set P67,3+((V567-R17)*2)+(0xC<<0x1B)
+ .set R69,3+((W568-R17)*2)+(0x10<<0x1B)
+ .set Z77,3+((X569-R17)*2)+(0xC<<0x1B)
+ .set H85,3+((Y570-R17)*2)+(0xC<<0x1B)
+ .set N91,3+((Z571-R17)*2)+(0xC<<0x1B)
+ .set P93,3+((A572-R17)*2)+(0xC<<0x1B)
+ .set U98,3+((B573-R17)*2)+(0xC<<0x1B)
+ .set E108,3+((C574-R17)*2)+(0xC<<0x1B)
+ .set J113,3+((D575-R17)*2)+(0xC<<0x1B)
+ .set R121,3+((E576-R17)*2)+(0xC<<0x1B)
+ .set T123,3+((F577-R17)*2)+(0xC<<0x1B)
+ .set V125,3+((G578-R17)*2)+(0xC<<0x1B)
+ .set D133,3+((H579-R17)*2)+(0xC<<0x1B)
+ .set N143,3+((I580-R17)*2)+(0xC<<0x1B)
+ .set W152,3+((J581-R17)*2)+(0xC<<0x1B)
+ .set G162,3+((K582-R17)*2)+(0xC<<0x1B)
+ .set O170,3+((L583-R17)*2)+(0xC<<0x1B)
+ .set Q172,3+((M584-R17)*2)+(0xC<<0x1B)
+ .set S174,3+((N585-R17)*2)+(0xC<<0x1B)
+ .set Y180,3+((O586-R17)*2)+(0xC<<0x1B)
+ .set C184,3+((P587-R17)*2)+(0xC<<0x1B)
+ .set E186,3+((Q588-R17)*2)+(0xC<<0x1B)
+ .set G188,3+((R589-R17)*2)+(0x10<<0x1B)
+ .set V203,3+((S590-R17)*2)+(0xC<<0x1B)
+ .set I216,3+((T591-R17)*2)+(0xC<<0x1B)
+ .set K218,3+((U592-R17)*2)+(0xC<<0x1B)
+ .set P223,3+((V593-R17)*2)+(0xC<<0x1B)
+ .set U228,3+((W594-R17)*2)+(0xC<<0x1B)
+ .set Z233,3+((X595-R17)*2)+(0xC<<0x1B)
+ .set D237,3+((Y596-R17)*2)+(0xC<<0x1B)
+ .set P249,3+((Z597-R17)*2)+(0xC<<0x1B)
+ .set B261,3+((A598-R17)*2)+(0xC<<0x1B)
+ .set D263,3+((B599-R17)*2)+(0xC<<0x1B)
+ .set H267,3+((C600-R17)*2)+(0xC<<0x1B)
+ .set P275,3+((D601-R17)*2)+(0xC<<0x1B)
+ .set B287,3+((E602-R17)*2)+(0xC<<0x1B)
+ .set L297,3+((F603-R17)*2)+(0xC<<0x1B)
+ .set D315,3+((G604-R17)*2)+(0xC<<0x1B)
+ .set J321,3+((H605-R17)*2)+(0xC<<0x1B)
+ .set P327,3+((I606-R17)*2)+(0xC<<0x1B)
+ .set U332,3+((J607-R17)*2)+(0xC<<0x1B)
+ .set Z337,3+((K608-R17)*2)+(0x10<<0x1B)
+ .set N351,3+((L609-R17)*2)+(0xC<<0x1B)
+ .set P353,3+((M610-R17)*2)+(0xC<<0x1B)
+ .set Y362,3+((N611-R17)*2)+(0x10<<0x1B)
+ .set T383,3+((O612-R17)*2)+(0xC<<0x1B)
+ .set B391,3+((P613-R17)*2)+(0xC<<0x1B)
+ .set D393,3+((Q614-R17)*2)+(0xC<<0x1B)
+ .set T435,3+((R615-R17)*2)+(0x10<<0x1B)
+ .set C444,3+((S616-R17)*2)+(0xC<<0x1B)
+ .set J451,3+((T617-R17)*2)+(0xC<<0x1B)
+ .set I476,3+((U618-R17)*2)+(0x10<<0x1B)
+ .set B521,3+((V619-R17)*2)+(0xC<<0x1B)
+W22:
+ .long 8

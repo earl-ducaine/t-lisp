@@ -1,0 +1,65 @@
+Things todo:
+
+Front End
+    Type Analysis (at least enough to do proclaim or assert e.g. fx=)
+    Representation Analysis and Conversion (needs types)
+    Handle Tail Recursion in integrable functions
+    Set
+    Object and Operation
+        Caching and Stats
+    Structures
+        implement as closures
+        initialization
+        freelisting, alloc and free, tombstones
+        type declaration
+            range specifiers
+            enumerated types
+        Variant records
+        included records
+        compaction
+        updating record types that have changed incompatibly
+        bitset
+    Eliminate *NOT-MORE-COND-CLAUSES*
+
+
+Safety Analysis
+
+Flow Analysis
+    Forward
+    Backward
+
+Kernel
+    Streams and Files
+    Interrupts and Faults (Stack Frame interpretation)
+    Condition System
+    Storage Management (GC, Consers, Heap Creation and Deletion.
+        Stack Management)
+    Procedure Call (Icall) and Return (Ireturn)
+    Process Creation, Deletion, and Scheduling
+        (Monitors, Critical Regions, Dynamic State, etc.)
+
+System
+    Dumper
+    Loader
+    Linker
+    Assembler
+
+Lap
+    %make-pair
+    %make-extend
+    Apply
+    Operation Dispatch
+    N-ary Settup
+    %push-magic-frame
+    %pop-magic-frame
+
+Primops (Needs type and representations)
+    Flonums
+    Vectors (bitv, bytev, short int, floats, general, ...)
+    Locale
+    Define-Foreign (test)
+
+Early Bindings
+    Strings (?)
+    General Catch
+    Large Integers

@@ -1,0 +1,152 @@
+(herald simplify
+        (syntax-table *orbit-syntax-table*))
+
+
+   akjhlkajsdhflkasjh
+
+
+
+(exits 1 list?
+  (clambda (val)
+    (exits 2 if-false? c1 (clambda (nil) -true-) val))
+  obj)
+
+  ==>
+
+(exits 2 if-list? (clambda (obj') -true-) c1 obj)
+
+--------
+
+(exits 1 list? c obj)
+
+  ==>
+
+(exits 2 if-list? (clambda (obj') (c t))
+                  (clambda ()     (c nil))
+                  obj)
+
+--------
+
+((lambda (j)
+   (exits 2 if-false? (clambda (nil) ... (j c) ... (j d) ...)
+                      (clambda () ... (j b) ...)
+                      a))
+ (lambda (test)
+   (exits 2 if-false? c1 c2 test)))
+
+  ==>
+
+variableify c1 and c2, and substitute j
+
+((lambda (c1 c2)
+   (exits 2 if-false? (clambda (nil) ... ((...) c) ... ((...) d) ...)
+                      (clambda () ... ((...) b))
+                      a))
+ -c1-
+ -c2-)
+
+--------
+
+(exits 1 f (clambda (val)
+             (exits 2 if-list? (clambda (obj') ...)
+                               $
+                               obj))
+           ...
+           obj
+           ...)
+
+  ==>
+
+(exits 2 if-list? (clambda (obj')
+                    (exits 1 f (clambda (val) ...)
+                               ...
+                               obj'
+                               ...)))
+                  $
+                  obj)
+
+--------
+
+Commutativity
+  (+ (? lit k) n)     ==>  (+ n k)
+  (* (? lit k) n)     ==>  (* n k)
+  logand, logor, logxor, logeqv
+Idempotency
+  (+ n 0)     ==>  n
+  (- n 0)     ==>  n
+  (* n 1)     ==>  n
+  (/ n 1)     ==>  n
+  (ashl n 0)  ==>  0
+  (ashr n 0)  ==>  0
+Zero
+  (* n 0)       ==>  0
+  (sb n pos 0)  ==>  0          ;Signed byte
+  (ub n pos 0)  ==>  0
+Inverses
+  (integer->pointer (pointer->integer x))  ==>  x
+  (pointer->integer (integer->pointer x))  ==>  x
+  (car (cons x y))  ==>  x
+  (cdr (cons x y))  ==>  y
+Reduction in strength
+  (* n (expt 2 (nonneg k)))             ==>  (ashl n k)
+  (div (nonneg n) (expt 2 (nonneg k)))  ==>  (ashr n k)
+
+Associativity
+  (+ (+ a (literal b)) (literal c))  ==>  (+ a (+ b c))
+
+Transformations on N-ARY, APPLY, and rest-args
+
+--------
+
+(define (match pat node env succ fail)
+  (let ((ntype (node-type node))
+        (ptype (node-type pat)))
+    (cond ((neq? ntype ptype)
+           (cond ((eq? ptype reference-node?)
+                  (let ((var (reference-variable pat)))
+                    (cond ((assq var env)
+                           (fail))
+                          (else
+                           (succ (cons (cons var node) env))))))
+                 (else (fail))))
+          (else (select type
+                  ((literal-node?)
+                   (cond ((eq? (literal-value node)
+                               ...)
+
+
+
+--------
+
+;;; Integrable procedures
+
+(define eq?-primop (create-primop 'eq?))
+(define =-primop   (create-primop '=))
+(define <-primop   (create-primop '<))
+
+(define (integrable-procedure-definition primop)
+  (let ((foo (lambda (primop)
+               `(lambda (x y)
+                  (exits 2 ,primop (clambda () t) (clambda () nil)
+                                   x y)))))
+    (select primop
+      ((eq?-primop) (foo if-eq-primop))
+      ((=-primop)   (foo if=-primop))
+      ((<-primop)   (foo if<-primop))
+      ((catch-primop)
+       '(clambda (cont p)
+          (exits 1 dynamic-state
+              (clambda (state)
+                (exits 1 p cont (clambda (ignored x)   ; do n-ary case later
+                                  (exits 1 set-dynamic-state
+                                           (lambda ()
+                                             (exits 0 cont x))
+                                           state)))))))
+      (else nil))))
+
+;;; (receive (((a b c) (f x y))) . body)    ; LET instead if RECEIVE?
+;;; (exits 1 f (clambda (a b c) . body) x y)
+
+;;; (labels ((x x)) ... x ...)  ==>  (labels () ... $ ...)
+
+;;; Also - (symbol? x) ==> (if-symbol (clambda (sym) win) (clambda () lose))

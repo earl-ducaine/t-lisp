@@ -1,0 +1,87 @@
+To: wrl, wsl
+From: rees (Jonathan Rees)
+Replied: Forwarded  9 Aug 84 15:29
+Date:  9 Aug 1984 1444-PDT (Thursday)
+Cc: mishkin@yale, ellis@yale, rees
+Subject: Lisp & FP conference report
+
+Norman Adams, John Lamping, David Kranz, and myself went to the 1984
+ACM Symposium on Lisp and Functional Programming, which was held in
+Austin from Sunday to Wednesday.  Here are some of the highlights.
+
+In the first talk, Patrick Winston attempted to describe "how to teach
+Lisp."  He didn't say much other than that on-line tutorials were the
+right thing, and that Common Lisp was the right dialect.  He believes CL is
+absolutely woderful and would like to see all other Lisp dialects wither
+and die.  He also advertised for his company.
+
+Gabriel (one of the CL "central committee") gave a critique of the
+language.  If you read between the lines, the message was that CL's size
+and its bad features were due to the strong Symbolics influence on the
+design.  Not that the Symbolics people had principles which dictated that,
+but that business considerations made compatibility with Zetalisp
+important.
+
+Everyone at the AAAI trade show had a Common Lisp: DEC, DG, Tektronix,
+Golden, Symbolics.  At the Lisp conference, Winston plugged it, but only
+Gabriel's critique had anything to do with CL.  CL is having its effect
+on implementors of non-CL's: because CL picked up Scheme's lexical scoping
+and full closures, both the PSL and LeLisp people are saying they want
+these also.
+
+I was pleased at the strength of the Scheme showing at the conference.
+Many of the papers in the conference were Scheme-based or simply assumed
+its existence and desirability.  There was a Scheme meeting Monday night in
+which it was decided that there will be a Scheme workshop this fall.
+There was agreement that the various Scheme groups (Indiana, TI, Yale,
+MIT) should try to come up with a common subset ("Common Scheme"?) in an
+effort to avoid gratuitous incompatibility and present a united front to
+the world.
+
+The sessions covered the usual topics such as multiprocessing Lisps, lazy
+evaluation, program tranformations, and Lisp implementations.  Most of the
+program transformation papers had to do with optimizing away allocation of
+the intermediate sequence or stream results that arise in functional
+programs.  There were some papers about ML (a strongly typed polymorphic
+lambda-calculus-based language).  One paper discussed TABLOG, which
+combines functional and relational (i.e. logic) programming.  There were
+two papers about computer music, one FP-oriented and the other
+object-oriented.
+
+There were two papers about garbage collection, Moon's on the Symbolics
+3600's multi-space "ephemeral object" GC, and Brooks' on a way to do a
+moderately efficient real-time GC on stock hardware.  In the questions
+following these papers John L. White of Xerox plugged the effectiveness of
+reference counting in Smalltalk, Cedar, and Interlisp-D.
+
+Indiana had a strong presence, with four papers.  Their preferred
+dialect is Scheme with first-class continuations (unlike T, which only
+has second-class continuations; a crime, according to Friedman - he
+talked me into changing this).  They're interested in taking a few
+simple, powerful, mathematically motivated primitives and building
+everything else out of them.  One excellent paper described "engines"
+which can be used to build processes; one described how to build
+coroutines from continuations; another described how to do a
+straightforward form of reflection (inspired by a reading of Smith's
+thesis); finally, a paper by Clinger rigorously proved the correctness
+of a simple but useful compiler.
+
+Griswold's invited talk was about ICON, showing some of the neat things
+you can do when backtracking is "lightweight."  ICON has been loosely
+described as a cross between C and Prolog.  I think it's good that Lisp
+and FP people finally got some exposure to Griswold's work.  Talking with
+him afterward, he told me that he was somewhat surprised to find
+so much diversity inside the Lisp community.  He said it's not widely
+understood outside the Lisp world that Lisp dialects differ from each
+other as substantially as, say, Algol-like languages (Fortran, C, PL/1,
+Pascal, Modula, Bliss, etc.) differ from each other.
+
+Henry Lieberman gave a good presentation of his Lisp debugger, which is a
+screen-oriented single-stepper for Lisp.  It uses an execution history to
+allow the user to see the result of an expression, and retroactively
+decide to single-step into it if the result is wrong or if a runtime error
+occurs.  The debugger is functionally oriented since it doesn't deal with
+reversing side-effects.
+
+Austin was hot and humid.
+

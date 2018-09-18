@@ -1,0 +1,103 @@
+
+;----- Beginning T compilation on "$DUMP/dump.t"
+
+;Obtaining support file "$DUMP/codes.uvs"
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;Warning: unreferenced variable SELF
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;  Consed environment = (THINGS ACCESSORS KEYS FILENAME)
+;(LAMBDA (() () () SELF STREAM) ...) compiled
+;(LAMBDA (() () () () THING) ...) compiled
+;(LAMBDA (() () () ()) ...) compiled
+;(LAMBDA (OBJECT.1 STATE.2) ...) compiled
+;OPEN-DUMP compiled
+;Processing INTEGRABLE-PROCEDURE definition of DUMP-STATUS-OBJECT-ID
+;Processing INTEGRABLE-PROCEDURE definition of DUMP-STATUS-STRING-ID
+;RESET-STATUS compiled
+;  Consed environment = (ACCESSORS KEYS THINGS)
+;  Consed environment = (FILENAME)
+;  Consed environment = ((ACCESSORS KEYS THINGS) STRINGS OBJECTS STATUS)
+;  Consed environment = ((ACCESSORS KEYS THINGS) STRINGS OBJECTS STATUS
+OUT)
+;(LAMBDA (THING) ...) compiled
+;(LAMBDA (THING) ...) compiled
+;(LAMBDA (OUT) ...) compiled
+;(LAMBDA () ...) compiled
+;DUMP compiled
+;  Consed environment = (ACCESSORS KEYS STRINGS OBJECTS STATUS)
+;  Consed environment = ((ACCESSORS KEYS STRINGS OBJECTS STATUS) THING)
+;(LAMBDA (PROC.40) ...) compiled
+;LOOP compiled
+;FIND-DUPLICATES compiled
+;ADD-TO-TABLE compiled
+;  Consed environment = (ACCESSORS KEYS STRINGS OBJECTS STATUS OUT)
+;  Consed environment = ((ACCESSORS KEYS STRINGS OBJECTS STATUS OUT) THING)
+;(LAMBDA (PROC.69) ...) compiled
+;LOOP compiled
+;DUMP-OUT compiled
+;SMALL-OBJECT? compiled
+;DUMP-SMALL-OBJECT compiled
+;DUMP-STRING compiled
+;DUMP-OBJECT compiled
+;  Consed environment = (OUT)
+;  Consed environment = (OUT)
+;(LAMBDA (P0 P1 P2 P3) ...) compiled
+;(LAMBDA (NUM) ...) compiled
+;DUMP-DATA compiled
+;DUMP-CODE compiled
+;DUMP-UNSHARED-CODE&SIZE compiled
+;DUMP-CODE&SIZE compiled
+;DUMP-BYTE compiled
+;DUMP-BYTES compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (->FILENAME FALSE %OBJECT PRINT WRITE CLOSE %DISPATCH-NEXT
+OBJECT-HASH FORMAT REVERSE! WITH-OPEN-STREAMS-HANDLER MAKE-TABLE MAKE-STRING-TABLE
+WALK OPEN STRING-TABLE-ENTRY SETTER 1+ *VECTOR-TEMPLATE* *SYMBOL-TEMPLATE*
+*BYTEV-TEMPLATE* FLOAT? BIGNUM? ERROR TABLE-ENTRY *VECTOR-TEMPLATE* *SYMBOL-TEMPLATE*
+*BYTEV-TEMPLATE* WRITES *SYMBOL-TEMPLATE* *VECTOR-TEMPLATE* *BYTEV-TEMPLATE*
+INTEGER? FLONUM-GUTS ABS =0? DIV REMAINDER > LENGTH WRITEC STYPE-COMPATIBLE?
+MAKE-OLD-STYPE *NONVALUE-HACK* STYPE-CONSTRUCTOR STYPE-PREDICATOR STYPE-HANDLER
+STYPE-SELECTOR STYPE-MASTER))
+
+(DEFINED-VARIABLES (OPEN-DUMP DUMP RESET-STATUS MAKE-DUMP-STATUS DUMP-SMALL-OBJECT
+FIND-DUPLICATES DUMP-OUT SMALL-OBJECT? ADD-TO-TABLE DUMP-OBJECT DUMP-STRING
+DUMP-UNSHARED-CODE&SIZE DUMP-BYTE DUMP-CODE&SIZE DUMP-DATA DUMP-CODE DUMP-BYTES
+DUMP-STATUS-STYPE DUMP-STATUS? HANDLE-DUMP-STATUS DUMP-STATUS-OBJECT-ID
+DUMP-STATUS-STRING-ID))
+
+(LSET-VARIABLES ())
+
+;;;     127  number of templates/code chunks emitted
+;;;    3896  LAP instructions emitted
+;;;      71  number of value cell pointers in unit
+;;;     229  number of entries into data section
+;;;      92  calls not requiring stack padding
+;;;       2  calls requiring stack padding
+;;;    1376  number of TN's generated
+;;;       7  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;      88  successes at propagating substitution into a LET body
+;;;      88  attempts to propagate substitution into a LET body
+;;;     203  substitutions of an argument for a parameter
+;;;     149  ((LAMBDA () FOO)) becomes FOO
+;;;     145  unreferenced argument with no side effects is flushed
+;;;       1  a CALL to a primop with constant arguments is folded
+;;;       8  (SETTER FOO) becomes SET-FOO
+;;;       4  a CALL to an open-codeable function is open-coded
+;;;       9  IF of a LET becomes LET of an IF
+;;;      32  IF of a constant has dead arm eliminated
+;;;      23  IF of an IF is involuted (anchor pointing)
+;;;       6  (IF (NOT A) B C) becomes (IF A C B)
+;;;      12  one BLOCK within another is flattened out
+;;;      11  statements eliminated from a BLOCK
+;;;     147  unreferenced parameter is flushed
+;;;    3124  number of internal-format program nodes created
+
+
+;----- Finished compiling "$DUMP/dump.t"
+

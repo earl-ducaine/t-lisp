@@ -1,0 +1,66 @@
+
+The compiler produces a support file for every file compiled.  The support
+file contains definitions of two environments.  One contains information
+about the top level environment of the file, the other has any primops that
+are defined in the file.  The primop environment is used only to convert
+code tree fragments in the file back into node representation.
+
+Format of support files:
+
+(<leaf name of file>
+ <list of support tables this one references>
+ <list of (<primop id> . <defining clauses>) pairs>
+ <list of (<name> <data a-list> <support variant> <section of code tree>)
+)
+
+   The primop definitions will eventually be stored as compiled code
+    objects instead of source code.
+
+   <data a-list> contains any random information that is known (e.g.
+    (type . '(proc (cont) (cont) number? number?)) for >=).
+
+   <support variant> is one of {support/lset, support/define,
+    support/constant, support/integrable, support/wired}.
+
+   <section of code tree> is the integrable definition (if any).  It is
+    an S-expression containing the following forms {lambda, call, primop,
+    var, quote}.  There is a one to one correspondence between forms in
+    the S-expression and nodes in the tree.  Their formats are as follows:
+
+      (lambda <variable list>
+              <number of exits>
+              <procedure>
+              . <list of arguments>)
+      (primop <environment> <id>)
+      (var <name of var>)               ;Lambda variables
+      (var <name of var> <environment>) ;Locale variables
+      (quote <literal value>)
+
+    The primop's <environment> is the name of the support environment it
+    is from.  If the name is () then it is defined in the same support
+    file.
+
+
+SOURCE FILE:
+(herald toad
+        (support *primitive-support-env* garden))
+
+(define-wired frog     ; This is changed to define-constant since the value
+  (primop frog ()      ;   is completely determined at compile time.
+    ((primop.simplify self node)
+     (simplify-frog node))))
+
+(define-integrable (snail x)
+  (slug x))       ; Slug is defined to be a primop in garden.t
+
+SUPPORT FILE:
+(toad
+ (*primitive-support-env* standard)
+ ((frog ((primop.simplify self node) (simplify-frog node))))
+ ((frog ()
+        support/constant
+        (primop () frog))
+  (snail ()
+         support/integrable
+         (lambda (c_10 x_11)
+           (call 1 (primop garden slug) (var c_10) (var x_11))))))

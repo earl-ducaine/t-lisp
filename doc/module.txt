@@ -1,0 +1,125 @@
+PROBLEM:
+
+There are several distinct functions that the module system needs to
+perform.  It must associate modules with the files that are loaded to
+create them.  It must characterize the definitions that modules import
+from other modules, and the definitions that they export to other modules.
+From this information, it must be able to determine the environments under
+which files are to be loaded.  It must provide for loading all the files
+necessary to create a module, including loading files for other modules
+necessary for creation of that module.  It must provide a facility to
+reload or recompile modules whose source has been modified since they were
+last loaded, or that depend on such modules.
+
+
+PROPOSAL:
+
+A module is just a collection of definitions that it exports, plus a name
+and some information on how it came to be.  There are four kinds of
+definitions: read macros, syntax macros, support information, and ordinary
+definitions.  Most modules will have only one kind of definition.  For
+example a module may consist of only macro definitions.
+
+A module is generally described in a text file.  The module is the natural
+unit of compilation and loading.  There is no absolute reason that module
+boundaries and file boundaries need to coincide, but since compiling and
+loading are done in terms of files, it is much simpler if modules don't
+span file boundaries.  The module system requires this.  Usually, there
+will be exactly one module per file.
+
+Since the declarations in the module depend on definitions from other
+modules, those definitions must first be set up in order to read and
+interpret the module.  The beginning of the module specifies what other
+modules provide definitions that are used by the code in the module.
+Declarations in the module can have one of two effects.  They can provide
+external definitions that are exported by the module, or they can provide
+internal definitions that are used by other code in the module.  This is
+the key difference between the module system and the usual approach to
+loading LISP programs.  The module system distinguishes between
+definitions available to the code in a module and definitions provided by
+a module.
+
+Syntax and read macros are assumed to be external, unless specified
+otherwise.  External read and syntax macro definitions have no effect on
+the interpretation of code in the module where they are defined.  Their
+only use is to be imported into other modules.  Internal read and syntax
+macro definitions are only available in the module where they are defined.
+
+While read, syntax, and support information is only needed at compile
+time, ordinary imported definitions are needed at runtime. This means that
+ordinary definitions are handled slightly differently.  Ordinary
+definitions are internal, unless specified otherwise.  Just like read and
+syntax modules, internal ordinary definitions are only available within
+the module where they are defined.  However, external ordinary definitions
+are available both within the module where they are defined and to modules
+that import them.  This is necessary to allow recursive definitions.
+
+The system provides the ability to load a module upon demand.  In order to
+do this, a declaration is provided to allow the user to say which file a
+module may be found in.  Then, when a module is requested, the system
+knows that it needs to load that file, and the files for any modules that
+that module requires.
+
+SYNTAX:
+
+Instead of HERALD, a file that contains a module opens with:
+
+(START-MODULE name . options)
+
+The options are:
+
+(READ-TABLE expression)
+(SYNTAX-TABLE expression)
+(SUPPORT expression)
+(LOCALE expression)
+(IMPORT . expressions)
+(IMPORT-PROCEDURES expression . names)
+(INCLUDE . expressions)
+
+The READ-TABLE, SYNTAX-TABLE, and SUPPORT options specify the tables to be
+active at compile time, just as they do in a HERALD.  LOCALE is similar,
+except that it specifies the lexical environment.  IMPORT specifies
+additional modules all of whose external declarations should be accessible
+to this module.  The imported declarations shadow the definitions in the
+tables specified in the other options. IMPORT-PROCEDURES specifies that
+the named procedures should be imported from another module.  INCLUDE
+specifies that the exported declarations of the specified modules should
+also be exported from this module.
+
+The MODULE declaration is effective until another MODULE declaration is
+encountered, or the end of file is reached.
+
+
+(MODULE name (options) . body)
+
+Is similar to START-MODULE, except that the declarations for the module
+occur in the body, not as separate forms.  Since the entire form is read
+before the BEGIN-MODULE is processed, read macro specifications have no
+effect.  The value is a module.
+
+
+(MODULE name filespec)
+
+Says that the module is found on the specified file.  When this module is
+needed, the file will be loaded.
+
+
+(DEFINE-MODULE name (options) . body)
+(DEFINE-MODULE name filespec)
+
+Same as MODULE, except that the variable name is bound to the value.
+
+
+(EXTERNAL . names)
+
+Declares that the values of names should be exported out of this module.
+
+
+(DEFINE-EXTERNAL ...)
+
+Is identical to DEFINE, except that the value is exported.
+
+
+(DEFINE-INTEGRABLE-EXTERNAL ...)
+
+Is identical to DEFINE-INTEGRABLE, except that the value is exported.

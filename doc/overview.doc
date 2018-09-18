@@ -1,0 +1,84 @@
+Outline of Orbit
+
+Phases:
+
+  1) Alphatize                    (in alpha.t)
+      (alpha-top S-expression syntax) => (top-node free-variables)
+      Build the code tree, expanding syntax.
+
+  2) Assignment analysis          (in assign.t)
+      (assignment-analyze top-node) => ;;; works by side-effecting the tree
+      Dereferencing sets to lambda variables.
+      (let (a 2) ...(set a 3)...a...) =>
+      (let (a' (make-locative 2)) ...(set-value a' 3)...(value a')...)
+
+  3) Complexity analysis          (in convert.t)
+      (complexity-analyze top-node) => ;;; works by side-effecting the tree
+      Assign a complexity to each node, to be used in CPS conversion.
+
+  4) CPS conversion               (in convert.t)
+      (convert top-node) => ;;; works by side-effecting the tree
+      Convert to continuation passing style.
+
+  5) Early binding                (in early.t)
+      (early-bind free-vars support) => (free-vars defined-vars new-support)
+      Creates a support object containing all integrable definitions from the
+  current file.  Any free variables whose names are in the new support object,
+  or in any support associated with the file being compiled, are marked as
+  being early bound.
+
+  6) Simplification               (in simplify.t)
+      (simplify top-node) => ;;; works by side-effecting the tree
+      The following simplifications are done (all in CPS of course):
+    a) Integrable definitions (as determined by early binding) are integrated.
+    b) (if (if a b c) d e) => ((lambda (x y)
+                                 (if a (if b x y) (if c x y)))
+                               d e)
+    c) (test c1 c2 TRUE? t) => c1, (test c1 c2 TRUE? nil) => c2
+    d) Lambdas in call position have their arguments substituted if possible.
+    e) Primop specific simplifications (e.g. (setter car)).
+
+  7) Live variable analysis       (in closure.t)
+      (live-analyze-top top-node) => ;;; works by side-effecting the tree
+      Determining which variables are live where.  This is a simple tree
+  traversal for everything except Y, which must be done iteratively.
+
+  8) Closure analysis             (in closure.t)
+      (close-analyze-top top-node) => ;;; works by side-effecting the tree
+      Which variables need to be put in closures and when.  Also, which
+  closures are stack or closure internal.  Lambdas are marked as to the nature
+  of their closures and calling sequence - one of strategy/heap, strategy/open
+  strategy/stack, strategy/top (for the top lambda).
+
+  9) Code generation              (in regs.t, vaxemit.t, vaxprimops.t)
+      (generate-code top-node new-support free-vars defined-vars) =>
+        (compiled-code-object support-object)  ;;; Not what is done now
+      Generating code.
+
+
+    A code tree is made up of 'nodes'.  Nodes come in three types, lambda,
+call, and leaf.  Leaf nodes are either variable references, primop references,
+or literals.  The important fields of node structures are:
+    Variant   - what type of node this is.
+    Parent    - parent within the tree. This is nil for the top node.
+    Role      - what this node is used for by its parent; a procedure,
+                ((node-role node) (node-parent node)) => node
+    Children  - this node's child nodes in the tree.
+There are also variant specific fields:
+    Lambda nodes:
+       Variables - a list of variables.
+       Body      - a node for the body of the lambda.  After CPS this will
+                   always be a call node.
+       Env       - the environment of this lambda.
+    Call nodes:
+       Proc      - a node for the procedure called.
+       Args      - a list of argument nodes.  After CPS these and the procedure
+                   will not be call nodes.
+       Exits     - The number of argument nodes that are exits.
+    Leaf nodes:
+       Variant   - whether this a variable reference, primop, or immediate node.
+       Variable  - all leaf nodes have an associated variable.
+
+    Variables are also defined as records, the important fields are:
+       Name   - The name of the variable.
+       Binder - The lambda node (if any) that binds it.

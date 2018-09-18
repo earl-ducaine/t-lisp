@@ -1,0 +1,70 @@
+
+;----- beginning t compilation on "fac"
+
+;;; Getting support
+;;; Alphatizing
+;;; Free variables (51): (FX= FX- FX* FAC)
+;;; Assignment analysis
+;;; Complexity analysis
+;;; CPS conversion
+;;; Early binding
+;;; Early binding FX=
+;;; Early binding FX-
+;;; Early binding FX*
+;;; Defining 'SUPPORT/DEFINE' support for FAC
+;;; Free variables (0): ()
+;;; Defined variables (53): (FAC)
+;;; Simplifying
+;;; Simplification done
+  ((P_1 () K_0)     (K_0 P_3))
+   ((P_3 () K_2)     ((MAKE-DEFINER DEFINE) K_2 FAC FAC_7))
+    ((FAC_7 () K_5 N_6)
+                      (CONDITIONAL P_8
+                                   P_9
+                                   (MAKE-COMPARATOR JNEQ NUMBER?)
+                                   N_6
+                                   '0))
+     ((P_8 ())         (K_5 '1))
+     ((P_9 ())         (FIXNUM-SUBTRACT C_18 N_6 '1))
+      ((C_18 () V_17)   (FAC C_16 V_17))
+       ((C_16 () V_15)   (FIXNUM-MULTIPLY K_5 N_6 V_15))
+;;; STRATEGY/STACK (54) C_16 env = (C_16 N_6)
+;;; Unit = ((#{Object 55 MAKE-NONSTANDARD-CALL} . 4) (#{Object 56 MAKE-NONSTANDARD-CALL}
+. 8) (#{Variable 57 FAC_4} . 12) (#{LAMBDA-node 58} . 16))
+
+59
+t_p_3:
+            movl    (sp),t
+            jmp     (t)
+
+58
+t_fac_7:
+
+** Error: variable FG? is unbound
+>>          cmpl    a1,$0<<2
+            jneq    p_9
+p_8:
+            movl    $1<<2,a1
+            movl    (sp),t
+            jmp     (t)
+p_9:
+            movl    a1,T0
+            subl2   $1<<2,a1
+            pushl   T0
+            pushal  t_c_16
+            movl    -6(p),p
+            movl    $2,s3
+            movl    -2(p),t
+            jmp     (t)
+
+54
+t_c_16:
+            ashl    $-2,a1,s0
+            mull3   4(sp),s0,a1
+            moval   8(sp),sp
+            movl    (sp),t
+            jmp     (t)
+
+** Error: variable MAKE-COMEX is unbound
+>> #{Procedure 48 FALSE}
+>> 

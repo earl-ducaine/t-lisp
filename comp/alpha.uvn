@@ -1,0 +1,100 @@
+
+;----- Beginning T compilation on "/t/t3/comp/alpha.t"
+
+;ALPHA compiled
+;ALPHA-SPECIAL-FORM compiled
+;ALPHA-LITERAL compiled
+;ALPHA-PRIMOP-REFERENCE compiled
+;ALPHA-REFERENCE compiled
+;IMMEDIATE? compiled
+;(LAMBDA (NAME) ...) compiled
+;ALPHA-LAMBDA compiled
+;PRIMOP compiled
+;CONSTRUCT-PRIMOP compiled
+;ALPHA-CALL compiled
+;  Consed environment = (SHAPE SYNTAX)
+;(LAMBDA (ARG) ...) compiled
+;ALPHA-CALL-1 compiled
+;ALPHA-ERROR compiled
+;Warning: unreferenced variable SPEC
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (#F) (QUOTE #F)) compiled
+;(LAMBDA (SPEC) ...) compiled
+;(LAMBDA (SPEC) ...) compiled
+;ALPHA-BLOCK compiled
+;SET-LOCAL-SYNTAX compiled
+;ALPHA-TOP compiled
+;S-EXP->NODE-TREE compiled
+;(LAMBDA (EXP.17 #F #F) ...) compiled
+;(LAMBDA (EXP.21 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.25 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.30 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.36 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.39 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.44 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.48 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.52 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.57 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.63 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.68 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.73 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.78 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.82 SYNTAX SHAPE) ...) compiled
+;(LAMBDA (EXP.85 SYNTAX #F) ...) compiled
+;  Consed environment = (NEW-SYNTAX)
+;(LAMBDA (SPEC) ...) compiled
+;(LAMBDA (EXP.88 SYNTAX SHAPE) ...) compiled
+;(LAMBDA #F ...) compiled
+
+(FREE-VARIABLES (*SYMBOL-TEMPLATE* *SYMBOL-TEMPLATE* SYNTAX-TABLE-ENTRY
+SYNTAX-DESCRIPTOR? SELF-EVALUATING? PRIMOP? NODE? SYNTAX-ERROR TABLE-ENTRY
+MACRO-EXPANDER? INVOKE-MACRO-EXPANDER CREATE-LITERAL-NODE CREATE-PRIMOP-NODE
+OBTAIN-VARIABLE CREATE-REFERENCE-NODE VARIABLE? CREATE-VARIABLE PROPER-LIST?
+MAP CREATE-LAMBDA-NODE LAMBDA-BODY BIND-VARIABLES RELATE REVERSE! LAMBDA-VARIABLES
+VARIABLE-REP SETTER PRIMOP CONS* LIST *ORBIT-ENV* EVAL PRIMOP/CONTINUATION
+LENGTH CREATE-CALL-NODE CALL-PROC RELATE-CALL-ARGS ERROR APPLY PRIMOP/UNDEFINED
+PRIMOP/BLOCK *VALUES-VECTOR* LOSING-RECEIVE *T-IMPLEMENTATION-ENV* *VALUE
+MAKE-HANDLE MAKE-SYNTAX-TABLE NODE-PARENT THE-FREE-VARIABLES CONVERT BUG
+FALSE MAKE-TABLE *STANDARD-SYNTAX-TABLE* MAKE-SYNTAX-DESCRIPTOR MAKE-MACRO-DESCRIPTOR
+PRIMOP/*SET-VAR PRIMOP/*DEFINE PRIMOP/*DEFINE-INTEGRABLE PRIMOP/*DEFINE-WIRED
+PRIMOP/*DEFINE-CONSTANT PRIMOP/*LSET PRIMOP/*PRIMOP PRIMOP/TEST PRIMOP/TRUE?
+PRIMOP/Y VARIABLE-NAME PRIMOP/VALUES WALK))
+
+(DEFINED-VARIABLES (ALPHA ALPHA-CALL ALPHA-SPECIAL-FORM ALPHA-PRIMOP-REFERENCE
+ALPHA-LITERAL ALPHA-REFERENCE *PRIMITIVE-HANDLER-TABLE* IMMEDIATE? ALPHA-LAMBDA
+ALPHA-BLOCK CONSTRUCT-PRIMOP ALPHA-CALL-1 ALPHA-ERROR SYNTAX/NAMED-LAMBDA
+SYNTAX/EXITS SYNTAX/CLAMBDA SYNTAX/LAMBDA SET-LOCAL-SYNTAX ALPHA-TOP S-EXP->NODE-TREE
+*PRIMITIVE-SYNTAX-TABLE* SYNTAX/QUOTE SYNTAX/SET-VAR SYNTAX/DEFINE-VAR SYNTAX/DEFINE-INTEGRABLE
+SYNTAX/DEFINE-WIRED SYNTAX/DEFINE-CONSTANT SYNTAX/LSET SYNTAX/PRIMOP SYNTAX/IF
+SYNTAX/LABELS SYNTAX/BLOCK SYNTAX/DEFINE-LOCAL-SYNTAX SYNTAX/LET-SYNTAX))
+
+(LSET-VARIABLES (*CURRENT-DEFINE-INTEGRABLES*))
+
+;;;     224  number of templates/code chunks emitted
+;;;    6111  LAP instructions emitted
+;;;     104  number of value cell pointers in unit
+;;;     407  number of entries into data section
+;;;     166  calls not requiring stack padding
+;;;      18  calls requiring stack padding
+;;;    1726  number of TN's generated
+;;;       2  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;       5  successes at propagating substitution into a LET body
+;;;      11  attempts to propagate substitution into a LET body
+;;;      88  substitutions of an argument for a parameter
+;;;      52  ((LAMBDA () FOO)) becomes FOO
+;;;      67  unreferenced argument with no side effects is flushed
+;;;       1  IF of a LET becomes LET of an IF
+;;;      16  IF of a constant has dead arm eliminated
+;;;       2  IF of an IF is involuted (anchor pointing)
+;;;      10  (IF (NOT A) B C) becomes (IF A C B)
+;;;      21  one BLOCK within another is flattened out
+;;;      16  BLOCK of one statement simplified to the statement
+;;;      56  statements eliminated from a BLOCK
+;;;      71  unreferenced parameter is flushed
+;;;    2202  number of internal-format program nodes created
+
+
+;----- Finished compiling "/t/t3/comp/alpha.t"
+

@@ -1,0 +1,62 @@
+
+;----- Beginning T compilation on "convert.t"
+
+;CONVERT compiled
+;  Consed environment = (CVAR)
+;(LAMBDA (BODY) ...) compiled
+;CONVERT-LAMBDA compiled
+;  Consed environment = (CNODE.5 LNODE.4)
+;(LAMBDA (NODE.6) ...) compiled
+;CONVERT-CALL compiled
+;Warning: unreferenced variable ARG
+;   (This was discovered in some obscure part of the compiler.)
+;Action: none
+;Location: at top level
+;(LAMBDA (NODE1 NODE2) ...) compiled
+;  Consed environment = (CONT NODE)
+;  Closure
+;  Consed environment = (VAR)
+;  Consed environment = (CONT ARG)
+;(LAMBDA (ARG.11) ...) compiled
+;(LAMBDA (()) ...) compiled
+;(LAMBDA (NODE) ...) compiled
+;(LAMBDA (ARG) ...) compiled
+;REALLY-CONVERT-CALL compiled
+;NODE-RANK compiled
+;COMPLEXITY-ANALYZE compiled
+;(LAMBDA () ...) compiled
+
+(FREE-VARIABLES (LAMBDA-NODE? LAMBDA-VARIABLES LAMBDA-BODY CALL-NODE? REPLACE
+CREATE-CALL-NODE CALL-PROC CREATE-REFERENCE-NODE RELATE CALL-ARG VARIABLE?
+CALL-EXITS CREATE-VARIABLE LIST CREATE-LAMBDA-NODE CALL-PROC+ARGS SORT WALK
+NODE-PARENT EMPTY? ERASE-ALL PRIMOP-NODE? PRIMOP-VALUE PRIMOP/CONTINUATION
+NODE-ROLE CALL-ARG-NUMBER ERASE CALL-COMPLEXITY REFERENCE-NODE? NODE-CHILDREN
+SETTER))
+
+(DEFINED-VARIABLES (CONVERT CONVERT-LAMBDA CONVERT-CALL REALLY-CONVERT-CALL
+NODE-RANK COMPLEXITY-ANALYZE))
+
+(LSET-VARIABLES (*LEFT-TO-RIGHT?*))
+
+;;;      69  number of templates/code chunks emitted
+;;;    1811  LAP instructions emitted
+;;;      38  number of value cell pointers in unit
+;;;     113  number of entries into data section
+;;;      44  calls not requiring stack padding
+;;;      11  calls requiring stack padding
+;;;     380  number of TN's generated
+;;;       1  (FOO? X) becomes (IF (FOO? X) T NIL)
+;;;       4  successes at propagating substitution into a LET body
+;;;       4  attempts to propagate substitution into a LET body
+;;;      10  substitutions of an argument for a parameter
+;;;       9  ((LAMBDA () FOO)) becomes FOO
+;;;       9  unreferenced argument with no side effects is flushed
+;;;      10  IF of a constant has dead arm eliminated
+;;;       4  IF of an IF is involuted (anchor pointing)
+;;;       3  (IF (NOT A) B C) becomes (IF A C B)
+;;;      10  unreferenced parameter is flushed
+;;;     544  number of internal-format program nodes created
+
+
+;----- Finished compiling "convert.t"
+

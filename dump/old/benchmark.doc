@@ -1,0 +1,66 @@
+The benchmark is on the source code of encoder:
+
+    //bronto/yale/li/dump/encode.t     
+                                                          
+We also have anthor no-comments source code which is:
+
+    //bronto/yale/li/dump/bench2.t                                        
+
+This code does not have extra spaces, <CR>, or <LF>.   
+
+The timing was done 3 times for any result value shown below.  The results
+listed here are the mean values of the last two:
+
+    Program description            blocks  length   Time taken (in seconds)
+
+    Using READC to read             17     16993    22.8 (with comments)
+    without doing anything           7      7083    10.1 (no comments)
+                                     5      4642     9.3 (dumped file)
+
+    Using pre-dispatch READC        17     16993    19.1 (with comments)
+    without doing anything           7      7083     8.6 (no comments)
+                                     5      4642     8.1 (dumped file)
+
+    Using READ to read objects      17     16993    33.3 (with comments)
+    and put them into a list         7      7083    25.5 (no comments)     
+
+    Encoding the list produced                      10.1 (hash twice for pointers)
+    by READ.  Write to a dumped                      5.9 (walk, hash once)
+    file                             5      4642    11.8 (write)
+
+    Decoding the file dumped         5      4642    13.6 (pre-dispatch everytime)
+    by encoding phase                5      4642    12.1 (pre-dispatch once)    
+
+
+Note that there are only 88 shared symbols here, nothing else is shared.
+The average length of the shared symbols is about 6.
+
+Another interesting benchmark is on the encoded file of *the-symbol-table*.
+This is just to see how much time we will spend on non-shared stuff in
+decoding:
+                                                       
+    Using READC to read without     43     42817    1:57
+    doing anything
+
+    Decoding                        43     42817    2:07
+           
+Here we only spent less than 8% of the time on computing.  This is probably
+because of it is a vector of lists.
+                                                
+Conclusion:
+                                                                      
+    - The dumper saved more than 50% time for reading in source code.
+
+    - Pre-dispatch each time costs about %10 - %15 of the time of READC.
+                                                
+    - For the no-comments source code, the dumper reduces about %34 storage.
+
+    - Decoder spends about 8% - 24% time on the pair-symbol type decoding.
+      Probably it depends on the structure of the data.  Consing will probably
+      costs much more than producing vectors.
+                                                        
+    - Object-hash costs a lot. 
+                                                    
+
+                                                   
+

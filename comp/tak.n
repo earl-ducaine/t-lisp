@@ -1,0 +1,102 @@
+
+;----- beginning t compilation on "tak"
+
+;;; Getting support
+;;; Alphatizing
+;;; Free variables (119): (FX< NOT FX- FOO)
+;;; Assignment analysis
+;;; Complexity analysis
+;;; CPS conversion
+;;; Early binding
+;;; Early binding FX<
+;;; Early binding NOT
+;;; Early binding FX-
+;;; Defining 'SUPPORT/DEFINE' support for FOO
+;;; Free variables (0): ()
+;;; Defined variables (121): (FOO)
+;;; Simplifying
+;;; Simplification done
+  ((P_1 () K_0)     (K_0 P_3))
+   ((P_3 () K_2)     ((MAKE-DEFINER DEFINE) K_2 FOO FOO_9))
+    ((FOO_9 () K_5 X_6 Y_7 Z_8)
+                      (Y P_11 P_14))
+     ((P_11 () B_10 ())(B_10 K_5))
+     ((P_14 () K_12 TAK_13)
+                       (K_12 P_16 TAK_21))
+      ((P_16 () K_15)   (TAK_13 K_5 X_6 Y_7 Z_8))
+      ((TAK_21 () K_17 X_18 Y_19 Z_20)
+                        (CONDITIONAL P_23
+                                     P_22
+                                     (MAKE-COMPARATOR JGEQ NUMBER?)
+                                     Y_19
+                                     X_18))
+       ((P_23 ())        (FIXNUM-SUBTRACT C_34 Z_20 '1))
+        ((C_34 () V_33)   (TAK_13 C_32 V_33 X_18 Y_19))
+         ((C_32 () V_31)   (FIXNUM-SUBTRACT C_38 X_18 '1))
+          ((C_38 () V_37)   (TAK_13 C_36 V_37 Y_19 Z_20))
+           ((C_36 () V_35)   (FIXNUM-SUBTRACT C_42 Y_19 '1))
+            ((C_42 () V_41)   (TAK_13 C_40 V_41 Z_20 X_18))
+             ((C_40 () V_39)   (TAK_13 K_17 V_35 V_39 V_31))
+       ((P_22 ())        (K_17 Z_20))
+;;; join-point (122) TAK_21 env = ()
+;;; STRATEGY/STACK (123) C_32 env = (C_32 X_18 Z_20 Y_19)
+;;; STRATEGY/STACK (124) C_36 env = (C_36 V_31)
+;;; STRATEGY/STACK (125) C_40 env = (C_40 V_35)
+;;; Unit = ((#{Object 55 MAKE-NONSTANDARD-CALL} . 4) (#{Object 56 MAKE-NONSTANDARD-CALL}
+. 8) (#{Variable 126 FOO_4} . 12) (#{LAMBDA-node 127} . 16))
+
+128
+t_p_3:
+            movl    (sp),t
+            jmp     (t)
+
+127
+t_foo_9:
+            jmp     tak_21
+
+122
+tak_21:
+            cmpl    a2,a1
+            jgeq    p_22
+p_23:
+            movl    a1,T0
+            subl3   $1<<2,a3,a1
+            pushl   a2
+            pushl   a3
+            pushl   T0
+            pushal  t_c_32
+            movl    a2,a3
+            movl    T0,a2
+            jmp     tak_21
+p_22:
+            movl    a3,a1
+            movl    (sp),t
+            jmp     (t)
+
+123
+t_c_32:
+            movl    a1,a3
+            subl3   $1<<2,4(sp),a1
+            pushl   a3
+            pushal  t_c_36
+            movl    16(sp),a3
+            movl    20(sp),a2
+            jmp     tak_21
+
+124
+t_c_36:
+            movl    a1,T0
+            subl3   $1<<2,20(sp),a1
+            pushl   T0
+            pushal  t_c_40
+            movl    20(sp),a3
+            movl    24(sp),a2
+            jmp     tak_21
+
+125
+t_c_40:
+            movl    a1,a2
+            movl    12(sp),a3
+            movl    4(sp),a1
+            moval   32(sp),sp
+            jmp     tak_21

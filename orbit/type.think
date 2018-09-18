@@ -1,0 +1,223 @@
+
+
+
+Types (NOT representations! - although they're related.)
+
+t   - the universal type
+nil - the empty type
+23  - the integer 23 etc.
+
+number
+    s-integer
+        (s-field <size>)
+            -1, etc.
+        u-integer
+            (u-field <size>)
+                0, 23 etc.
+    float
+        small
+        single
+        double
+list
+    pair
+    empty
+
+bitv
+text
+vector
+
+(locative <type>)
+
+(procedure <arg-types>)
+(cont <value-types>)
+(n-ary <proc-or-cont-type>)
+
+(closure <lambda-exp>)
+
+----
+
+  Primop        Type
+
+  nil           false
+  t             (not false)
+  $             nil             ;??
+
+  +             (proc (cont number) number number)
+  +             (proc (cont s-integer) s-integer s-integer)
+  +             (proc (cont u-integer) u-integer u-integer)
+
+  car-loc       (proc (cont (locative t)) list)
+  value         (proc (cont _type) (locative _type))
+  set-value     (proc (cont) (locative _type) _type)
+
+  *block        (proc (cont) (proc))
+
+  u-field       (proc (cont u-integer) s-integer (u-field 23) (u-field 23))
+  s-field       (proc (cont s-integer) s-integer (u-field 23) (u-field 23))
+
+  u-bitv-field-loc  (proc (cont (locative u-integer))
+                          bitv
+                          (u-field 23)
+                          (u-field 23))
+
+  text-elt-loc  (proc (cont (locative char)) text (u-field 20))
+
+  if-false?     (proc (cont) (cont) t)
+                (type list)
+
+  Y             (proc (cont) . t)
+
+Simplification of type expressions.
+
+  (or type t)       =>  t
+  (or type type)    =>  type
+  (or type nil)     =>  type
+
+  (or (op a1 a2 ...) (op b1 b2 ...))
+    => (op (or a1 b1) (or a2 b2) ...)
+
+  (or type1 type2)  =>  t
+
+  (proc (cont) (cont) t)  ==  (type t)
+
+  (and type t)      =>  type
+  (and type type)   =>  type
+  (and type nil)    =>  nil
+
+Type propagation
+
+Propagation up: through unions of types in children nodes.
+
+Down: through type "application."
+
+
+  In
+    (type arm1 arm2 arg),
+  arg's type in arm1 is type and in arm2 is (not type).
+
+  In
+    (type arm1 $ arg),
+  arg's type in arm1 is type.
+
+  In
+    (let ((f (lambda ...)) (g (lambda ...))) ...),
+  f's type is its lambda, etc.
+
+
+  If V has types T1, T2, ... in the arguments of a call,
+  then it has type (or T1 T2 ...) in the call's parent lambda-node.
+
+  In
+    ((proc type ...) arg ...),
+  the type of arg is type.
+
+Reference nodes have both ISTYPE and WANTTYPE slots!
+
+Example.
+
+    (if (list? x) (car x) y)
+
+CPS converts to
+
+    (if-list? (lambda ()
+                (car-loc (lambda (z) (value cont z)) x))
+              (lambda () (cont y))
+              x)
+
+if-list?  -  (type list?)
+car-loc   -  (proc (cont (loc t)) list?)
+value     -  (proc (cont _t) (loc _t))
+
+  Apply:
+      if-list? is of type (type list?)
+  Propagate: x has type list is first arm, type (not list?) in the second.
+      (i.e. we set the istype slot of any reference node below there in the
+        tree.)
+      (actually, x has type (and ... list?) - need to do intersection so
+               we don't lose info as we go downwards.)
+      ... (modify (reference-istype node)
+                  (lambda (type) (type-intersect type merge-it-in))) ...
+  Apply:
+      car-loc is of type (proc (cont (loc t)) list?)
+      so, we apply the subtypes to the arguments:
+            (proc     (cont (loc t))               list?)  wanttypes
+            (car-loc  (lambda (z) (value cont z))  x)
+
+      istype of car-loc is proc; okay.
+      istype of (lambda ...) is (cont ...); recursive application.
+      istype of x is list?  -  simply set this.  - we now have the
+            information we wanted - the istype and wanttype are the same
+            in this reference, so no type checking need be done.
+  Align:
+      type = (cont    (loc t))
+      node = (lambda (z      )  (value cont z))
+        So we set the variable-type of z to be (loc t), and propagate
+        that to all of its reference node.
+  Apply:
+      type = (proc  (cont _t) (loc _t))
+      node = (value cont      z)
+              We merge: wanttype cont = (cont _t)
+                    and wanttype z    = (loc _t).
+              Now istype of z is already (loc t); again things match.
+              - What do we do about the _t's?  Leave them as t's?  Where
+              does this matter?  Probably not in the case of locatives.
+
+Variables have a priori types for the points at which they're bound -
+e.g. if bound by a primop's continuation.
+
+...
+
+
+(variable-type var)
+ =
+(apply type-union (map variable-feeders var))
+
+(
+At the tope of tree, for every free variable, we can set the variable's
+type, and the istype of every reference, to be t, the universal type.
+
+At any call, we set the istypes for every variable bound by every
+inferior LAMBDA, and we set wanttypes for every variable which is an
+argument to the call.
+
+At a call to a LAMBDA, we set the types of the known procedures to be
+the LAMBDA node themselves.
+
+Want to traverse the body of the procedure to determine the istypes
+of arguments in calls to the labels.  We set the istypes of the bound
+variables of the labels to be the union of all the istypes of their
+feeders.
+
+At a call to a primop, we set wanttypes for argument nodes...  setting
+the wanttype for a LAMBDA node consists of setting the variable-types
+(and therefore the ISTYPEsof references) of the LAMBDA's bound
+variables.
+
+At a call to a type, we set the istypes for references in the two arms.
+
+Type mismatches -
+
+    In (let ((f (lambda (c x y))) ...)
+         ...),
+    if there's a call to f with wrong number of args, then:
+    the intersection of the istype of the called procedure
+      istype f = (proc (cont t) t t)
+    and the reference
+      wanttype f in (f k z) = (proc (cont t) t)
+    is nil:
+
+        (and (proc . a) (proc . b)) = nil, if length a = length b.
+
+
+
+
+(make-type) - new primop
+
+
+
+make-type    (proc (cont type))
+
+instantiate  (proc (cont _type) object? _type)
+
+if           (proc (cont) (cont) type object?)
+type         (proc (cont boolean?) object?)

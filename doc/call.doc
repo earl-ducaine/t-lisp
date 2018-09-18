@@ -1,0 +1,255 @@
+T version 3
+
+Calling and control sequences
+-----------------------------
+
+NOTE:   K = number of arguments passed or values delivered
+	M = number of arguments or values expected
+	N = number of argument registers
+
+Registers
+    NIL = false
+    P  = procedure
+    SP = stack pointer = continuation
+    T  = template
+    NARGS = number of arguments
+    A1, A2, ... AN = argument registers
+    TASK = process state
+    S0, S1, ... = scratch registers
+
+Sample register assignments
+  68000: (N = 4)
+    machine reg   D0 D1 D2 D3 D4 D5 D6    D7  | A0 A1 A2 A3 A4 A5   A6 A7
+       T3 use     S0 S1 S2 S3 S4 S5 NARGS NIL | P  A1 A2 A3 A4 TASK T  SP
+
+  VAX:  (N = 4)
+    machine reg   R0 R1 R2 R3 R4    R5 R6 R7 R8 R9 R10 R11 AP   FP SP PC
+       T3 use	    S0 S1 S2 S3 NARGS P  A1 A2 A3 A4 T   NIL TASK -- SP --
+
+-----
+
+General call (P A1 A2 ... AK):
+
+    P  := procedure
+    A1 := 1st arg
+    ...
+    AN := Nth arg
+    NARGS := K+1
+    SP := continuation, i.e. frame  (deleted when invoked by callee)
+
+    [If P is not a closure, then error.]
+
+    T  := template(P)
+
+    [If P expects M arguments (is not N-ary; M+1 is fetched from template)
+        and NARGS not= M+1, then error.]
+
+    Jump to code(T)
+
+-----
+
+General return (VALUES V1 V2 ... VK):
+
+    SP := continuation to be invoked (less type tag!)
+    A1 := first value V1
+    ...
+    AN := Nth value
+    NARGS := -(K+1)
+
+    Move (SP) into T (do not pop!)
+
+    [If SP expects M values (is not N-ary; M+1 is fetched from template)
+        and NARGS not= -(M+1), then error.]
+
+    Jump to code(T)
+
+    [Note that P is unused.  Worry?]
+
+Sample call/return (LAMBDA () ... (FOO X) ... Y)
+
+    movl X,A1
+    movl FOO,P
+    movl #2,NARGS       ;2 = 1 + # args passed
+    moval A,-(SP)
+    movl -2(P),T
+    jmp (T)
+    .byte ptr, scr              ;frame size
+    .word A-bitv                ;offset
+    .byte 128,-2                ;-2 = -1 - # returned values wanted
+A:  ...
+    movl Y,A1           ;value to return
+    movl #-2,NARGS      ;-2 = -1 - # of values being returned
+    movl (SP),T
+    jmp (T)
+
+-----
+
+Optimizations to consider.
+
+    (a)	Have the number-of-returned-values consistency check admit any
+	positive value of NARGS as meaning the same as -2, i.e. one
+	returned value.  This saves one instruction, i.e. loading NARGS,
+        on every (unchecked) return.
+
+-----
+
+Invoke handler - (OPERATE OBJ NEXT OP A1 A2 A3 ... AK)
+
+That is, apply generic operation OP to the object OBJ; SELF = A1;
+invoke NEXT's handler to punt.
+
+Normally an operation call
+
+                                  (OP A1 A2 A3 ... AK)
+
+starts out by doing
+
+             (OPERATE A1 LAST-GASP OP A1 A2 A3 ... AK)
+
+The operation dispatch/redispatch protocol requires two or three extra
+registers, for the "current" and "next" objects in the joined sequence.
+To obtain these after an operation is invoked, the thing to do is to
+make AN and AN-1 available by pushing whatever arguments may have been
+there onto the rest-arg stack.
+
+-----
+
+Sample concrete code for the VAX.  (See data.doc for info about closure
+representations.)
+
+Call with type and # args check:
+    CMPZV #0,#2,P,#2
+    BNE LOSE                    ; Error if not escape type
+    MOVL -2(P),T                ; Fetch template
+    CMPZV #0,#7,-2(T),#TEMPLATE ; Union of two template subtypes (low 7 same)
+    BNE LOSE                    ; Error if not a closure
+    CVTBL -1(T),S0              ; Test # args info
+    BEQL WIN                    ; Okay if n-ary
+    CMPL NARGS,S0               ; Check # args
+    BNEQ LOSE                   ; Lose if mismatch
+WIN:
+    JMP (T)
+
+Note that calls on the VAX could still be done with JMP/JSR *-2(P),
+except then you'd lose the ability to map PC to current template
+quickly.  Too bad.  On the 68000, general non-checked call is MOVE.L
+-2(P),T -- JMP/JSR (T).
+
+To invoke a handler (VAX) - assume escape tag = 2:
+    CMPZV #0,#2,OBJ,#2          ; If not escape tag, then not a closure
+    BNE LOSE
+    MOVL -2(OBJ),T              ; Fetch template
+    CMPB -2(T),#BITV_INTERNAL_TEMPLATE  ; Check type byte of descriptor cell
+    BEQL A
+    CMPB -2(T),#CLOSURE_INTERNAL_TEMPLATE
+    BNEQ LOSE
+    MOVL 2(T),T                 ; If closure internal, need to indirect
+A:  CVTWL -6(T),TEMP            ; Fetch handler offset
+    JMP (T)[TEMP]               ; Zowie!
+LOSE:
+    ... deal with non-closure case ...
+
+-----
+
+Calling foreign code - how to?
+
+Making sure that pointers are safe.  Try not to give away pointers
+into the heap, pass around hash codes and statically consed things
+instead.
+
+Re-entry into T via some reasonable interface?...
+
+Global state
+    D7 holds () and/or nil.
+
+-----
+
+Asynchronous interrupt:
+
+    Must queue the interrupt if either we're inside of one of the
+    consers (see below) or interrupts are disabled via the global
+    inhibit count.  (Of course, if the interrupt is synchronous, there's
+    no way it can be queued.)
+
+    Create a new task when an interrupt occurs.  The first job of
+    the new task is to save the processor state of the interrupted
+    process.
+
+    Process(or) state (i.e. "control point")
+        General pointer registers P, A1, A2, ... AN
+	Extra registers
+        Special pointer registers:
+            SP - must scan down stack until a return addr is found
+                    everything between SP and frame is traceable!
+                    The search for the first frame is heuristic, but
+                    it is extremely unlikely to fail.
+            T  - always points to a template; normally the template for
+                    the currently running code.  (Flush JMP * on VAX?)
+            PC - two cases
+                    (a) PC is internal to same object as T is
+                    (b) PC not internal to same object as T is
+                 In case (b), we know we have an ephemeral condition;
+                 either we're in the middle of doing a call and wouldn't
+                 mind doing jumping to T (and therefore the GC may simply
+                 ignore PC and replace it with the forwarded T), OR we're
+                 inside of handler invocation sequence, in which case PC
+                 won't be in the heap and thus won't need forwarding.
+        Scratch registers
+	    S0, S1, ...
+            NARGS
+            Processor status word, condition codes
+        Dynamic state
+        Current task ID
+
+    Processor state objects exist for all processes other than the
+    currently running one(s).
+
+-----
+
+Spawning a process (task)
+
+    (SPAWN P)
+        Creates a stack which when resumed will call P.  When
+        P returns, the stack may be deleted.  SPAWN returns a task ID,
+        which is an object which handles the resumption operation.
+
+    State = running / runnable / blocked
+
+    Scheduler, etc.
+
+-----
+
+Consing
+
+    Enable/disable interrupts during consing using PC range checks.
+
+Cons a pair (or flonum): heap object in P; call using jsr; value
+returned in A1.
+
+    move hp(P),S1           ; Cache frontier
+    add 8,S1
+    compare S1,limit(P)
+    branch if greater, overflow
+    move S1,hp(P)           ; Write back
+    subtract 8-list_tag,S1  ; [subq] Adjust type tag
+    move S1,A1
+    return
+
+Cons a bit vector: heap object in P; number of cells
+in S1; value returned in A1.
+
+    move hp(P),S2           ; Cache frontier
+    move S2,A1              ; Save pointer to front of chunk
+    add S1,S2
+    compare S2,limit(P)
+    branch if greater, overflow
+    move S2,hp(P)           ; Write back
+    add escape_tag,A1       ; Adjust type tag
+    shift left S1, 11 bits  ; Coerce size to be a valid descriptor
+    [ add <i-am-a-bitv>,S1  ; Necessary if fixnumness isn't sufficient ]
+    move S1,descr(A1)
+    return
+
+-----
+
+How to indicate that templates are forwarded and to where.

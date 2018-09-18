@@ -1,0 +1,82 @@
+;;; Free variables (259): (FX= FX- FX* FAC)
+;;; Early binding (261): FX=
+;;; Early binding (262): FX-
+;;; Early binding (263): FX*
+;;; Defining 'SUPPORT/DEFINE' support for FAC
+;;; Free variables (0): ()
+;;; Defined variables (264): (FAC)
+;;; integrating: FX=
+;;; integrating: FIXNUM-EQUAL?
+;;; integrating: FX-
+;;; integrating: FIXNUM-SUBTRACT
+;;; integrating: FX*
+;;; integrating: FIXNUM-MULTIPLY
+;;; substituting: V_39 := (QUOTE #T)
+;;; substituting: V_37 := (QUOTE ())
+;;; substituting: C_33 := P_18
+;;; substituting: C_34 := P_19
+;;; substituting: K_13 := K_6
+  ((P_1 K_0)        (K_0 P_3))
+   ((P_3 K_2)        ((MAKE-DEFINER DEFINE) K_2 FAC FAC_5))
+    ((FAC_5 K_6 ())   (Y P_9 P_12))
+     ((P_9 B_8 ())     (B_8 K_6))
+     ((P_12 K_10 F_11) (K_10 P_14 F_15))
+      ((P_14 ())        (K_6 F_11))
+      ((F_15 K_16 X_17) (CONDITIONAL P_40
+                                     P_41
+                                     (MAKE-COMPARATOR JNEQ NUMBER?)
+                                     X_17
+                                     '0))
+       ((P_40)           (K_16 '1))
+       ((P_41)           (FIXNUM-SUBTRACT C_42 X_17 '1))
+        ((C_42 V_43)      (F_11 C_44 V_43))
+         ((C_44 V_45)      (FIXNUM-MULTIPLY K_16 X_17 V_45))
+;;; STRATEGY/STACK (265) C_44 env = (C_44 X_17)
+;;; STRATEGY/HEAP (266) F_15 env = (F_15)
+;;; Unit = ((#{Object 58 %MAKE-EXTEND} . 4) (#{Object 59 %MAKE-PAIR} . 8)
+(#{Variable 267 FAC_4} . 12) (#{LAMBDA-node 268} . 16))
+
+269 P_3
+t_p_3:      .word 0
+            movl    $-2,s4
+            movl    (sp),t
+            jmp     (t)
+
+268 FAC_5
+t_fac_5:    .word 0
+            moval   t_f_15+2,a5
+            movl    $4<<2,s1
+            movl    -14(p),xp
+            jsb     *-2(r12)
+            movl    a5,a1
+            movl    $-2,s4
+            movl    (sp),t
+            jmp     (t)
+
+266 F_15
+t_f_15:     .word 0
+            cmpl    a1,$0<<2
+            jneq    p_41
+p_40:
+            movl    $1<<2,a1
+            movl    $-2,s4
+            movl    (sp),t
+            jmp     (t)
+p_41:
+            movl    a1,T0
+            subl2   $1<<2,a1
+            pushl   T0
+            pushal  t_c_44+2
+            movl    $2,s4
+            movl    -2(p),t
+            jmp     (t)
+
+265 C_44
+t_c_44:     .word 0
+            ashl    $-2,a1,s1
+            mull3   4(sp),s1,a1
+            moval   8(sp),sp
+            movl    $-2,s4
+            movl    (sp),t
+            jmp     (t)
+

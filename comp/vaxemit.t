@@ -1,233 +1,276 @@
-(HERALD (TCOMP VAXEMIT T 147)
-        (ENV TCOMP))
+(herald vaxemit)
 
-;;; Machine-specific support for EMIT-like things.
-;;; This is the Vax/Unix version.
+(define-constant CELL 4)
+(define-constant S0 0)
+(define-constant S1 1)
+(define-constant S2 2)
+(define-constant S3 3)
+(define-constant NARGS 3)
+(define-constant P 4)
+(define-constant A1 5)
+(define-constant A2 6)
+(define-constant A3 7)
+(define-constant A4 8)
+(define-constant AN 9)
+(define-constant AN-1 8)
+(define-constant TP -1)
+(define-constant nil-reg -2)
+(define-constant SP -3)
+(define-constant TASK -4)
 
-;;; Parameters for TRANSDUCE
-
-(DEFINE *SCRATCH-REG-NAMES* '(R0 R1 R2 R3 R4))
-
-(DEFINE *POINTER-REG-NAMES*
-  (MAP (LAMBDA (Z)
-         (PUT (CAR Z) 'SYM (CADR Z))
-         (*DEFINE-LAP-CONSTANT (CONCATENATE-SYMBOL '%% (CAR Z)) (CADDR Z))
-         (CADR Z))
-       '((VAL R5 5)
-         (XP  R6 6)
-         (YP  R7 7)
-         (ZP  R8 8)
-         (FUN R9 9))))
-
-(BLOCK0 'REGISTER-ALIASES
-       (WALK (LAMBDA (X)
-               (IF (NEQ? (CAR X) (CADR X))
-                   (PUT (CAR X) 'SYM (CADR X)))
-               (*DEFINE-LAP-CONSTANT (CONCATENATE-SYMBOL '%% (CAR X)) (CADDR X)))
-             '((HP  R10 10)             ; Top-of-heap pointer
-               (SLP R11 11)             ; SLINK pointer
-               (AP  AP  12)             ; Argument pointer
-               (TP  FP  13)             ; Template pointer
-               (SP  SP  14)             ; Stack pointer
-               (PC  PC  15)             ; Program counter
-               ;; The following two are used only for indexing a fault-frame.
-               (JF  JF  15)             ; Jump-from
-               (SHP SHP 16)             ; Saved heap pointer
-               (SAP SAP 17)             ; Saved heap pointer
-               )))
-
-(DEFINE *VAL* (GET 'VAL 'SYM))
-(DEFINE *CALLEE-VAL* *VAL*)
-(DEFINE *MY-VAL* *VAL*)
-
-(DEFINE *FUN* (GET 'FUN 'SYM))
-(DEFINE *CALLEE-FUN* *FUN*)
-(DEFINE *MY-FUN* *FUN*)
-
-(DEFINE *POSITION-INDEPENDENT-CODE?* NIL)       ; ?
-(DEFINE *SEPARATE-ASSEMBLY?* T)
+(lset *registers* (vector-fill (make-vector 20) nil))
+(lset *pointer-registers* 6)
+(lset *scratch-registers* 4)
+(lset *argument-registers* 4)
+(lset *real-registers* 10)
+(lset *pointer-temps* 6)
+(lset *no-of-registers* 20)
+(lset *assembly-output* nil)
 
 
-;;; Set this stuff up for NEXTLOC.
-(LET ((FUN (LAMBDA (X Y) (PUT X 'NEXT-REGISTER Y))))
-  (WALK FUN *SCRATCH-REG-NAMES* (CDR *SCRATCH-REG-NAMES*))
-  (WALK FUN *POINTER-REG-NAMES* (CDR *POINTER-REG-NAMES*)))
+(define (generate-move ref1 ref2)
+  (if (neq? ref1 ref2)
+      (if (and (pair? ref1) (null? (cdr ref1)))
+          (emit vax/moval (car ref1) ref2)
+          (emit vax/movl ref1 ref2))))
 
-(DEFINE *POINTER* 4)    ;Number of bytes per pointer
-(DEFINE *SHIFT* 3)      ;Number of low 0 bits in fixna
+(define (generate-push access)
+  (set *stack-pos* (fx+ *stack-pos* CELL))
+  (if (and (pair? access) (null? (cdr access)))
+      (emit vax/pushal (car access))
+      (emit vax/pushl access )))
 
-;;; For cross-compilation, fixnum size may change.  Use generic arithmetic.
-(DEFINE TARGET:BITS-PER-FIXNUM (FX- 32. *SHIFT*))
-(DEFINE TARGET:MAX-FIXNUM (- (EXPT 2 TARGET:BITS-PER-FIXNUM) 1))
-(DEFINE TARGET:MIN-FIXNUM (- -1 TARGET:MAX-FIXNUM))
+(define (generate-pop access)
+  (emit vax/movl (@r+ SP 0) access))
+                                     
+(define (generate-move-address from to)
+  (emit vax/moval from to))
+  
+(define (generate-jump-to-subroutine)
+  (emit vax/jsb (*d@r AN-1 -2)))
+                   
+(define (generate-jump label)
+  (emit vax/jmp label))
 
-(LET ((U? (CASE *TARGET-SYSTEM* ((UNIX) T) ((VMS) NIL))))
+(define (emit-jump inst else then)
+  (emit (concatenate-symbol 'vax/ inst) (label else)))
 
-  (DEFINE *LOWERCASIFY-SYLLABLES?* U?)
-  (DEFINE *IMMEDIATE-CHARACTER*     (IF U? #\$ #\#))
-  (DEFINE *INDIRECTION-CHARACTER*   (IF U? #\* #\@))
-  (DEFINE *COMMENT-START-CHARACTER* (IF U? #\# #\;)))
 
-(DEFINE *STRING-CHARACTER*          #\")
-;; Non alphanumerics that EMIT-SYLLABLE will not numberify
-(DEFINE *OK-ASSEMBLY-SPECIAL-CHARACTERS* '(#\$ #\_ #\.))
+(define (generate-return n-args)
+  (if (fxn= n-args 1)
+      (emit vax/movl (machine-num (fx- -1 n-args)) (r NARGS)))
+  (emit vax/movl (reg-offset SP 0) (r TP))
+  (emit vax/jmp (reg-offset TP 0)))
 
-;;; This info is used by EMITJ only... on VMS, we lose big...
+(define (generate-general-call n-args)
+  (emit vax/movl  (machine-num (fx+ n-args 1)) (r NARGS))
+  (emit vax/movl (reg-offset P -2) (r TP))
+  (emit vax/jmp (reg-offset TP 0)))
+    
+(define (generate-push-address access)
+  (set *stack-pos* (fx+ *stack-pos* CELL))
+  (emit vax/pushal access))
 
-(BLOCK0 'REVERSED-JOP
-       (WALK (LAMBDA (X)
-               (PUT (CAR X) 'REVERSED-JOP (CADR X))
-               (PUT (CADR X) 'REVERSED-JOP (CAR X))
-               (PUT (CADDR X) 'REVERSED-JOP (CADDDR X))
-               (PUT (CADDDR X) 'REVERSED-JOP (CADDR X))
-               (PUT (CAR X) 'LOSE (CADDDR X))
-               (PUT (CADR X) 'LOSE (CADDR X)))
-             '((JEQL JNEQ BEQL BNEQ)
-               (JLSS JGEQ BLSS BGEQ)
-               (JLEQ JGTR BLEQ BGTR)
-               (JEQLU JNEQU BEQLU BNEQU)
-               (JLSSU JGEQU BLSSU BGEQU)
-               (JLEQU JGTRU BLEQU BGTRU))))
+      
+(define (emit op . args)
+  (format *assembly-output* "~12t~a~20t"
+          (if (fixnum? op)
+              (vref *vax-instructions* op)
+              (nthchdr (string-downcase! (symbol->string op)) 4)))
+  (cond (args
+         (format *assembly-output* "~a" (assembly-syntax (car args)))
+         (walk (lambda (arg)
+                 (format *assembly-output* ",~a" (assembly-syntax arg)))
+               (cdr args))))
+  (newline *assembly-output*))
 
-;;; When this is called, there is already an appropriate remark pending.
-;;; TTAGS is a list of the form created by SETUP-LAMBDA-TEMPLATE:
-;;;     (ctag ttag . ptag)
 
-(DEFINE-LAP-CONSTANT %%JUMP-OPCODE #x9f17)
+(define (emit-tag l)
+  (format *assembly-output* "~a:~%"
+    (if (lambda-node? l)
+        (tag l)
+        (string-downcase (symbol->string l)))))
 
-(STAT-COUNTER *TEMPLATE-COUNT* "number of templates/code chunks emitted")
+(define (emit-template l)
+  (format *assembly-output* "t_~a:~%" (tag l)))
 
-(DEFINE (EMIT-TEMPLATE TTAGS)
-  (DECLARE (SPECIAL *THE-CODE-TAG*))
-  (COND ((NOT *SUPPRESS-FLINK?*)
-         (DESTRUCTURE (((CTAG TTAG . PTAG) TTAGS))
-           (BEGIN-ALIGNED-IMPURE-DATUM)
-           (EMIT '(BYTE %%REL-ITEM-TAG))
-           (EMITTAG TTAG)
-           (COND ((AND *ENABLE-LAP-COMMENTARY?*
-                       (EQ? *ASSEMBLER-TYPE* 'VAX-UNIX))
-                  ;; Globalize tags for better typeout in "adb" debugger.
-                  (EMIT `(GLOBL ,CTAG))
-                  (EMIT `(GLOBL ,TTAG))))
-           (COND (*PRE-COOK?*
-                  (EMIT '(WORD %%JUMP-OPCODE))    ; jump absolute
-                  (EMIT-CODE-ADDRESS CTAG)
-                  (EMIT '(BYTE 0)))
-                 (ELSE
-                  (EMIT '(WORD %%JUMP-OPCODE))
-                  (EMIT `(BYTE ,(LSH TARGET:%%TEMPLATE-REL-TYPE
-                                     (FX- TARGET:%%REL-ITEM-TYPE-FIELD-POS 24.))))
-                  (EMIT-CODE-ADDRESS CTAG)))
-           (SET *OFFSET* (FX+ *OFFSET* 2))
-           (COND (PTAG (EMITREMARK "Tproc")
-                       (EMIT-VANILLA TTAG)
-                       (EMITTAG PTAG)))
-           (TEXT-SECTION)
-           (INCR *TEMPLATE-COUNT*)
-           ))))
+(define r identity)
 
-(DEFINE (EMIT-CODE-ADDRESS TAG)
-  (COND (*LISP-ASSEMBLY-SYNTAX?*
-         (EMIT `(CODE-ADDRESS ,TAG)))
-        ((OR *PRE-COOK?*
-             (EQ? *ASSEMBLER-TYPE* 'VAX-UNIX))  ; Unix assembler can't cope.
-         (EMIT `(ADDRESS ,TAG)))
-        (ELSE
-         (EMIT `(LONG (- ,TAG ,*THE-CODE-TAG*))))))
+(define (reg-offset reg offset)
+  (cons reg offset))
 
-;;; See RELOC
-(DEFINE-LAP-CONSTANT %%TEMPLATE-LOW-PESO (FX+ #x+9f1700 TARGET:%%REL-ITEM-TAG))
+(define (*d@r foo goo) "*-2(a4)")
 
-;;; This is for data which wants to be aligned and pure but not position-
-;;; independent.  Thus this can be .text on the Vax but must be data on
-;;; the 68K.  Think of a better name for this than FOO!
+(define (lit x)
+  (cons 'lit x))
 
-(DEFINE (BEGIN-ALIGNED-FOO-DATUM)
-  (BEGIN-ALIGNED-PURE-DATUM))
+(define (machine-num x)
+  (cons 'machine-num x))
 
-(DEFINE (EMIT-OPCODE OP)
-  (SET-HPOS *ASSEMBLY-OUTPUT* (OR *TAB-STOP-INTERVAL* 1))
-  (EMIT-SYLLABLE (OR (GET OP 'OP-ALIAS) OP))    ;Fix this for pesudo-ops later
-  (WRITEC *ASSEMBLY-OUTPUT* #\SPACE))
+(define (@-r a v)
+  "-(sp)")
 
-(DEFINE (EMIT-OPERAND X)
-  (COND ((STRING? X) (WRITES *ASSEMBLY-OUTPUT* X))
-        ((SYMBOL? X)
-         (LET ((PROBE (GET X 'SYM)))
-           (IF PROBE (EMIT-OPERAND PROBE) (EMIT-SYLLABLE X))))
-        ((NUMBER? X) (EMIT-OFFSET X NIL))       ;For weird pseudo-ops
-        ((ATOM? X)
-         (BUGLET ((*OPERAND* X))
-                 "~S weird operand" "will ignore it" X))
-        (ELSE (LET ((X (EXPAND-OPERAND X)))
-             (CASE (CAR X)
-               ((REG -REG REG+)
-                (IF (AND (CADDR X) (NOT (ALIKEV? (CADDR X) 0))) ; EQUIV?
-                    (EMIT-OFFSET (CADDR X) NIL))
-                (IF (EQ? (CAR X) '-REG) (WRITEC *ASSEMBLY-OUTPUT* #\-))
-                (EMIT-REG-NAME-WITH-PARENS (CADR X))
-                (IF (EQ? (CAR X) 'REG+) (WRITEC *ASSEMBLY-OUTPUT* #\+)))
-               ((REL)                   ;PC-relative, indirectable
-                (EMIT-OFFSET (CADR X) NIL))
-               ((DATUM)
-                (COND (*PRE-COOK?* (EMIT-OFFSET (CADR X) NIL))
-                      (ELSE (BUG "can't have a DATUM operand here: ~S"
-                              "will fail to put out any operand"
-                              X))))
-               ((LIT)
-                (WRITEC *ASSEMBLY-OUTPUT* *IMMEDIATE-CHARACTER*)
-                (EMIT-OFFSET (CADR X) NIL))
-               ((@)
-                (WRITEC *ASSEMBLY-OUTPUT* *INDIRECTION-CHARACTER*)
-                (EMIT-OPERAND (CADR X)))
-               ((IDX)
-                (EMIT-OPERAND (CADDR X))
-                (WRITEC *ASSEMBLY-OUTPUT* #\[)
-                (EMIT-OPERAND (CADR X))
-                (WRITEC *ASSEMBLY-OUTPUT* #\]))
-               ((ABS)
-                (WRITEC *ASSEMBLY-OUTPUT* *INDIRECTION-CHARACTER*)
-                (WRITEC *ASSEMBLY-OUTPUT* *IMMEDIATE-CHARACTER*)
-                (EMIT-OPERAND (CADR X)))
-               ((ADDR) (EMIT-OPERAND (ADDR-LOC (CADR X))))
-               ((UADDR)
-                (COND (*PRE-COOK?* (EMIT-OPERAND `(LIT ,(CADR X))))
-                      (ELSE (BUG "what's this ~S doing here?"
-                              "will fail to emit any operand"
-                              X))))
-               (ELSE (EMIT-OFFSET X NIL))  ;Allow (+ ...) to fall through
-               )))))
+(define (@r+ aq v)
+  "(sp)+")
 
-;;; Is this adequate for the 68000?  Do we ever want to generate an
-;;; out-of-line literal?  ... well, let PRODUCE and friends figure that out.
+(define (index pair reg)
+  (cons (cons (car pair) reg) (cdr pair)))
 
-(DEFINE (ADDR-LOC THING)
-  (COND ((OR (ATOM? THING)
-             (NOT (MEMQ (CAR THING) '(REL DATUM))))
-         (BUGLET ((*OPERAND* THING))
-                 "cannot address ~S's address"
-                 "use 0 instead"
-                 THING)
-         '(LIT 0))
-        (ELSE `(LIT ,(CADR THING)))))
+(define (label l)
+  (tag l))
 
-;;; Write a flonum.
+(define (template l)
+  (string-append "t_" (tag l)))
 
-(DEFINE (OUTPUT-FLONUM N)
-  (EMIT `(\.DOUBLE ,N)))
 
-(DEFINE (OUTPUT-STRING-TEXT TAG S)
-  (LET ((L (FX+ (STRING-LENGTH S) 1)))
-    (TEXT-SECTION)
-    (EMIT '(ALIGN 1))
-    (EMIT `(HALFPESO ,L))
-    (EMITTAG TAG)
-    (COND (*LISP-ASSEMBLY-SYNTAX?*
-           (EMIT `(ASCIZ ,S)))
-          (ELSE
-           (OUTPUT-ASCIZ S)))
-    ;; Avoid weird GC screw.  This is really a hack.  I bet you don't
-    ;; understand it.
-    (COND ((AND (NOT *PRE-COOK?*)
-                (FX< L 5))
-           (EMIT `(SPACE ,(FX- 6 L)))))))
+(define temp-access r)
+
+(define (assembly-syntax operand)
+  (cond ((fixnum? operand)
+         (register->symbol operand)) 
+        ((string? operand) operand)
+        ((eq? (car operand) 'lit)
+         (if (char? (cdr operand))
+             (format nil "$~a"
+                (logior (ash (char->ascii (cdr operand)) 8) %char))
+             (format nil "$~a<<2" (cdr operand))))
+        ((eq? (car operand) 'machine-num) 
+         (format nil "$~a" (cdr operand)))
+        ((fixnum? (car operand))
+         (if (fx= (cdr operand) 0)
+             (format nil "(~a)" (register->symbol (car operand)))
+             (format nil "~d(~a)" (cdr operand)
+                                  (register->symbol (car operand)))))
+        (else
+         (if (fx= (cdr operand) 0)
+             (format nil "(~a)[~a]" (register->symbol (caar operand))
+               (register->symbol (cdar operand)))
+             (format nil "~d(~a)[~a]" (cdr operand) (register->symbol (caar operand))
+               (register->symbol (cdar operand)))))))
+                                                        
+
+(define (register->symbol r)
+  (cond ((fx< r 0)
+         (vref *reserved-registers* (fx- 0 r)))
+        ((fx< r *real-registers*)
+         (vref *register-symbol-table* r))
+        (else
+         (concatenate-symbol 't (fx- r *real-registers*)))))
+
+;(define *register-symbol-table*
+        ;'#("r0" "r1" "r2" "r3" "r4" "r5" "r6" "r7"
+           ;"r8" "r9" "r10" "r11" "12" "huh?" "sp" nil))
+
+(define *register-symbol-table*
+        '#("s0" "s1" "s2" "s3" "p" "a1" "a2" "a3"
+           "a4" "an"))
+
+(define *reserved-registers*
+        '#(nil "t" "nil" "sp" "task"))
+
+(define (mn-assembly-syntax reg)
+  (string->symbol (register->symbol reg)))
+
+(define (printable-closure-env closure)
+  (map (lambda (pair)
+         (variable-unique-name (car pair)))
+       (closure-env closure)))
+
+(define (emit-comment . args)
+  (apply format *assembly-output* args)
+  (newline *assembly-output*))
+
+(define (tag l)
+  (string-downcase! (symbol->string (lambda-name l))))
+
+(define (access-name name)
+  (string-downcase! (symbol->string name)))
+    
+(define (generate-nary-setup node required)
+  (do ((i (fx+ A1 required) (fx+ i 1)))
+      ((fx>= i *real-registers*))
+    (generate-move (r i) (r (fx+ *real-registers* (fx- i A1)))))
+  (generate-move (machine-num required) (r S1))
+  (generate-move (access-value node primop/%make-pair) (r XP))
+  (generate-jump-to-subroutine)
+  (mark (lambda-rest-var node) AN))
+
+
+
+(define (create-comex unit templates thing code)
+  (let ((size (fx+ (fx+ (length unit) 1) (fx* (length templates) 3)))
+        (comex (make-comex)))
+    (receive (objects opcodes)
+             (create-obj-op-vectors thing unit templates size)
+      (set (comex-code comex) code)
+      (set (comex-objects comex) objects)
+      (set (comex-opcodes comex) opcodes)
+      comex)))
+
+
+(define (create-obj-op-vectors thing unit templates size)
+  (let ((objects (make-vector size))
+        (opcodes (make-vector size)))
+    (vset opcodes 0 op/closure)
+    (vset objects 0 (code-vector-offset thing))
+    (do ((a-list unit (cdr a-list))
+         (i 1 (fx+ i 1)))
+        ((null? a-list)
+         (do ((templates templates (cdr templates))
+              (i i (fx+ i 3)))
+             ((null? templates)
+              (values objects opcodes))
+           (vset objects i
+                 (code-vector-offset (cit->lambda (car templates))))
+           (vset opcodes i op/template1)
+           (vset opcodes (fx+ i 1) op/template2)
+           (vset opcodes (fx+ i 2) op/template3)))
+      (receive (opcode obj) (comex-decipher unit (caar a-list))
+        (vset objects i obj)
+        (vset opcodes i opcode)))))
+
+
+(define (comex-decipher unit obj)
+  (cond ((primop? obj)
+         (cond ((primop.foreign obj)
+                => (lambda (name)
+                     (values op/foreign name)))
+               (else
+                (values op/special-literal (primop.external-name obj)))))
+        ((lambda-node? obj)
+         (values op/closure (code-vector-offset obj)))
+        ((not (variable? obj))
+         (values op/literal obj))
+        (else
+         (cond ((not (supported? obj))
+                (values op/free (variable-name obj)))
+               ((lset? obj)
+                (values op/lset (variable-name obj)))
+               ((closure-defined-at-top-level obj)  ; returns closure
+                => (lambda (closure)
+                     (values op/stored-definition
+                             (cons (variable-name obj)
+                                   (cdr (assq closure unit))))))
+               (else
+                (values op/defined (variable-name obj)))))))
+
+
+(define (lset? var)
+  (eq? (support.variant (variable-support var)) support/lset))
+
+
+(define (closure-defined-at-top-level var)
+  (any (lambda (ref)
+         (let ((proc (call-proc (node-parent ref))))
+           (and (eq? (call-arg 2) (node-role ref))
+                (primop-node? proc)
+                (primop.defines-support? (primop-value proc))
+                (let ((node ((call-arg 3) (node-parent ref))))
+                  (if (lambda-node? node)
+                      node
+                      nil)))))
+       (variable-refs var)))
+
+
+(define (cit->lambda closure)
+  (variable-binder (car (closure-members closure))))

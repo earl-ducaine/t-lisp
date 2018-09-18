@@ -1,0 +1,1069 @@
+(OPEN (VAXPRIMOPS VAXBASE)
+      ()
+      ((FIXNUM-POSITIVE? ()
+                         SUPPORT/INTEGRABLE
+                         (LAMBDA P_395
+                                 (() C_393 X_394)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_955
+                                         (())
+                                         0
+                                         (REFERENCE C_393)
+                                         (LITERAL #T))
+                                 (LAMBDA P_956
+                                         (())
+                                         0
+                                         (REFERENCE C_393)
+                                         (LITERAL ()))
+                                 (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                 (LITERAL 0)
+                                 (REFERENCE X_394)))
+       (ALWAYS ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_60
+                       (() K_58 K_59)
+                       0
+                       (REFERENCE K_58)
+                       (LAMBDA P_63
+                               (X_61 K_62)
+                               0
+                               (LAMBDA P_66
+                                       (IGNORE_64)
+                                       0
+                                       (REFERENCE K_62)
+                                       (REFERENCE K_62))
+                               (LITERAL IGNORE))))
+       (*NUMBER-OF-CHAR-CODES* () SUPPORT/CONSTANT (LITERAL 256))
+       (FIXNUM-MIN ()
+                   SUPPORT/INTEGRABLE
+                   (LAMBDA P_376
+                           (() K_373 X_374 Y_375)
+                           2
+                           (PRIMOP VAXBASE CONDITIONAL)
+                           (LAMBDA P_377
+                                   (())
+                                   0
+                                   (REFERENCE K_373)
+                                   (REFERENCE X_374))
+                           (LAMBDA P_378
+                                   (())
+                                   0
+                                   (REFERENCE K_373)
+                                   (REFERENCE Y_375))
+                           (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                           (REFERENCE X_374)
+                           (REFERENCE Y_375)))
+       (BOOLEAN? ()
+                 SUPPORT/INTEGRABLE
+                 (LAMBDA P_49
+                         (() C_47 X_48)
+                         1
+                         (LAMBDA P_656
+                                 (() C_655)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_657
+                                         (())
+                                         0
+                                         (REFERENCE C_655)
+                                         (LITERAL #T))
+                                 (LAMBDA P_658
+                                         (())
+                                         0
+                                         (REFERENCE C_655)
+                                         (LITERAL ()))
+                                 (REFERENCE EQ? VAXPRIMOPS)
+                                 (REFERENCE X_48)
+                                 (LITERAL #T))
+                         (LAMBDA C_596
+                                 (() V_595)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_667
+                                         (())
+                                         0
+                                         (REFERENCE C_47)
+                                         (REFERENCE V_595))
+                                 (LAMBDA P_668
+                                         (())
+                                         2
+                                         (PRIMOP VAXBASE CONDITIONAL)
+                                         (LAMBDA P_661
+                                                 (())
+                                                 0
+                                                 (REFERENCE C_47)
+                                                 (LITERAL #T))
+                                         (LAMBDA P_662
+                                                 (())
+                                                 0
+                                                 (REFERENCE C_47)
+                                                 (LITERAL ()))
+                                         (REFERENCE EQ? VAXPRIMOPS)
+                                         (REFERENCE X_48)
+                                         (LITERAL ()))
+                                 (PRIMOP VAXBASE TEST)
+                                 (PRIMOP VAXBASE TRUE?)
+                                 (REFERENCE V_595))))
+       (CHAR>= ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_478
+                       (() K_475 X_476 Y_477)
+                       1
+                       (LAMBDA P_1024
+                               (() C_1021)
+                               1
+                               (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                               (LAMBDA C_1026
+                                       (() V_1025)
+                                       1
+                                       (PRIMOP VAXPRIMOPS
+                                               MAKE-TYPE-CONVERTER
+                                               -6
+                                               ()
+                                               (*))
+                                       (LAMBDA C_1028
+                                               (() V_1027)
+                                               2
+                                               (PRIMOP VAXBASE CONDITIONAL)
+                                               (LAMBDA P_1029
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1021)
+                                                       (LITERAL #T))
+                                               (LAMBDA P_1030
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1021)
+                                                       (LITERAL ()))
+                                               (REFERENCE FIXNUM-LESS?
+                                                          VAXPRIMOPS)
+                                               (REFERENCE V_1027)
+                                               (REFERENCE V_1025))
+                                       (REFERENCE X_476))
+                               (REFERENCE Y_477))
+                       (LAMBDA C_652
+                               (() V_651)
+                               2
+                               (PRIMOP VAXBASE CONDITIONAL)
+                               (LAMBDA P_1034
+                                       (())
+                                       0
+                                       (REFERENCE K_475)
+                                       (LITERAL ()))
+                               (LAMBDA P_1035
+                                       (())
+                                       0
+                                       (REFERENCE K_475)
+                                       (LITERAL #T))
+                               (PRIMOP VAXBASE TEST)
+                               (PRIMOP VAXBASE TRUE?)
+                               (REFERENCE V_651))))
+       (FIXNUM-NOT-GREATER? ()
+                            SUPPORT/INTEGRABLE
+                            (LAMBDA P_358
+                                    (() K_355 X_356 Y_357)
+                                    2
+                                    (PRIMOP VAXBASE CONDITIONAL)
+                                    (LAMBDA P_907
+                                            (())
+                                            0
+                                            (REFERENCE K_355)
+                                            (LITERAL ()))
+                                    (LAMBDA P_908
+                                            (())
+                                            0
+                                            (REFERENCE K_355)
+                                            (LITERAL #T))
+                                    (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                    (REFERENCE Y_357)
+                                    (REFERENCE X_356)))
+       (FALSE? ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_40
+                       (() K_38 X_39)
+                       2
+                       (PRIMOP VAXBASE CONDITIONAL)
+                       (LAMBDA P_41 (()) 0 (REFERENCE K_38) (LITERAL ()))
+                       (LAMBDA P_42 (()) 0 (REFERENCE K_38) (LITERAL #T))
+                       (PRIMOP VAXBASE TEST)
+                       (PRIMOP VAXBASE TRUE?)
+                       (REFERENCE X_39)))
+       (CHAR= ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_445
+                      (() C_442 X_443 Y_444)
+                      1
+                      (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                      (LAMBDA C_642
+                              (() V_641)
+                              1
+                              (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                              (LAMBDA C_644
+                                      (() V_643)
+                                      2
+                                      (PRIMOP VAXBASE CONDITIONAL)
+                                      (LAMBDA P_990
+                                              (())
+                                              0
+                                              (REFERENCE C_442)
+                                              (LITERAL #T))
+                                      (LAMBDA P_991
+                                              (())
+                                              0
+                                              (REFERENCE C_442)
+                                              (LITERAL ()))
+                                      (REFERENCE FIXNUM-EQUAL? VAXPRIMOPS)
+                                      (REFERENCE V_643)
+                                      (REFERENCE V_641))
+                              (REFERENCE X_443))
+                      (REFERENCE Y_444)))
+       (EOF? ()
+             SUPPORT/INTEGRABLE
+             (LAMBDA P_251
+                     (() C_249 X_250)
+                     2
+                     (PRIMOP VAXBASE CONDITIONAL)
+                     (LAMBDA P_817 (()) 0 (REFERENCE C_249) (LITERAL #T))
+                     (LAMBDA P_818 (()) 0 (REFERENCE C_249) (LITERAL ()))
+                     (REFERENCE EQ? VAXPRIMOPS)
+                     (REFERENCE X_250)
+                     (REFERENCE *EOF* ())))
+       (ENFORCE () SUPPORT/CONSTANT (REFERENCE PROCLAIM ()))
+       (CHAR< ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_454
+                      (() C_451 X_452 Y_453)
+                      1
+                      (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                      (LAMBDA C_646
+                              (() V_645)
+                              1
+                              (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                              (LAMBDA C_648
+                                      (() V_647)
+                                      2
+                                      (PRIMOP VAXBASE CONDITIONAL)
+                                      (LAMBDA P_994
+                                              (())
+                                              0
+                                              (REFERENCE C_451)
+                                              (LITERAL #T))
+                                      (LAMBDA P_995
+                                              (())
+                                              0
+                                              (REFERENCE C_451)
+                                              (LITERAL ()))
+                                      (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                      (REFERENCE V_647)
+                                      (REFERENCE V_645))
+                              (REFERENCE X_452))
+                      (REFERENCE Y_453)))
+       (NULL-LIST? ()
+                   SUPPORT/INTEGRABLE
+                   (LAMBDA P_226
+                           (() K_224 X_225)
+                           2
+                           (PRIMOP VAXBASE CONDITIONAL)
+                           (LAMBDA P_227 (()) 0 (REFERENCE K_224) (LITERAL #T))
+                           (LAMBDA P_228
+                                   (())
+                                   2
+                                   (LAMBDA P_768
+                                           (() C_767)
+                                           2
+                                           (PRIMOP VAXBASE CONDITIONAL)
+                                           (LAMBDA P_769
+                                                   (())
+                                                   2
+                                                   (PRIMOP VAXBASE CONDITIONAL)
+                                                   (REFERENCE C_767)
+                                                   (LAMBDA P_230
+                                                           (())
+                                                           0
+                                                           (REFERENCE K_224)
+                                                           (LITERAL ()))
+                                                   (REFERENCE EQ? VAXPRIMOPS)
+                                                   (REFERENCE X_225)
+                                                   (LITERAL ()))
+                                           (REFERENCE C_767)
+                                           (PRIMOP VAXBASE TEST)
+                                           (PRIMOP VAXPRIMOPS
+                                                   MAKE-TAG-TYPE-PREDICATE
+                                                   3)
+                                           (REFERENCE X_225))
+                                   (LAMBDA P_771
+                                           (())
+                                           1
+                                           (PRIMOP VAXBASE UNDEFINED-EFFECT)
+                                           (REFERENCE K_224)))
+                           (REFERENCE EQ? VAXPRIMOPS)
+                           (REFERENCE X_225)
+                           (LITERAL ())))
+       (STRING-TAIL ()
+                    SUPPORT/INTEGRABLE
+                    (LAMBDA P_313
+                            (() K_311 S_312)
+                            1
+                            (REFERENCE CHOPY ())
+                            (LAMBDA C_624
+                                    (() V_623)
+                                    1
+                                    (REFERENCE STRING-TAIL! ())
+                                    (REFERENCE K_311)
+                                    (REFERENCE V_623))
+                            (REFERENCE S_312)))
+       (CHECK-ARG ()
+                  SUPPORT/INTEGRABLE
+                  (LAMBDA P_184
+                          (() K_180 TYPE_181 OBJ_182 FN_183)
+                          0
+                          (LAMBDA P_187
+                                  (IGNORE_185)
+                                  1
+                                  (REFERENCE TYPE_181)
+                                  (LAMBDA C_602
+                                          (() V_601)
+                                          2
+                                          (PRIMOP VAXBASE CONDITIONAL)
+                                          (LAMBDA P_188
+                                                  (())
+                                                  0
+                                                  (REFERENCE K_180)
+                                                  (REFERENCE OBJ_182))
+                                          (LAMBDA P_189
+                                                  (())
+                                                  1
+                                                  (PRIMOP VAXBASE
+                                                          UNDEFINED-EFFECT)
+                                                  (REFERENCE K_180))
+                                          (PRIMOP VAXBASE TEST)
+                                          (PRIMOP VAXBASE TRUE?)
+                                          (REFERENCE V_601))
+                                  (REFERENCE OBJ_182))
+                          (LITERAL IGNORE)))
+       (ATOM? ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_209
+                      (() K_207 X_208)
+                      2
+                      (LAMBDA P_717
+                              (() C_716)
+                              2
+                              (PRIMOP VAXBASE CONDITIONAL)
+                              (LAMBDA P_678
+                                      (())
+                                      2
+                                      (PRIMOP VAXBASE CONDITIONAL)
+                                      (REFERENCE C_716)
+                                      (LAMBDA P_713
+                                              (())
+                                              0
+                                              (REFERENCE K_207)
+                                              (LITERAL ()))
+                                      (REFERENCE EQ? VAXPRIMOPS)
+                                      (REFERENCE X_208)
+                                      (LITERAL ()))
+                              (REFERENCE C_716)
+                              (PRIMOP VAXBASE TEST)
+                              (PRIMOP VAXPRIMOPS MAKE-TAG-TYPE-PREDICATE 3)
+                              (REFERENCE X_208))
+                      (LAMBDA P_714 (()) 0 (REFERENCE K_207) (LITERAL #T))))
+       (NEQ? ()
+             SUPPORT/INTEGRABLE
+             (LAMBDA P_295
+                     (() K_292 X_293 Y_294)
+                     2
+                     (PRIMOP VAXBASE CONDITIONAL)
+                     (LAMBDA P_839 (()) 0 (REFERENCE K_292) (LITERAL ()))
+                     (LAMBDA P_840 (()) 0 (REFERENCE K_292) (LITERAL #T))
+                     (REFERENCE EQ? VAXPRIMOPS)
+                     (REFERENCE X_293)
+                     (REFERENCE Y_294)))
+       (PROCLAIM ()
+                 SUPPORT/INTEGRABLE
+                 (LAMBDA P_172
+                         (() K_169 TYPE_170 OBJ_171)
+                         1
+                         (REFERENCE TYPE_170)
+                         (LAMBDA C_600
+                                 (() V_599)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_173
+                                         (())
+                                         0
+                                         (REFERENCE K_169)
+                                         (REFERENCE OBJ_171))
+                                 (LAMBDA P_174
+                                         (())
+                                         1
+                                         (PRIMOP VAXBASE UNDEFINED-EFFECT)
+                                         (REFERENCE K_169))
+                                 (PRIMOP VAXBASE TEST)
+                                 (PRIMOP VAXBASE TRUE?)
+                                 (REFERENCE V_599))
+                         (REFERENCE OBJ_171)))
+       (IDENTITY ()
+                 SUPPORT/INTEGRABLE
+                 (LAMBDA P_144
+                         (() K_142 X_143)
+                         0
+                         (REFERENCE K_142)
+                         (REFERENCE X_143)))
+       (MEMQ? ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_287
+                      (() K_284 OBJ_285 LIST_286)
+                      1
+                      (REFERENCE MEM ())
+                      (LAMBDA C_829
+                              (() V_828)
+                              2
+                              (PRIMOP VAXBASE CONDITIONAL)
+                              (LAMBDA P_830
+                                      (())
+                                      0
+                                      (REFERENCE K_284)
+                                      (LITERAL #T))
+                              (LAMBDA P_831
+                                      (())
+                                      0
+                                      (REFERENCE K_284)
+                                      (LITERAL ()))
+                              (PRIMOP VAXBASE TEST)
+                              (PRIMOP VAXBASE TRUE?)
+                              (REFERENCE V_828))
+                      (REFERENCE EQ? VAXPRIMOPS)
+                      (REFERENCE OBJ_285)
+                      (REFERENCE LIST_286)))
+       (FIXNUM-GREATER? ()
+                        SUPPORT/INTEGRABLE
+                        (LAMBDA P_332
+                                (() C_329 X_330 Y_331)
+                                2
+                                (PRIMOP VAXBASE CONDITIONAL)
+                                (LAMBDA P_866
+                                        (())
+                                        0
+                                        (REFERENCE C_329)
+                                        (LITERAL #T))
+                                (LAMBDA P_867
+                                        (())
+                                        0
+                                        (REFERENCE C_329)
+                                        (LITERAL ()))
+                                (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                (REFERENCE Y_331)
+                                (REFERENCE X_330)))
+       (NIL () SUPPORT/CONSTANT (LITERAL ()))
+       (PROJN ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_133
+                      (() K_131 N_132)
+                      0
+                      (REFERENCE K_131)
+                      (LAMBDA P_136
+                              (ARGLIST_134 K_135)
+                              1
+                              (REFERENCE NTH ())
+                              (REFERENCE K_135)
+                              (REFERENCE ARGLIST_134)
+                              (REFERENCE N_132))))
+       (MEMQ ()
+             SUPPORT/INTEGRABLE
+             (LAMBDA P_279
+                     (() K_276 OBJ_277 LIST_278)
+                     1
+                     (REFERENCE MEM ())
+                     (REFERENCE K_276)
+                     (REFERENCE EQ? VAXPRIMOPS)
+                     (REFERENCE OBJ_277)
+                     (REFERENCE LIST_278)))
+       (PROJ2 ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_105
+                      (REST_100 K_101 X_102 Y_103 Z_104)
+                      0
+                      (LAMBDA P_108
+                              (IGNORE_106)
+                              0
+                              (REFERENCE K_101)
+                              (REFERENCE Z_104))
+                      (LITERAL IGNORE)))
+       (FIXNUM-NOT-POSITIVE? ()
+                             SUPPORT/INTEGRABLE
+                             (LAMBDA P_416
+                                     (() K_414 X_415)
+                                     2
+                                     (PRIMOP VAXBASE CONDITIONAL)
+                                     (LAMBDA P_969
+                                             (())
+                                             0
+                                             (REFERENCE K_414)
+                                             (LITERAL ()))
+                                     (LAMBDA P_970
+                                             (())
+                                             0
+                                             (REFERENCE K_414)
+                                             (LITERAL #T))
+                                     (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                     (LITERAL 0)
+                                     (REFERENCE X_415)))
+       (FIXNUM-NOT-LESS? ()
+                         SUPPORT/INTEGRABLE
+                         (LAMBDA P_350
+                                 (() K_347 X_348 Y_349)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_891
+                                         (())
+                                         0
+                                         (REFERENCE K_347)
+                                         (LITERAL ()))
+                                 (LAMBDA P_892
+                                         (())
+                                         0
+                                         (REFERENCE K_347)
+                                         (LITERAL #T))
+                                 (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                 (REFERENCE X_348)
+                                 (REFERENCE Y_349)))
+       (PROJ0 ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_76
+                      (REST_73 K_74 X_75)
+                      0
+                      (LAMBDA P_79
+                              (IGNORE_77)
+                              0
+                              (REFERENCE K_74)
+                              (REFERENCE X_75))
+                      (LITERAL IGNORE)))
+       (FIXNUM-NEGATIVE? ()
+                         SUPPORT/INTEGRABLE
+                         (LAMBDA P_402
+                                 (() C_400 X_401)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_959
+                                         (())
+                                         0
+                                         (REFERENCE C_400)
+                                         (LITERAL #T))
+                                 (LAMBDA P_960
+                                         (())
+                                         0
+                                         (REFERENCE C_400)
+                                         (LITERAL ()))
+                                 (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                 (REFERENCE X_401)
+                                 (LITERAL 0)))
+       (*STRING-LENGTH-LIMIT* () SUPPORT/CONSTANT (LITERAL 32767))
+       (T () SUPPORT/CONSTANT (LITERAL #T))
+       (CHARN= ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_470
+                       (() K_467 X_468 Y_469)
+                       1
+                       (LAMBDA P_1009
+                               (() C_1006)
+                               1
+                               (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                               (LAMBDA C_1011
+                                       (() V_1010)
+                                       1
+                                       (PRIMOP VAXPRIMOPS
+                                               MAKE-TYPE-CONVERTER
+                                               -6
+                                               ()
+                                               (*))
+                                       (LAMBDA C_1013
+                                               (() V_1012)
+                                               2
+                                               (PRIMOP VAXBASE CONDITIONAL)
+                                               (LAMBDA P_1014
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1006)
+                                                       (LITERAL #T))
+                                               (LAMBDA P_1015
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1006)
+                                                       (LITERAL ()))
+                                               (REFERENCE FIXNUM-EQUAL?
+                                                          VAXPRIMOPS)
+                                               (REFERENCE V_1012)
+                                               (REFERENCE V_1010))
+                                       (REFERENCE X_468))
+                               (REFERENCE Y_469))
+                       (LAMBDA C_650
+                               (() V_649)
+                               2
+                               (PRIMOP VAXBASE CONDITIONAL)
+                               (LAMBDA P_1019
+                                       (())
+                                       0
+                                       (REFERENCE K_467)
+                                       (LITERAL ()))
+                               (LAMBDA P_1020
+                                       (())
+                                       0
+                                       (REFERENCE K_467)
+                                       (LITERAL #T))
+                               (PRIMOP VAXBASE TEST)
+                               (PRIMOP VAXBASE TRUE?)
+                               (REFERENCE V_649))))
+       (FIXNUM-MAX ()
+                   SUPPORT/INTEGRABLE
+                   (LAMBDA P_386
+                           (() K_383 X_384 Y_385)
+                           2
+                           (PRIMOP VAXBASE CONDITIONAL)
+                           (LAMBDA P_387
+                                   (())
+                                   0
+                                   (REFERENCE K_383)
+                                   (REFERENCE X_384))
+                           (LAMBDA P_388
+                                   (())
+                                   0
+                                   (REFERENCE K_383)
+                                   (REFERENCE Y_385))
+                           (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                           (REFERENCE Y_385)
+                           (REFERENCE X_384)))
+       (OR-AUX ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_162
+                       (() K_159 P_160 R_161)
+                       2
+                       (PRIMOP VAXBASE CONDITIONAL)
+                       (LAMBDA P_163 (()) 0 (REFERENCE K_159) (REFERENCE P_160))
+                       (LAMBDA P_164 (()) 1 (REFERENCE R_161) (REFERENCE K_159))
+                       (PRIMOP VAXBASE TEST)
+                       (PRIMOP VAXBASE TRUE?)
+                       (REFERENCE P_160)))
+       (*NULL-CHAR* () SUPPORT/CONSTANT (LITERAL #\NULL))
+       (FIXNUM-ABS ()
+                   SUPPORT/INTEGRABLE
+                   (LAMBDA P_365
+                           (() K_363 N_364)
+                           2
+                           (PRIMOP VAXBASE CONDITIONAL)
+                           (LAMBDA P_366
+                                   (())
+                                   1
+                                   (REFERENCE FIXNUM-NEGATE ())
+                                   (REFERENCE K_363)
+                                   (REFERENCE N_364))
+                           (LAMBDA P_368
+                                   (())
+                                   0
+                                   (REFERENCE K_363)
+                                   (REFERENCE N_364))
+                           (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                           (REFERENCE N_364)
+                           (LITERAL 0)))
+       (NEWLINE? ()
+                 SUPPORT/INTEGRABLE
+                 (LAMBDA P_259
+                         (() C_257 C_258)
+                         2
+                         (PRIMOP VAXBASE CONDITIONAL)
+                         (LAMBDA P_821 (()) 0 (REFERENCE C_257) (LITERAL #T))
+                         (LAMBDA P_822 (()) 0 (REFERENCE C_257) (LITERAL ()))
+                         (REFERENCE EQ? VAXPRIMOPS)
+                         (REFERENCE C_258)
+                         (LITERAL #\NEWLINE)))
+       (NOT ()
+            SUPPORT/INTEGRABLE
+            (LAMBDA P_31
+                    (() K_29 X_30)
+                    2
+                    (PRIMOP VAXBASE CONDITIONAL)
+                    (LAMBDA P_32 (()) 0 (REFERENCE K_29) (LITERAL ()))
+                    (LAMBDA P_33 (()) 0 (REFERENCE K_29) (LITERAL #T))
+                    (PRIMOP VAXBASE TEST)
+                    (PRIMOP VAXBASE TRUE?)
+                    (REFERENCE X_30)))
+       (FIXNUM-NOT-NEGATIVE? ()
+                             SUPPORT/INTEGRABLE
+                             (LAMBDA P_422
+                                     (() K_420 X_421)
+                                     2
+                                     (PRIMOP VAXBASE CONDITIONAL)
+                                     (LAMBDA P_975
+                                             (())
+                                             0
+                                             (REFERENCE K_420)
+                                             (LITERAL ()))
+                                     (LAMBDA P_976
+                                             (())
+                                             0
+                                             (REFERENCE K_420)
+                                             (LITERAL #T))
+                                     (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                     (REFERENCE X_421)
+                                     (LITERAL 0)))
+       (CHAR<= ()
+               SUPPORT/INTEGRABLE
+               (LAMBDA P_486
+                       (() K_483 X_484 Y_485)
+                       1
+                       (LAMBDA P_1039
+                               (() C_1036)
+                               1
+                               (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                               (LAMBDA C_1041
+                                       (() V_1040)
+                                       1
+                                       (PRIMOP VAXPRIMOPS
+                                               MAKE-TYPE-CONVERTER
+                                               -6
+                                               ()
+                                               (*))
+                                       (LAMBDA C_1043
+                                               (() V_1042)
+                                               2
+                                               (PRIMOP VAXBASE CONDITIONAL)
+                                               (LAMBDA P_1044
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1036)
+                                                       (LITERAL #T))
+                                               (LAMBDA P_1045
+                                                       (())
+                                                       0
+                                                       (REFERENCE C_1036)
+                                                       (LITERAL ()))
+                                               (REFERENCE FIXNUM-LESS?
+                                                          VAXPRIMOPS)
+                                               (REFERENCE V_1042)
+                                               (REFERENCE V_1040))
+                                       (REFERENCE Y_485))
+                               (REFERENCE X_484))
+                       (LAMBDA C_654
+                               (() V_653)
+                               2
+                               (PRIMOP VAXBASE CONDITIONAL)
+                               (LAMBDA P_1049
+                                       (())
+                                       0
+                                       (REFERENCE K_483)
+                                       (LITERAL ()))
+                               (LAMBDA P_1050
+                                       (())
+                                       0
+                                       (REFERENCE K_483)
+                                       (LITERAL #T))
+                               (PRIMOP VAXBASE TEST)
+                               (PRIMOP VAXBASE TRUE?)
+                               (REFERENCE V_653))))
+       (STRING-NTHTAIL ()
+                       SUPPORT/INTEGRABLE
+                       (LAMBDA P_323
+                               (() K_320 S_321 N_322)
+                               1
+                               (REFERENCE CHOPY ())
+                               (LAMBDA C_626
+                                       (() V_625)
+                                       1
+                                       (REFERENCE STRING-NTHTAIL! ())
+                                       (REFERENCE K_320)
+                                       (REFERENCE V_625)
+                                       (REFERENCE N_322))
+                               (REFERENCE S_321)))
+       (FIXNUM-NOT-EQUAL? ()
+                          SUPPORT/INTEGRABLE
+                          (LAMBDA P_341
+                                  (() K_338 X_339 Y_340)
+                                  2
+                                  (PRIMOP VAXBASE CONDITIONAL)
+                                  (LAMBDA P_875
+                                          (())
+                                          0
+                                          (REFERENCE K_338)
+                                          (LITERAL ()))
+                                  (LAMBDA P_876
+                                          (())
+                                          0
+                                          (REFERENCE K_338)
+                                          (LITERAL #T))
+                                  (REFERENCE FIXNUM-EQUAL? VAXPRIMOPS)
+                                  (REFERENCE X_339)
+                                  (REFERENCE Y_340)))
+       (PAIR? ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_216
+                      (() K_214 X_215)
+                      2
+                      (PRIMOP VAXBASE CONDITIONAL)
+                      (LAMBDA P_217
+                              (())
+                              2
+                              (PRIMOP VAXBASE CONDITIONAL)
+                              (LAMBDA P_743
+                                      (())
+                                      0
+                                      (REFERENCE K_214)
+                                      (LITERAL ()))
+                              (LAMBDA P_744
+                                      (())
+                                      0
+                                      (REFERENCE K_214)
+                                      (LITERAL #T))
+                              (REFERENCE EQ? VAXPRIMOPS)
+                              (REFERENCE X_215)
+                              (LITERAL ()))
+                      (LAMBDA P_218 (()) 0 (REFERENCE K_214) (LITERAL ()))
+                      (PRIMOP VAXBASE TEST)
+                      (PRIMOP VAXPRIMOPS MAKE-TAG-TYPE-PREDICATE 3)
+                      (REFERENCE X_215)))
+       (CHAR> ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_462
+                      (() C_459 X_460 Y_461)
+                      1
+                      (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                      (LAMBDA C_1001
+                              (() V_1000)
+                              1
+                              (PRIMOP VAXPRIMOPS MAKE-TYPE-CONVERTER -6 () (*))
+                              (LAMBDA C_1003
+                                      (() V_1002)
+                                      2
+                                      (PRIMOP VAXBASE CONDITIONAL)
+                                      (LAMBDA P_1004
+                                              (())
+                                              0
+                                              (REFERENCE C_459)
+                                              (LITERAL #T))
+                                      (LAMBDA P_1005
+                                              (())
+                                              0
+                                              (REFERENCE C_459)
+                                              (LITERAL ()))
+                                      (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                      (REFERENCE V_1002)
+                                      (REFERENCE V_1000))
+                              (REFERENCE Y_461))
+                      (REFERENCE X_460)))
+       (NULL? ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_202
+                      (() C_200 X_201)
+                      2
+                      (PRIMOP VAXBASE CONDITIONAL)
+                      (LAMBDA P_671 (()) 0 (REFERENCE C_200) (LITERAL #T))
+                      (LAMBDA P_672 (()) 0 (REFERENCE C_200) (LITERAL ()))
+                      (REFERENCE EQ? VAXPRIMOPS)
+                      (REFERENCE X_201)
+                      (LITERAL ())))
+       (COND-=>-AUX ()
+                    SUPPORT/INTEGRABLE
+                    (LAMBDA P_153
+                            (() K_149 P_150 F_151 A_152)
+                            2
+                            (PRIMOP VAXBASE CONDITIONAL)
+                            (LAMBDA P_154
+                                    (())
+                                    1
+                                    (REFERENCE F_151)
+                                    (LAMBDA C_598
+                                            (() V_597)
+                                            1
+                                            (REFERENCE V_597)
+                                            (REFERENCE K_149)
+                                            (REFERENCE P_150)))
+                            (LAMBDA P_155
+                                    (())
+                                    1
+                                    (REFERENCE A_152)
+                                    (REFERENCE K_149))
+                            (PRIMOP VAXBASE TEST)
+                            (PRIMOP VAXBASE TRUE?)
+                            (REFERENCE P_150)))
+       (NON-EMPTY-STRING? ()
+                          SUPPORT/INTEGRABLE
+                          (LAMBDA P_302
+                                  (() K_300 X_301)
+                                  2
+                                  (PRIMOP VAXBASE CONDITIONAL)
+                                  (LAMBDA P_303
+                                          (())
+                                          1
+                                          (REFERENCE STRING-EMPTY? ())
+                                          (LAMBDA C_622
+                                                  (() V_621)
+                                                  2
+                                                  (PRIMOP VAXBASE CONDITIONAL)
+                                                  (LAMBDA P_862
+                                                          (())
+                                                          0
+                                                          (REFERENCE K_300)
+                                                          (LITERAL ()))
+                                                  (LAMBDA P_863
+                                                          (())
+                                                          0
+                                                          (REFERENCE K_300)
+                                                          (LITERAL #T))
+                                                  (PRIMOP VAXBASE TEST)
+                                                  (PRIMOP VAXBASE TRUE?)
+                                                  (REFERENCE V_621))
+                                          (REFERENCE X_301))
+                                  (LAMBDA P_305
+                                          (())
+                                          0
+                                          (REFERENCE K_300)
+                                          (LITERAL ()))
+                                  (PRIMOP VAXBASE TEST)
+                                  (PRIMOP VAXPRIMOPS
+                                          MAKE-HEADER-TYPE-PREDICATE
+                                          41)
+                                  (REFERENCE X_301)))
+       (NONNEGATIVE-FIXNUM? ()
+                            SUPPORT/INTEGRABLE
+                            (LAMBDA P_240
+                                    (() K_238 X_239)
+                                    2
+                                    (PRIMOP VAXBASE CONDITIONAL)
+                                    (LAMBDA P_241
+                                            (())
+                                            2
+                                            (PRIMOP VAXBASE CONDITIONAL)
+                                            (LAMBDA P_806
+                                                    (())
+                                                    0
+                                                    (REFERENCE K_238)
+                                                    (LITERAL ()))
+                                            (LAMBDA P_807
+                                                    (())
+                                                    0
+                                                    (REFERENCE K_238)
+                                                    (LITERAL #T))
+                                            (REFERENCE FIXNUM-LESS? VAXPRIMOPS)
+                                            (REFERENCE X_239)
+                                            (LITERAL 0))
+                                    (LAMBDA P_243
+                                            (())
+                                            0
+                                            (REFERENCE K_238)
+                                            (LITERAL ()))
+                                    (PRIMOP VAXBASE TEST)
+                                    (PRIMOP VAXPRIMOPS
+                                            MAKE-TAG-TYPE-PREDICATE
+                                            0)
+                                    (REFERENCE X_239)))
+       (ELSE () SUPPORT/CONSTANT (LITERAL #T))
+       (FIXNUM-EVEN? ()
+                     SUPPORT/INTEGRABLE
+                     (LAMBDA P_436
+                             (() K_434 X_435)
+                             1
+                             (REFERENCE FIXNUM-ODD? ())
+                             (LAMBDA C_640
+                                     (() V_639)
+                                     2
+                                     (PRIMOP VAXBASE CONDITIONAL)
+                                     (LAMBDA P_986
+                                             (())
+                                             0
+                                             (REFERENCE K_434)
+                                             (LITERAL ()))
+                                     (LAMBDA P_987
+                                             (())
+                                             0
+                                             (REFERENCE K_434)
+                                             (LITERAL #T))
+                                     (PRIMOP VAXBASE TEST)
+                                     (PRIMOP VAXBASE TRUE?)
+                                     (REFERENCE V_639))
+                             (REFERENCE X_435)))
+       (PROJ3 ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_121
+                      (REST_115 K_116 X_117 Y_118 Z_119 W_120)
+                      0
+                      (LAMBDA P_124
+                              (IGNORE_122)
+                              0
+                              (REFERENCE K_116)
+                              (REFERENCE W_120))
+                      (LITERAL IGNORE)))
+       (FIXNUM-NOT-ZERO? ()
+                         SUPPORT/INTEGRABLE
+                         (LAMBDA P_429
+                                 (() K_427 X_428)
+                                 2
+                                 (PRIMOP VAXBASE CONDITIONAL)
+                                 (LAMBDA P_981
+                                         (())
+                                         0
+                                         (REFERENCE K_427)
+                                         (LITERAL ()))
+                                 (LAMBDA P_982
+                                         (())
+                                         0
+                                         (REFERENCE K_427)
+                                         (LITERAL #T))
+                                 (REFERENCE FIXNUM-EQUAL? VAXPRIMOPS)
+                                 (REFERENCE X_428)
+                                 (LITERAL 0)))
+       (MEM? ()
+             SUPPORT/INTEGRABLE
+             (LAMBDA P_268
+                     (() K_264 PRED_265 OBJ_266 LIST_267)
+                     1
+                     (REFERENCE MEM ())
+                     (LAMBDA C_616
+                             (() V_615)
+                             2
+                             (PRIMOP VAXBASE CONDITIONAL)
+                             (LAMBDA P_269
+                                     (())
+                                     0
+                                     (REFERENCE K_264)
+                                     (LITERAL #T))
+                             (LAMBDA P_270
+                                     (())
+                                     0
+                                     (REFERENCE K_264)
+                                     (LITERAL ()))
+                             (PRIMOP VAXBASE TEST)
+                             (PRIMOP VAXBASE TRUE?)
+                             (REFERENCE V_615))
+                     (REFERENCE PRED_265)
+                     (REFERENCE OBJ_266)
+                     (REFERENCE LIST_267)))
+       (PROJ1 ()
+              SUPPORT/INTEGRABLE
+              (LAMBDA P_90
+                      (REST_86 K_87 X_88 Y_89)
+                      0
+                      (LAMBDA P_93
+                              (IGNORE_91)
+                              0
+                              (REFERENCE K_87)
+                              (REFERENCE Y_89))
+                      (LITERAL IGNORE)))
+       (FIXNUM-ZERO? ()
+                     SUPPORT/INTEGRABLE
+                     (LAMBDA P_409
+                             (() C_407 X_408)
+                             2
+                             (PRIMOP VAXBASE CONDITIONAL)
+                             (LAMBDA P_963
+                                     (())
+                                     0
+                                     (REFERENCE C_407)
+                                     (LITERAL #T))
+                             (LAMBDA P_964
+                                     (())
+                                     0
+                                     (REFERENCE C_407)
+                                     (LITERAL ()))
+                             (REFERENCE FIXNUM-EQUAL? VAXPRIMOPS)
+                             (REFERENCE X_408)
+                             (LITERAL 0)))))

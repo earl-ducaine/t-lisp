@@ -1,0 +1,16 @@
+
+
+MC68000     .
+VAX         .
+Titan       .
+IBM 801/802 .
+Pyramid     .
+Ridge       .
+DEC-20      .
+370 - ???   .
+
+Parameters (?)
+
+    Two-address  vs.  three-address
+    Load/store  vs.  move
+    Addressing modes in ALU ops or not
