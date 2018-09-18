@@ -1,0 +1,178 @@
+*** Wed Aug 29 17:59:03 1984, "/t/t2.9.x/comp/cmacros.t", rees ***
+*** Wed Aug 29 17:58:29 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Flushed %DEFINE-SYNTAX in favor of (*DEFINE-SYNTAX (THE-ENVIRONMENT) ...).
+
+*** Wed Aug 29 13:59:20 1984, "/t/t2.9.x/comp/optimize.t", rees ***
+Fixed bug in ERASE-NODES.
+
+*** Thu Aug 23 11:40:11 1984, "/t/t2.9.x/comp/compile.t", rees ***
+(RESET) -> (*ABORT* NIL)
+
+*** Fri Aug  3 13:17:18 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Useless changes to SET-MACRO-DEFINITION.
+
+*** Thu Aug  2 17:16:30 1984, "/t/t2.9.x/comp/optimize.t", rees ***
+Added DEFINE-SOURCE-REWRITE macro, and using it, an optimizer for VALUES.
+
+*** Thu Aug  2 17:16:09 1984, "/t/t2.9.x/comp/targetize.t", rees ***
+Flushed spare tn conflict warning in SETSPARETN.
+
+*** Thu Jul 26 11:16:51 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Flushed definition of CEVAL.
+
+*** Thu Jul 26 11:14:54 1984, "/t/t2.9.x/comp/sysgen.t", rees ***
+No more dependence on CEVAL.
+
+----- T 2.9 (178) -----
+
+*** Wed Jul 25 17:46:54 1984, "/t/t2.9.x/comp/change.log", rees ***
+Reversed change log entries.
+
+*** Mon Jul 23 21:25:16 1984, "/t/t2.9.x/comp/random.t", rees ***
+Import DEFAULT-METHOD.
+
+*** Mon Jul 23 21:24:24 1984, "/t/t2.9.x/comp/vaxgen.t", rees ***
+Flushed PUSH-STACK-LAMBDA.
+
+*** Mon Jul 23 21:22:56 1984, "/t/t2.9.x/comp/targetize.t", rees ***
+(BIND ((NEWFON ...)) ...)  ->  (LET ((NEWFON ...)) ...)
+
+*** Mon Jul 23 21:17:38 1984, "/t/t2.9.x/comp/lap.t", rees ***
+Fix TRANSDUCE-LAP-STREAM, for what that's worth...
+
+*** Mon Jul 23 21:14:21 1984, "/t/t2.9.x/comp/lap.t", rees ***
+Flushed the TPROC operand macro.
+
+*** Mon Jul 23 21:12:53 1984, "/t/t2.9.x/comp/generate.t", rees ***
+Flush the STACK-LAMBDA nonsense
+
+*** Thu Jul 19 16:00:03 1984, "/t/t2.9.x/comp/tcsystem.t", rees ***
+Import REINITIALIZE-SYSTEM from impl env.
+
+*** Tue Jul 17 10:12:50 1984, "/t/t2.9.x/comp/tcsystem.t", rees ***
+Import *TRUE-OBJECT* from impl env.
+
+*** Fri Jul 13 13:33:34 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+% -> ~% in PRE-TRANSDUCE
+
+*** Fri Jul 13 11:09:33 1984, "/t/t2.9.x/comp/gmax.t", rees ***
+* ** Fri Jul 13 11:11:53 1984, "/t/t2.9.x/comp/vaxgen.t", rees ***
+* ** Fri Jul 13 11:12:49 1984, "/t/t2.9.x/comp/vaxemit.t", rees ***
+* ** Fri Jul 13 11:13:43 1984, "/t/t2.9.x/comp/unemit.t", rees ***
+SYMBOLCONC -> CONCATENATE-SYMBOL
+
+*** Fri Jul 13 10:08:22 1984, "/t/t2.9.x/comp/random.t", rees ***
+WARN-MENTION-HANDLER calls IDENTIFICATION on the things in the *WHERE*
+list.
+
+*** Fri Jul 13 10:07:43 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+ALPHA-ATOM calls ATOM-EXPANDER.
+
+*** Fri Jul 13 10:05:07 1984, "/t/t2.9.x/comp/tcsystem.t", rees ***
+Import ATOM-EXPANDER from impl env.
+
+*** Wed Jul 11 22:55:55 1984, "/t/t2.9.x/comp/random.t", rees ***
+Fixed SUPPORT-ENV-ENTRY.
+
+*** Wed Jul 11 22:41:28 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+Fix PROCESS-HERALD.
+
+*** Wed Jul 11 22:26:33 1984, "/t/t2.9.x/comp/envinit.t", rees ***
+*TEST-COMPILE-NAMESPACE* now LSET, not DEFINE'd
+
+*** Wed Jul 11 14:00:55 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+Fixes to binding of *SYNTAX-TABLE*.
+
+*** Tue Jul 10 19:25:44 1984, "/t/t2.9.x/comp/tcsystem.t", rees ***
+Import ASSEMBLE from the implementation env.
+
+*** Tue Jul 10 19:24:44 1984, "/t/t2.9.x/comp/tcsystem.t", rees ***
+Export SUPPORT-ENV-ENTRY.
+
+*** Tue Jul 10 19:22:19 1984, "/t/t2.9.x/comp/tcompenv.t", rees ***
+Flushed GENSYM.
+
+*** Tue Jul 10 19:19:23 1984, "/t/t2.9.x/comp/common.t", rees ***
+SYMBOLCONC -> CONCATENATE-SYMBOL
+
+*** Tue Jul 10 19:09:45 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+Assembles the file now!
+
+*** Tue Jul 10 17:26:11 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+ALPHA-TOPLEVEL now binds *NAMESPACE* to be an env inferior to
+*STANDARD-SUPPORT-ENV*.  Could this possibly be right?
+
+*** Tue Jul 10 17:11:23 1984, "/t/t2.9.x/comp/random.t", rees ***
+SUPPORT-ENV-ENTRY.
+
+*** Tue Jul 10 15:52:41 1984, "/t/t2.9.x/comp/vmsemit.t", rees ***
+* ** Tue Jul 10 15:55:18 1984, "/t/t2.9.x/comp/machax.t", rees ***
+Flushed an IF-MACLISP.
+
+*** Tue Jul 10 15:49:45 1984, "/t/t2.9.x/comp/vaxemit.t", rees ***
+Flushed an IF-MACLISP and a SETQ.  Upped TARGET:MAX-FIXNUM from 100000 to
+what it should have been all along.  (The computation involves bignum
+arithmetic.)
+
+*** Tue Jul 10 15:46:54 1984, "/t/t2.9.x/comp/compile.t", rees ***
+Flushed an occurrence of IF-MACLISP.  Changed a D0 to a DO.
+
+*** Tue Jul 10 15:43:00 1984, "/t/t2.9.x/comp/tcompenv.t", rees ***
+Doesn't export IF-MACLISP or FUNCALL to the scratch syntax table any more.
+
+*** Tue Jul 10 10:17:44 1984, "/t/t2.9.x/comp/random.t", rees ***
+Improvements... flushed MAKE-BASIC-NAMESPACE and MAKE-COMPOUND-NAMESPACE.
+Other randomness.
+
+*** Tue Jul 10 09:47:20 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+No more missing-HERALD warning message.
+COMPILE-FILE and MAYBE-COMPILE-FILE now take three optional arguments:
+syntax table, support environment, and read table.
+
+*** Fri Jul  6 21:39:20 1984, "/t/t2.9.x/comp/random.t", rees ***
+Changed support env implementation to use tables instead of property lists.
+
+*** Fri Jun 29 19:00:14 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+SET-VAR -> SET-VARIABLE-VALUE, DEFINE-VAR -> DEFINE-VARIABLE-VALUE
+
+*** Fri Jun 29 18:46:01 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Reinstated VAR special form as VARIABLE-VALUE.
+
+*** Fri Jun 29 14:36:25 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Fixed (IF X Y) to turn into (IF X Y 0) instead of (IF X Y ()) [which was
+producing warnings about ()'s in evaluated positions].
+
+*** Wed Jun 27 21:44:34 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Reserved word/procedure call ambiguity now handled a little more
+intelligently.
+
+*** Wed Jun 27 21:35:18 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Compiling () as an expression will now produce a warning.
+
+*** Wed Jun 27 20:13:01 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+PROCESS-HERALD writes (COMMENT (HERALDED-FILENAME ...)) to the support
+file.
+
+*** Wed Jun 27 20:08:02 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+(COMMENT (SOURCE-FILENAME ...)) is now written to the support file.
+COMMENT forms are now ignored by LOAD-SUPPORT.
+
+*** Wed Jun 27 20:06:14 1984, "/t/t2.9.x/comp/random.t", rees ***
+Fixed WARN so that it writes to the terminal even if *NOISY?* is false.
+
+*** Tue Jun 26 19:04:22 1984, "/t/t2.9.x/comp/transduce.t", rees ***
+Fixed the overflowing comment line problem.
+
+*** Tue Jun 26 18:32:49 1984, "/t/t2.9.x/comp/optimize.t", rees ***
+Fixed inclomplete node erasure in META-CALL-EXIT.
+
+*** Tue Jun 26 18:31:52 1984, "/t/t2.9.x/comp/alphatize.t", rees ***
+Fixed SEXPRFY so that (CATCH () ...) will sexprfy correctly.
+
+*** Tue Jun 26 18:29:42 1984, "/t/t2.9.x/comp/closure.t", rees ***
+Fixed CONSENV-LOOKUP - maybe the "environment lookup lost big" problems
+will go away now!"
+
+*** Tue Jun 26 18:06:01 1984, "/t/t2.9.x/comp/random.t", rees ***
+Fixed MAYBE-CRAWL-COMPONENT in light of new operation punt protocol.
+Made nodes handle DISCLOSE, therefore making CRAWL's P command useful.

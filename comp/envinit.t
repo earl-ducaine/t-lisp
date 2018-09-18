@@ -1,0 +1,39 @@
+(HERALD (TCOMP ENVINIT T 23))
+
+;;; Copyright (c) 1983, 1984 Yale University
+
+(DEFINE *RAW-SUPPORT-ENV*
+  (MAKE-EMPTY-SUPPORT-ENV '*RAW-SUPPORT-ENV*))
+
+(DEFINE *PRIMOP-NAMESPACE* *RAW-SUPPORT-ENV*)    ;older name
+(DEFINE *SYSTEM-NAMESPACE* *RAW-SUPPORT-ENV*)    ;older name
+
+(DEFINE *STANDARD-SUPPORT-ENV*
+  (MAKE-SUPPORT-ENV *RAW-SUPPORT-ENV* '*STANDARD-SUPPORT-ENV*))
+
+(DEFINE *STANDARD-NAMESPACE* *STANDARD-SUPPORT-ENV*)    ;older name
+
+(LSET *TEST-COMPILE-NAMESPACE*         ;Testbed
+  (MAKE-SUPPORT-ENV *STANDARD-SUPPORT-ENV* '*TEST-COMPILE-NAMESPACE*))
+
+(LSET *ENV-BASES*
+      (LIST (CONS '()    *RAW-SUPPORT-ENV*)
+            (CONS 'T     *STANDARD-SUPPORT-ENV*)
+            (CONS 'TSYS  *STANDARD-SUPPORT-ENV*)))
+
+;;; The following get reset to the scratch env on initialization.
+
+(LSET *TC-MACRO-DEFINITION-ENV* *TC-ENV*)       ;No one uses?
+
+(LSET *TC-SYNTAX-TABLE* (ENV-SYNTAX-TABLE *STANDARD-ENV*))
+(LSET *SYNTAX-TABLE* *TC-SYNTAX-TABLE*)
+
+(LSET *NAMESPACE* *RAW-SUPPORT-ENV*)    ;primops go here!
+
+;;; Constants which have definitions which differ between interpreted and
+;;; compiled code.
+
+(CPUT '**LET-MISSING-INITIALIZER** 'CONSTANT 0)
+(CPUT '**NO-MORE-COND-CLAUSES**    'CONSTANT 0)
+(CPUT '**CASE-FELL-OFF-END**       'CONSTANT 0)
+(CPUT '**SELECT-FELL-OFF-END**     'CONSTANT 0)

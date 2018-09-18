@@ -1,0 +1,346 @@
+# VAX T compiler assembly file
+# Compiled from #[Filename VULCAN.DECWRL TCOMP UTC T 0]
+# TC version 1.4 (47)
+
+ .text 
+ .align 3
+q_t:
+ .long 0x1F98
+ .long Y24-q_t
+ .long (T19-R17)*2
+ .long (V21-R17)*2
+ .long (U20-R17)*2
+ .long (W22-R17)*2
+ .long X23-q_t
+ .long 0
+ .data 
+ .align 3
+ .globl d_t
+d_t:
+ .long unit_template
+R17:
+ .long q_t
+ .long S18
+ .long null
+ .long null
+ .long null
+ .long null
+ .text 
+ .globl d_boot
+ .globl d_vaxslink
+ .globl d_vaxkernel
+ .globl d_unxeno
+ .globl d_early
+ .globl d_reloc
+ .globl d_chunk
+ .globl d_populate
+ .globl d_operation
+ .globl d_open
+ .globl d_pcommon
+ .globl d_primops
+ .globl d_vaxprim
+ .globl d_vaxopen
+ .globl d_unix
+ .globl d_stdio
+ .globl d_unfault
+ .globl d_unload
+ .globl d_vaxgc
+ .globl d_ungc
+ .globl d_unfile
+ .globl d_untime
+ .globl d_vmwrite
+ .globl d_vmrepl
+ .globl d_signal
+ .globl d_list1
+ .globl d_throw
+ .globl d_fault
+ .globl d_frame
+ .globl d_gc
+ .globl d_gctop
+ .globl d_vmsystem
+ .globl d_vector
+ .globl d_character
+ .globl d_string
+ .globl d_hash
+ .globl d_misc
+ .globl d_struct
+ .globl d_pool
+ .globl d_carcdr
+ .globl d_list2
+ .globl d_tree
+ .globl d_aliases
+ .globl d_property
+ .globl d_table
+ .globl d_ratio
+ .globl d_arith
+ .globl d_bignum
+ .globl d_dispatch
+ .globl d_syntax
+ .globl d_env
+ .globl d_load
+ .globl d_eval
+ .globl d_sort
+ .globl d_debug
+ .globl d_crawl
+ .globl d_lapconst
+ .globl d_recognize
+ .globl d_readtable
+ .globl d_read
+ .globl d_print
+ .globl d_pfloat
+ .globl d_format
+ .globl d_pp
+ .globl d_fs
+ .globl d_strops
+ .globl d_streams
+ .globl d_channel
+ .globl d_standard
+ .globl d_repl
+ .globl d_object
+ .globl d_macros
+ .globl d_let
+ .globl d_cond
+ .globl d_backquote
+ .globl d_location
+ .globl d_defstruct
+ .globl d_export
+ .globl d_obsolete
+ .globl d_exports
+ .globl d_tsystem
+ .globl d_tcenv
+ .globl d_tctop
+ .globl d_machax
+ .globl d_node
+ .globl d_defs
+ .globl d_random
+ .globl d_sets
+ .globl d_envinit
+ .globl d_transduce
+ .globl d_compile
+ .globl d_alphatize
+ .globl d_cmacros
+ .globl d_analyze
+ .globl d_optimize
+ .globl d_subst
+ .globl d_copy
+ .globl d_strategy
+ .globl d_annotate
+ .globl d_closure
+ .globl d_targetize
+ .globl d_pack
+ .globl d_generate
+ .globl d_gmax
+ .globl d_common
+ .globl d_emit
+ .globl d_output
+ .globl d_lap
+ .globl d_tcsystem
+ .globl d_vaxgen
+ .globl d_vaxemit
+ .globl d_vaxsup
+ .globl d_unemit
+ .globl d_uvmbase
+ .data 
+ .long 8
+ .long 4*8
+ .long 0x398
+ .long vector_template
+ .globl the_initial_units
+the_initial_units:
+ .long d_boot+4
+ .long d_vaxslink+4
+ .long d_vaxkernel+4
+ .long d_unxeno+4
+ .long d_early+4
+ .long d_reloc+4
+ .long d_chunk+4
+ .long d_populate+4
+ .long d_operation+4
+ .long d_open+4
+ .long d_pcommon+4
+ .long d_primops+4
+ .long d_vaxprim+4
+ .long d_vaxopen+4
+ .long d_unix+4
+ .long d_stdio+4
+ .long d_unfault+4
+ .long d_unload+4
+ .long d_vaxgc+4
+ .long d_ungc+4
+ .long d_unfile+4
+ .long d_untime+4
+ .long d_vmwrite+4
+ .long d_vmrepl+4
+ .long d_signal+4
+ .long d_list1+4
+ .long d_throw+4
+ .long d_fault+4
+ .long d_frame+4
+ .long d_gc+4
+ .long d_gctop+4
+ .long d_vmsystem+4
+ .long d_vector+4
+ .long d_character+4
+ .long d_string+4
+ .long d_hash+4
+ .long d_misc+4
+ .long d_struct+4
+ .long d_pool+4
+ .long d_carcdr+4
+ .long d_list2+4
+ .long d_tree+4
+ .long d_aliases+4
+ .long d_property+4
+ .long d_table+4
+ .long d_ratio+4
+ .long d_arith+4
+ .long d_bignum+4
+ .long d_dispatch+4
+ .long d_syntax+4
+ .long d_env+4
+ .long d_load+4
+ .long d_eval+4
+ .long d_sort+4
+ .long d_debug+4
+ .long d_crawl+4
+ .long d_lapconst+4
+ .long d_recognize+4
+ .long d_readtable+4
+ .long d_read+4
+ .long d_print+4
+ .long d_pfloat+4
+ .long d_format+4
+ .long d_pp+4
+ .long d_fs+4
+ .long d_strops+4
+ .long d_streams+4
+ .long d_channel+4
+ .long d_standard+4
+ .long d_repl+4
+ .long d_object+4
+ .long d_macros+4
+ .long d_let+4
+ .long d_cond+4
+ .long d_backquote+4
+ .long d_location+4
+ .long d_defstruct+4
+ .long d_export+4
+ .long d_obsolete+4
+ .long d_exports+4
+ .long d_tsystem+4
+ .long d_tcenv+4
+ .long d_tctop+4
+ .long d_machax+4
+ .long d_node+4
+ .long d_defs+4
+ .long d_random+4
+ .long d_sets+4
+ .long d_envinit+4
+ .long d_transduce+4
+ .long d_compile+4
+ .long d_alphatize+4
+ .long d_cmacros+4
+ .long d_analyze+4
+ .long d_optimize+4
+ .long d_subst+4
+ .long d_copy+4
+ .long d_strategy+4
+ .long d_annotate+4
+ .long d_closure+4
+ .long d_targetize+4
+ .long d_pack+4
+ .long d_generate+4
+ .long d_gmax+4
+ .long d_common+4
+ .long d_emit+4
+ .long d_output+4
+ .long d_lap+4
+ .long d_tcsystem+4
+ .long d_vaxgen+4
+ .long d_vaxemit+4
+ .long d_vaxsup+4
+ .long d_unemit+4
+ .long d_uvmbase+4
+ .long d_t+4
+ .text 
+ .data 
+ .byte 3
+A26:
+ .word 0x9F17
+ .long Z25
+ .byte 0
+ .long A26
+S18:
+ .text 
+ .byte 0,0,0
+ .byte 9
+ .byte 0,0
+ .word 0
+ .word (A26-d_t)/8
+Z25:
+ .data 
+B27:
+ .long C28+5
+ .text 
+ .data 
+D29:
+ .globl v_42_generation_numbers42_
+ .long v_42_generation_numbers42_
+ .text 
+ movl B27-A26(fp),*D29-A26(fp)
+ .data 
+E30:
+ .long F31
+ .text 
+ movl E30-A26(fp),r5
+ .data 
+G32:
+ .globl v_42_system_build_time42_
+ .long v_42_system_build_time42_
+ .text 
+ movl r5,*G32-A26(fp)
+ jmp *-112(r11)
+ .align 3
+X23:
+ .data 
+T19:
+ .long 8
+C28:
+ .long 0xF00BAD0
+ .long H33+5
+H33:
+ .long 0xF00BAD0
+ .long I34+5
+I34:
+ .long 0xF00BAD0
+ .long J35+5
+J35:
+ .long 0xF00BAD0
+ .long K36+5
+K36:
+ .long 0xF00BAD0
+ .long L37+5
+L37:
+ .long 0xF00BAD0
+ .long M38+5
+M38:
+ .long 0xF00BAD0
+ .long N39+5
+N39:
+ .long 0xF00BAD0
+ .long null
+ .text 
+ .align 1
+ .word 0x3F
+O40:
+ .asciz "!============================================================!"
+ .align 3
+Y24:
+ .data 
+V21:
+ .word 0x3E
+F31:
+ .long O40
+ .word 0
+U20:
+W22:
